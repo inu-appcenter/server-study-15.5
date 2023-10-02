@@ -48,6 +48,8 @@
 	- [박세용](contents/todoListAPI/sh/README.md)
 	- [강형준](contents/todoListAPI/hj/README.md)
 	- [이혜성](contents/todoListAPI/hs/README.md)
+    - [조하은](contents/todoListAPI/he/README.md)
+    - [정동현](contents/todoListAPI/dh/README.md)
 
 ---
 
