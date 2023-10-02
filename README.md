@@ -1,4 +1,4 @@
-# Appcenter server study 15기
+# Appcenter server study 15.5기
 > Since 2023.09.19
 
 ## 👨‍💻 운영진
