@@ -162,7 +162,7 @@
        ![Untitled](Servlet%20Container%E1%84%8B%E1%85%AA%20Spring%20Container%20734d0de266d746199b51330314a79edb/Untitled%207.png)
 
         - MessageSource : 메세지 다국화를 위한 인터페이스
-        - EnvironmentCapabel: 개발, 운영 등 환경을 분리해서 처리하고 , 애플리케이션 구동에 필요한 정보들을 관리하기 위한 인터페이스
+        - EnvironmentCapable: 개발, 운영 등 환경을 분리해서 처리하고 , 애플리케이션 구동에 필요한 정보들을 관리하기 위한 인터페이스
         - ApplicationEvenPublisher: 이벤트를 발행하고 구독하는 모델을 편리하게 지원하는 서비스
         - ResourcePatternResolver : 파일, 클래스패스, 외부 등 리소스를 읽어오기 위한 인터페이스
 
