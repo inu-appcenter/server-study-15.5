@@ -6,11 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
     @Id
@@ -21,6 +21,22 @@ public class User {
 
     @Column
     private String password;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Board> board;
+    @Builder
+    public User(String email, String name, String password){
+        this.email=email;
+        this.name=name;
+        this.password=password;
+    }
+    public void changeName(String name){
+        this.name=name;
+    }
+
+    public void changePassword(String password){
+        this.password=password;
+    }
 
 
 }
