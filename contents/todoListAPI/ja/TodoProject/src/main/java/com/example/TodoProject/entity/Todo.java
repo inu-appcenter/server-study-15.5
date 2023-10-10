@@ -1,6 +1,7 @@
-package com.example.TodoProject.Entity;
+package com.example.TodoProject.entity;
 
 
+import com.example.TodoProject.common.Time;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -13,15 +14,15 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Todo {
+public class Todo extends Time {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long todo_Num;
+    private Long todoNum;
 
-    private String todo_Title;
+    private String todoTitle;
 
     @Column(nullable = false)
-    private String todo_Description;
+    private String todoDescription;
 
     private LocalDate StartDate;
 
@@ -30,22 +31,20 @@ public class Todo {
     private Boolean isFinished;
 
     @Column(nullable = false)
-    private String todo_Place;
+    private String todoPlace;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_Num")
     private Client client;
 
     @Builder
-    public Todo(Long todo_Num,String todo_Title, String todo_Description,LocalDate StartDate, LocalDate EndDate, Boolean isFinished, String todo_Place){
-        this.todo_Num = todo_Num;
-        this.todo_Title = todo_Title;
-        this.todo_Description = todo_Description;
+    public Todo(Long todoNum,String todoTitle, String todoDescription,LocalDate StartDate, LocalDate EndDate, Boolean isFinished, String todoPlace){
+        this.todoNum = todoNum;
+        this.todoTitle = todoTitle;
+        this.todoDescription = todoDescription;
         this.StartDate = StartDate;
         this.EndDate = EndDate;
         this.isFinished =isFinished;
-        this.todo_Place = todo_Place;
+        this.todoPlace = todoPlace;
     }
-
-
 }
