@@ -75,7 +75,7 @@
         1. 서블릿 컨테이너는 요청이 올 때마다 새로운 자바 쓰레드 생성
         2. Http Service() 실행 후 쓰레드 자동 소멸(처리 완료 후 자원 관리)
 
-- ### 1.6 Servelt 요청 처리 단계
+- ### 1.6 Servlet 요청 처리 단계
 
   클라이언트에게 요청이 오면 서블릿 컨테이너는 어떻게 요청 URL에 해당하는 서블릿을 찾아 처리해 응답으로 보내주는 것 일까? **web.xml** 설정파일에 그 정보가 기록되어 있습니다.
 
@@ -162,9 +162,9 @@
        ![Untitled](Servlet%20Container%E1%84%8B%E1%85%AA%20Spring%20Container%20734d0de266d746199b51330314a79edb/Untitled%207.png)
 
         - MessageSource : 메세지 다국화를 위한 인터페이스
-        - EnvironmentCapable: 개발, 운영 등 환경을 분리해서 처리하고 , 애플리케이션 구동에 필요한 정보들을 관리하기 위한 인터페이스
+        - EnvironmentCapabel: 개발, 운영 등 환경을 분리해서 처리하고 , 애플리케이션 구동에 필요한 정보들을 관리하기 위한 인터페이스
         - ApplicationEvenPublisher: 이벤트를 발행하고 구독하는 모델을 편리하게 지원하는 서비스
-        - ResourcePatternResolver : 파일, 클래스패스, 외부 등 리소스를 읽어오기 위한 인터페이스
+        - ResourcePatternResolver : 파일, 클래스패스, 외부 등 리소르를 읽어오기 위한 인터페이스
 
 
 - ### 2.4 스프링 컨테이너의 구조 및 동작 과정
