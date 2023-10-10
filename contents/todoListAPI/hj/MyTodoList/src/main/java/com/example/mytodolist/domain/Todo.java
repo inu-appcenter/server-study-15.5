@@ -43,8 +43,8 @@ public class Todo extends Time{
         this.deadLine = deadLine;
     }
 
-    //투두에 해당하는 유저 엔티티를 저장.
-    public void setUser(User user){
+    //투두에 해당하는 유저를 할당합니다.
+    public void assignToUser(User user){
         this.user = user;
         user.getTodoList().add(this);
     }
