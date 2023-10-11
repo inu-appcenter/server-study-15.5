@@ -44,8 +44,9 @@ public class Todo extends Time{
     }
 
     //투두에 해당하는 유저를 할당합니다.
+    //연관관계가 설정되어있어 this.user = user를 통해 엔티티간의 연관관계가 설정이 되면,
+    //JPA는 이 변경을 인식하고 관련된 컬렉션에 업데이트를 자동으로 수행.
     public void assignToUser(User user){
         this.user = user;
-        user.getTodoList().add(this);
     }
 }
