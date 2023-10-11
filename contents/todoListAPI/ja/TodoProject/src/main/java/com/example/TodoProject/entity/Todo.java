@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Todo extends Time {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long todoNum;
@@ -24,9 +25,9 @@ public class Todo extends Time {
     @Column(nullable = false)
     private String todoDescription;
 
-    private LocalDate StartDate;
+    private LocalDate startDate;
 
-    private LocalDate EndDate;
+    private LocalDate endDate;
 
     private Boolean isFinished;
 
@@ -34,17 +35,11 @@ public class Todo extends Time {
     private String todoPlace;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_Num")
+    @JoinColumn(name = "clientNum")
     private Client client;
 
-    @Builder
-    public Todo(Long todoNum,String todoTitle, String todoDescription,LocalDate StartDate, LocalDate EndDate, Boolean isFinished, String todoPlace){
-        this.todoNum = todoNum;
-        this.todoTitle = todoTitle;
-        this.todoDescription = todoDescription;
-        this.StartDate = StartDate;
-        this.EndDate = EndDate;
-        this.isFinished =isFinished;
-        this.todoPlace = todoPlace;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "groupNum")
+    private TodoGroup todoGroup;
+
 }

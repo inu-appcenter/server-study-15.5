@@ -37,14 +37,9 @@ public class Client extends Time {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Todo> todoList = new ArrayList<>();
 
-    @Builder
-    public Client(Long clientNum, String clientId, String clientPassword, String clientName, String clientEmail, String clientRole,String clientPhoneNum){
-      this.clientNum = clientNum;
-      this.clientId = clientId;
-      this.clientPassword = clientPassword;
-      this.clientName = clientName;
-      this.clientEmail = clientEmail;
-      this.clientRole = clientRole;
-      this.clientPhoneNum=clientPhoneNum;
-    }
+    @Builder.Default
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<TodoGroup> todoGroup = new ArrayList<>();
+
+
 }
