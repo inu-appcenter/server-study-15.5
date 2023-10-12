@@ -18,7 +18,6 @@ public class RequestClientDto {
 
     private String clientRole;
 
-    @Column(nullable = false)
     private String clientPhoneNum;
 
     @Builder
