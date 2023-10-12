@@ -18,20 +18,20 @@ public class Board extends  BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
 
-    @Column
+    @Column(nullable = false)
     private String title;
 
-    @Column
+    @Column(nullable = false)
     private String content;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime dueDate;
 
     @Column
     private boolean isFinished;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_email")
+    @JoinColumn(name = "user_email",nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY,cascade = CascadeType.ALL)

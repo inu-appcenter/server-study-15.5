@@ -17,11 +17,11 @@ public class Like {
     private Long likeId;
 
     @ManyToOne
-    @JoinColumn(name = "user_email")
+    @JoinColumn(name = "user_email",nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "board_boardId")
+    @JoinColumn(name = "board_boardId",nullable = false)
     private Board board;
 
     @Builder
