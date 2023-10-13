@@ -15,15 +15,15 @@ public class Reply extends  BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long replyId;
 
-    @Column
+    @Column(nullable = false)
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_boardId")
+    @JoinColumn(name = "board_boardId",nullable = false)
     private Board board;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_email")
+    @JoinColumn(name = "user_email",nullable = false)
     private User user;
 
     @Builder

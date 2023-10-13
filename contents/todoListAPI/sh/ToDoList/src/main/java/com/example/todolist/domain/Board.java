@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -17,22 +18,29 @@ public class Board extends  BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long boardId;
 
-    @Column
+    @Column(nullable = false)
     private String title;
 
-    @Column
+    @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private LocalDateTime dueDate;
+
+    @Column
+    private boolean isFinished;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_email")
+    @JoinColumn(name = "user_email",nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Reply> reply;
 
     @Builder
-    public Board(String title, String content,User user){
+    public Board(String title, LocalDateTime dueDate,String content,User user){
         this.title=title;
+        this.dueDate=dueDate;
         this.content=content;
         this.user=user;
     }
@@ -43,5 +51,13 @@ public class Board extends  BaseEntity{
 
     public void changeContent(String content){
         this.content=content;
+    }
+
+    public void changeDueDate(LocalDateTime dueDate){
+        this.dueDate=dueDate;
+    }
+
+    public void changeIsFinished(boolean isFinished){
+        this.isFinished=isFinished;
     }
 }
