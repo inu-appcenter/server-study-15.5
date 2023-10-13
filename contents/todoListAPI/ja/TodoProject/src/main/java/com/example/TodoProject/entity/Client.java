@@ -1,7 +1,7 @@
 package com.example.TodoProject.entity;
 
 import com.example.TodoProject.common.Time;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,19 +18,25 @@ public class Client extends Time {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "client_num")
     private Long clientNum;
 
+    @Column(name = "client_id")
     private String clientId;
 
+    @Column(name="client_password")
     private String clientPassword;
 
+    @Column(name = "client_name")
     private String clientName;
 
+    @Column(name = "client_email")
     private String clientEmail;
 
+    @Column(name = "client_role")
     private String clientRole;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "client_phone_num")
     private String clientPhoneNum;
 
     @Builder.Default
