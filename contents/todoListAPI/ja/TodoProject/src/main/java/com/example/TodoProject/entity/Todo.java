@@ -2,7 +2,7 @@ package com.example.TodoProject.entity;
 
 
 import com.example.TodoProject.common.Time;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,21 +18,26 @@ public class Todo extends Time {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "todo_num")
     private Long todoNum;
 
+    @Column(name = "todo_title")
     private String todoTitle;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "todo_description")
     private String todoDescription;
 
+    @Column(name = "start_date")
     private LocalDate startDate;
 
+    @Column(name = "end_date")
     private LocalDate endDate;
 
+    @Column(name = "is_finished")
     private Boolean isFinished;
 
-    @Column(nullable = false)
-    private String todoPlace;
+    @Column(nullable = false, name = "todo_location")
+    private String todoLocation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clientNum")

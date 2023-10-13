@@ -1,6 +1,6 @@
 package com.example.TodoProject.dto;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
