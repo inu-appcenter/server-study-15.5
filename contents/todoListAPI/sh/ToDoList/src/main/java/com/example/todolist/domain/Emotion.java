@@ -7,17 +7,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "Likes")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Like {
+public class Emotion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long likeId;
+    private Long EmotionId;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private EmotionStatus emotionStatus;
 
     @ManyToOne
-    @JoinColumn(name = "user_email",nullable = false)
+    @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
     @ManyToOne
@@ -25,9 +28,10 @@ public class Like {
     private Board board;
 
     @Builder
-    public Like(User user,Board board){
+    public Emotion(User user,Board board,EmotionStatus emotionStatus){
         this.user=user;
         this.board=board;
+        this.emotionStatus=emotionStatus;
     }
 
 }
