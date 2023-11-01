@@ -31,7 +31,7 @@ public class Board extends  BaseEntity{
     private boolean isFinished;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_email",nullable = false)
+    @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "board",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
