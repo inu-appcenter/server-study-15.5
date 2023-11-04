@@ -12,11 +12,11 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Board extends  BaseEntity{
+public class ToDo extends  BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardId;
+    private Long toDoId;
 
     @Column(nullable = false)
     private String title;
@@ -34,11 +34,11 @@ public class Board extends  BaseEntity{
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "board",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "toDo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Reply> reply;
 
     @Builder
-    public Board(String title, LocalDateTime dueDate,String content,User user){
+    public ToDo(String title, LocalDateTime dueDate,String content,User user){
         this.title=title;
         this.dueDate=dueDate;
         this.content=content;

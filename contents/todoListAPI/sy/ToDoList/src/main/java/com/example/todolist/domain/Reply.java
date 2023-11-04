@@ -19,17 +19,17 @@ public class Reply extends  BaseEntity{
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "board_boardId",nullable = false)
-    private Board board;
+    @JoinColumn(name = "toDo_Id",nullable = false)
+    private ToDo toDo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
     @Builder
-    public Reply(String content,Board board,User user){
+    public Reply(String content,ToDo toDo,User user){
         this.content=content;
-        this.board=board;
+        this.toDo=toDo;
         this.user=user;
     }
 

@@ -24,7 +24,7 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Board> board;
+    private List<ToDo> toDoList;
     @Builder
     public User(String email, String name, String password){
         this.email=email;
