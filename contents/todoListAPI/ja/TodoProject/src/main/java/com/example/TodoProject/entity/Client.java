@@ -2,18 +2,19 @@ package com.example.TodoProject.entity;
 
 import com.example.TodoProject.common.Time;
 import javax.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import com.example.TodoProject.dto.ShortClientDto;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "Client_tb")
+@Table(name = "client_tb")
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Client extends Time {
 
     @Id
@@ -41,11 +42,16 @@ public class Client extends Time {
 
     @Builder.Default
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private List<Todo> todoList = new ArrayList<>();
+    private List<Todo> todo = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<TodoGroup> todoGroup = new ArrayList<>();
 
+    public void editUser(ShortClientDto shortClientDto){
+        this.clientPassword = shortClientDto.getClientPassword();
+        this.clientEmail = shortClientDto.getClientEmail();
+        this.clientPhoneNum = shortClientDto.getClientPhoneNum();
+    }
 
 }

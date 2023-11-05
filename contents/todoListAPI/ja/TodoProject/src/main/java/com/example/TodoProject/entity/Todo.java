@@ -3,17 +3,18 @@ package com.example.TodoProject.entity;
 
 import com.example.TodoProject.common.Time;
 import javax.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import com.example.TodoProject.dto.RequestTodoDto;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Table(name = "Todo_tb")
+@Table(name = "todo_tb")
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Todo extends Time {
 
     @Id
@@ -40,11 +41,21 @@ public class Todo extends Time {
     private String todoLocation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clientNum")
+    @JoinColumn(name = "client_num")
     private Client client;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupNum")
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true )
+    @JoinColumn(name = "group_num")
     private TodoGroup todoGroup;
+
+    public void EditTodo(RequestTodoDto requestTodoDto){
+        this.todoTitle = requestTodoDto.getTodoTitle();
+        this.todoDescription = requestTodoDto.getTodoDescription();
+        this.startDate = requestTodoDto.getStartDate();
+        this.endDate = requestTodoDto.getEndDate();
+        this.isFinished = requestTodoDto.getIsFinished();
+        this.todoLocation = requestTodoDto.getTodoLocation();
+    }
 
 }

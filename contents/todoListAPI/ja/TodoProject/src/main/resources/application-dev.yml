@@ -6,8 +6,8 @@ server:
       force: true
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3333/todoproject?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: todoprojectuser
+    url: jdbc:mysql://localhost:3333/test_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: testuser
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   thymeleaf:
@@ -19,9 +19,9 @@ spring:
     ansi:
       enabled: always
   jpa:
-    database-platform: org.hibernate.dialect.MySQLDialect
+    database-platform: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 

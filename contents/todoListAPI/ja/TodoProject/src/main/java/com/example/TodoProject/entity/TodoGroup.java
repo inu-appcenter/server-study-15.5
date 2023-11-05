@@ -2,18 +2,20 @@ package com.example.TodoProject.entity;
 
 import com.example.TodoProject.common.Time;
 import javax.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import com.example.TodoProject.dto.RequestTodoDto;
+import com.example.TodoProject.dto.RequestTodoGroupDto;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "TodoGroup_tb")
+@Table(name = "todogroup_tb")
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class TodoGroup extends Time {
 
     @Id
@@ -28,12 +30,16 @@ public class TodoGroup extends Time {
     private Boolean isImportant;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clientNum")
+    @JoinColumn(name = "client_num")
     private Client client;
 
     @Builder.Default
     @OneToMany(mappedBy = "todoGroup", cascade = CascadeType.ALL)
-    private List<Todo> todoList = new ArrayList<>();
+    private List<Todo> todo = new ArrayList<>();
 
+    public void EditTodoGroup(RequestTodoGroupDto requestTodoGroupDto){
+       this.groupName = requestTodoGroupDto.getGroupName();
+       this.isImportant = requestTodoGroupDto.getIsImportant();
+    }
 
 }
