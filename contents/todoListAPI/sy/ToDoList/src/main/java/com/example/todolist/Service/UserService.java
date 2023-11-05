@@ -22,7 +22,7 @@ public class UserService {
 
     public void addUser(AddUserReqDTO addUserReqDTO){  // 회원가입 로직
 
-        if(!userRepository.existsByEmail(addUserReqDTO.getEmail())){
+        if(!userRepository.existsByEmail(addUserReqDTO.getEmail())){ // email값이 중복일 경우
             // 예외처리
         }
         User user = User.builder()
@@ -34,7 +34,7 @@ public class UserService {
         userRepository.save(user);
     }
     
-    public ReadUserResDTO readUserInfo(Long userId){ // 회원 정보조회 로직
+    public ReadUserResDTO readUserInfo(Long userId){ // 회원 정보조회 로직, userId값은 토큰에서 가져온다.
 
         User user = userRepository.findById(userId).orElseThrow( /*예외처리 */);
 
@@ -49,7 +49,7 @@ public class UserService {
     public void changeUserInfo(ChangeUserReqDTO changeUserReqDTO){ // 회원정보 수정 로직
 
         User user = userRepository.findById(changeUserReqDTO.getUserId()).orElseThrow( /*예외처리 */);
-        if(!user.getPassword().equals(changeUserReqDTO.getOldPassword())){
+        if(!user.getPassword().equals(changeUserReqDTO.getOldPassword())){ // 비밀번호가 불일치 할 경우
             // 예외처리
         }
 
@@ -63,7 +63,7 @@ public class UserService {
     public void deleteUser(DeleteUserReqDTO deleteUserReqDTO){ // 회원 탈퇴 로직
 
         User user = userRepository.findById(deleteUserReqDTO.getUserId()).orElseThrow( /*예외처리 */);
-        if(!user.getPassword().equals(deleteUserReqDTO.getPassword())){
+        if(!user.getPassword().equals(deleteUserReqDTO.getPassword())){ // 비밀번호가 불일치 할 경우
             // 예외처리
         }
 

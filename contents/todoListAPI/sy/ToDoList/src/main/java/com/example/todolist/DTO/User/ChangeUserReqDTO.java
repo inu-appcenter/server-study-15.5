@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class ChangeUserReqDTO {
 
-    private Long userId;
+    private Long userId; // userId값은 토큰에서 가져온다.
 
     private String name;
 

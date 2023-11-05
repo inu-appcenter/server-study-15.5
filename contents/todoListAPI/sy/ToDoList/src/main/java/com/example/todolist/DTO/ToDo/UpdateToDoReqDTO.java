@@ -1,6 +1,5 @@
 package com.example.todolist.DTO.ToDo;
 
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,7 +10,11 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddToDoReqDTO {
+public class UpdateToDoReqDTO {
+
+    private Long userId; // 토큰에서 userId값을 가져옴
+
+    private Long toDoId;
 
     private String title;
 
@@ -21,5 +24,5 @@ public class AddToDoReqDTO {
 
     private boolean isFinished;
 
-    private Long userId; // 토큰에서 userId값을 가져옴
 }
+
