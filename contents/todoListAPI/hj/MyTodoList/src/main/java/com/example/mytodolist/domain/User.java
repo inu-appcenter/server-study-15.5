@@ -1,9 +1,6 @@
 package com.example.mytodolist.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -33,7 +30,6 @@ public class User{
 
     //생성자로 초기화 하지 않아도, @Builder.Default 를 이용하여 빈 ArrayList 로 초기화 함.
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Builder.Default
     private List<Todo> todoList = new ArrayList<>();
 
     @Builder
@@ -41,6 +37,17 @@ public class User{
     {
         this.name =name;
         this.email = email;
+        this.level = 0;
+    }
+
+    public void updateUserInfo(String name, String email){
+        this.name = name;
+        this.email = email;
+    }
+
+    public void checkLevel(int level)
+    {
+        this.level = level;
     }
 
 }

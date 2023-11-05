@@ -49,4 +49,11 @@ public class Todo extends Time{
     public void assignToUser(User user){
         this.user = user;
     }
+    public void checkCompleted(Boolean isCompleted){this.isCompleted =isCompleted;}
+    public void updateTodo(String title,String contents ,LocalDateTime deadLine)
+    {
+        this.title = title;
+        this.contents = contents;
+        this.deadLine = deadLine;
+    }
 }
