@@ -27,7 +27,7 @@ public class ToDo extends  BaseEntity{
     @Column(nullable = false)
     private LocalDateTime dueDate;
 
-    @Column
+    @Column(nullable = false)
     private boolean isFinished;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,10 +38,11 @@ public class ToDo extends  BaseEntity{
     private List<Reply> reply;
 
     @Builder
-    public ToDo(String title, LocalDateTime dueDate,String content,User user){
+    public ToDo(String title, LocalDateTime dueDate,String content,boolean isFinished ,User user){
         this.title=title;
         this.dueDate=dueDate;
         this.content=content;
+        this.isFinished=isFinished;
         this.user=user;
     }
 
