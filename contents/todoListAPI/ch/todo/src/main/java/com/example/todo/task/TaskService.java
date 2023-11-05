@@ -22,7 +22,7 @@ public class TaskService {
     public List<TaskResponseDto> getAllByUserId(Long userId) {
         List<TaskResponseDto> taskResponseDtos = new ArrayList<>();
 
-        List<Task> taskList = taskRepository.findAllByUser_Id(userId);
+        List<Task> taskList = taskRepository.findAllByUser_UserId(userId);
         for (Task task : taskList) {
             taskResponseDtos.add(TaskResponseDto.builder()
                     .taskId(task.getTaskId())

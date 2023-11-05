@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/tasks")
 @RestController
+@RequestMapping("/tasks")
 @RequiredArgsConstructor
 public class TaskController {
+
     private final TaskService taskService;
 
     @GetMapping("/{userId}")
