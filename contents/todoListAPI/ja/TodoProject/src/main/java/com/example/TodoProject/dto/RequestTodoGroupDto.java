@@ -29,8 +29,8 @@ public class RequestTodoGroupDto {
     public TodoGroup toEntity(Client client, RequestTodoGroupDto requestTodoGroupDto) {
         return TodoGroup.builder()
                 .client(client)
-                .groupName(requestTodoGroupDto.getGroupName()) // 사용자로부터 그룹 이름 가져오기
-                .isImportant(requestTodoGroupDto.getIsImportant()) // 사용자로부터 중요성 정보 가져오기
+                .groupName(getGroupName()) // 사용자로부터 그룹 이름 가져오기
+                .isImportant(getIsImportant()) // 사용자로부터 중요성 정보 가져오기
                 .build();
     }
 }

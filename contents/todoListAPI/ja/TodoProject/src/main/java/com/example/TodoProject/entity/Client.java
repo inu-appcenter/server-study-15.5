@@ -12,9 +12,7 @@ import java.util.List;
 @Table(name = "client_tb")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Client extends Time {
 
     @Id
@@ -40,11 +38,11 @@ public class Client extends Time {
     @Column(nullable = false, name = "client_phone_num")
     private String clientPhoneNum;
 
-    @Builder.Default
+//    @Builder.Default
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Todo> todo = new ArrayList<>();
 
-    @Builder.Default
+//    @Builder.Default
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<TodoGroup> todoGroup = new ArrayList<>();
 
@@ -54,4 +52,14 @@ public class Client extends Time {
         this.clientPhoneNum = shortClientDto.getClientPhoneNum();
     }
 
+    @Builder
+    public Client(Long clientNum,String clientId, String clientPassword, String clientName, String clientEmail, String clientRole,String clientPhoneNum){
+        this.clientNum = clientNum;
+        this.clientId = clientId;
+        this.clientPassword = clientPassword;
+        this.clientName = clientName;
+        this.clientEmail = clientEmail;
+        this.clientRole = clientRole;
+        this.clientPhoneNum=clientPhoneNum;
+    }
 }

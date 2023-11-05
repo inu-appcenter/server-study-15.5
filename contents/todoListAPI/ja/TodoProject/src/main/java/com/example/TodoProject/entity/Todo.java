@@ -12,9 +12,7 @@ import java.time.LocalDate;
 @Table(name = "todo_tb")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Todo extends Time {
 
     @Id
@@ -49,13 +47,26 @@ public class Todo extends Time {
     @JoinColumn(name = "group_num")
     private TodoGroup todoGroup;
 
-    public void EditTodo(RequestTodoDto requestTodoDto){
+    @Builder
+    public Todo(String todoTitle, String todoDescription, LocalDate startDate, LocalDate endDate, Boolean isFinished, String todoLocation, Client client, TodoGroup todoGroup) {
+        this.todoTitle = todoTitle;
+        this.todoDescription = todoDescription;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.isFinished = isFinished;
+        this.todoLocation = todoLocation;
+        this.client = client;
+        this.todoGroup = todoGroup;
+    }
+
+    public void EditTodo(TodoGroup todoGroup, RequestTodoDto requestTodoDto){
         this.todoTitle = requestTodoDto.getTodoTitle();
         this.todoDescription = requestTodoDto.getTodoDescription();
         this.startDate = requestTodoDto.getStartDate();
         this.endDate = requestTodoDto.getEndDate();
         this.isFinished = requestTodoDto.getIsFinished();
         this.todoLocation = requestTodoDto.getTodoLocation();
+        this.todoGroup = todoGroup;
     }
 
 }

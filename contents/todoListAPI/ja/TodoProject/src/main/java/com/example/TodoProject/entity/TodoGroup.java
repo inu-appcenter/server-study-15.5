@@ -13,9 +13,7 @@ import java.util.List;
 @Table(name = "todogroup_tb")
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class TodoGroup extends Time {
 
     @Id
@@ -33,7 +31,7 @@ public class TodoGroup extends Time {
     @JoinColumn(name = "client_num")
     private Client client;
 
-    @Builder.Default
+//    @Builder.Default
     @OneToMany(mappedBy = "todoGroup", cascade = CascadeType.ALL)
     private List<Todo> todo = new ArrayList<>();
 
@@ -42,4 +40,14 @@ public class TodoGroup extends Time {
        this.isImportant = requestTodoGroupDto.getIsImportant();
     }
 
-}
+        @Builder
+        public TodoGroup(String groupName, Boolean isImportant, Client client){
+            this.groupName = groupName;
+            this.isImportant = isImportant;
+            this.client = client;
+        }
+    }
+
+
+
+

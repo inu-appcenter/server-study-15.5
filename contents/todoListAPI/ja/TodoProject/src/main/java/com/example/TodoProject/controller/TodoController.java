@@ -38,35 +38,44 @@ public class TodoController {
     @Operation(summary = "투두 만들기", description = "clientNum과 RequestTodoDto를 파라미터로 받음. 유저에게 투두를 생성한다.")
     @PostMapping("/create")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "투두 생성 성공"),
+            @ApiResponse(responseCode = "201", description = "투두 생성 성공"),
     })
     public ResponseEntity<CommonResponseDto> createTodo(Long clientNum,@RequestBody RequestTodoDto requestTodoDto){
-        todoService.save(clientNum, requestTodoDto);
+        if(requestTodoDto.getTodoGroupNum() == null){
+            todoService.saveForNotTodoGroup(clientNum, requestTodoDto);
+        } else if (requestTodoDto.getTodoGroupNum() != null) {
+            todoService.saveForTodoGroup(clientNum, requestTodoDto);
+        }
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두리스트 생성 성공", "null"));
     }
 
     //투두 수정하기
-    @PostMapping("/edit")
+    @PostMapping("/patch/{todonum}")
     @Operation(summary = "투두 수정하기", description = "todoNum과 RequestTodoDto를 파라미터로 받음. 투두 수정을 한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 수정 성공"),
     })
-    public ResponseEntity<CommonResponseDto> editTodo(Long todoNum,@RequestBody RequestTodoDto requestTodoDto){
-        todoService.editTodo(todoNum, requestTodoDto);
+    public ResponseEntity<CommonResponseDto> editTodo(@PathVariable Long todonum,@RequestBody RequestTodoDto requestTodoDto){
+        if(requestTodoDto.getTodoGroupNum() == null){
+            todoService.editTodoForNotTodoGroup(todonum, requestTodoDto);
+        }
+        else{
+            todoService.editTodoForTodoGroup(todonum, requestTodoDto);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 수정 성공", "null"));
     }
 
     //투두 삭제하기
     @Operation(summary = "투두 삭제하기", description = "clientNum을 파라미터로 받음. 투두를 영구 삭제한다.")
-    @DeleteMapping("/{todoNum}")
+    @DeleteMapping("/delete/{todonum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 삭제 성공"),
     })
-    public ResponseEntity<CommonResponseDto> deleteTodo(@PathVariable Long todoNum){
-        todoService.deleteTodo(todoNum);
+    public ResponseEntity<CommonResponseDto> deleteTodo(@PathVariable Long todonum){
+        todoService.deleteTodo(todonum);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두 삭제 성공" ,todoNum));
+                .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두 삭제 성공" ,todonum));
     }
 
     @GetMapping ("/title/{clientNum}/{keyword}")
@@ -83,7 +92,4 @@ public class TodoController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"검색 성공",matchingTodos));
     }
-
-
-
 }

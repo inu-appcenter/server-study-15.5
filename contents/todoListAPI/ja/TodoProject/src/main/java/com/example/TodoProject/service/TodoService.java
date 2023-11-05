@@ -29,34 +29,54 @@ public class TodoService {
         this.todoRepository = todoRepository;
         this.todoGroupRepository = todoGroupRepository;
     }
-    public void save(Long clientNum, RequestTodoDto requestTodoDto) {
+    public void saveForTodoGroup(Long clientNum, RequestTodoDto requestTodoDto) {
         Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new RuntimeException());
 
         Long todoGroupNum = requestTodoDto.getTodoGroupNum();
-        TodoGroup todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum).orElse(null);
+        TodoGroup todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
+                .orElseThrow(()->new RuntimeException());
 
-        Todo todo = Todo.builder()
-                .client(client)
-                .todoTitle(requestTodoDto.getTodoTitle())
-                .todoDescription(requestTodoDto.getTodoDescription())
-                .startDate(requestTodoDto.getStartDate())
-                .endDate(requestTodoDto.getEndDate())
-                .isFinished(requestTodoDto.getIsFinished())
-                .todoLocation(requestTodoDto.getTodoLocation())
-                .todoGroup(todoGroup)
-                .build();
+        Todo todo = requestTodoDto.toEntity(client, todoGroup, requestTodoDto);
 
         todoRepository.save(todo);
     }
 
-    public void editTodo(Long todoNum, RequestTodoDto requestTodoDto){
+    public void saveForNotTodoGroup(Long clientNum, RequestTodoDto requestTodoDto) {
+        Client client = clientRepository.findByClientNum(clientNum)
+                .orElseThrow(() -> new RuntimeException());
+
+        TodoGroup todoGroup = null;
+
+        Todo todo = requestTodoDto.toEntity(client, todoGroup, requestTodoDto);
+
+        todoRepository.save(todo);
+    }
+
+    public void editTodoForTodoGroup(Long todoNum, RequestTodoDto requestTodoDto){
         Todo todo = todoRepository.findByTodoNum(todoNum)
                 .orElseThrow(() -> new RuntimeException());
-        todo.EditTodo(requestTodoDto);
+
+        Long todoGroupNum =requestTodoDto.getTodoGroupNum();
+
+        TodoGroup todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
+                .orElseThrow(()->new RuntimeException());
+
+        todo.EditTodo(todoGroup, requestTodoDto);
+
         todoRepository.save(todo);
     }
 
+    public void editTodoForNotTodoGroup(Long todoNum, RequestTodoDto requestTodoDto){
+        Todo todo = todoRepository.findByTodoNum(todoNum)
+                .orElseThrow(() -> new RuntimeException());
+
+        TodoGroup todoGroup = null;
+
+        todo.EditTodo(todoGroup, requestTodoDto);
+
+        todoRepository.save(todo);
+    }
     public void deleteTodo(Long todoNum){
         Todo todo = todoRepository.findByTodoNum(todoNum)
                 .orElseThrow(() -> new RuntimeException());

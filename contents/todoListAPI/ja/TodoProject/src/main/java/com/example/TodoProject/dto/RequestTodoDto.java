@@ -42,16 +42,17 @@ public class RequestTodoDto {
         this.todoGroupNum = todoGroupNum;
     }
 
-//    public Todo toEntity(Client client,RequestTodoDto requestTodoDto) {
-//        return Todo.builder()
-//                .client(client)
-//                .todoTitle(getTodoTitle())
-//                .todoDescription(getTodoDescription())
-//                .startDate(getStartDate())
-//                .endDate(getEndDate())
-//                .isFinished(getIsFinished())
-//                .todoLocation(getTodoLocation())
-//                .build();
-//    }
+    public Todo toEntity(Client client,TodoGroup todoGroup,RequestTodoDto requestTodoDto) {
+        return Todo.builder()
+                .client(client)
+                .todoGroup(todoGroup)
+                .todoTitle(getTodoTitle())
+                .todoDescription(getTodoDescription())
+                .startDate(getStartDate())
+                .endDate(getEndDate())
+                .isFinished(getIsFinished())
+                .todoLocation(getTodoLocation())
+                .build();
+    }
 
 }

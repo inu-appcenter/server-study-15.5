@@ -46,7 +46,7 @@ public class ClientController {
 
     //유저 전체 조회
     @Operation(summary = "유저 전체 조회", description = "관리자가 유저를 관리할 때 쓸 수 있는 도구. 시큐리티 추가 후 권한 설정 예정")
-    @GetMapping("/allClients")
+    @GetMapping("")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공"),
             @ApiResponse(responseCode = "404", description = "잘못된 요청입니다."),
@@ -61,7 +61,7 @@ public class ClientController {
     @Operation(summary = "유저 생성(회원가입)", description = "RequestClientDto를 파라미터로 받음. 유저의 회원가입을 담당함.")
     @PostMapping("/sign-up")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "회원가입 성공")
+            @ApiResponse(responseCode = "201", description = "회원가입 성공")
     })
     public ResponseEntity<CommonResponseDto> signUp(@RequestBody RequestClientDto requestClientDto){
         LOGGER.info("[signUp] 회원가입중... id : {}", requestClientDto.getClientId());
@@ -71,13 +71,13 @@ public class ClientController {
 
     //유저 수정하기
     @Operation(summary = "유저 회원정보 수정", description = "clientNum과 ShortClientDto를 파라미터로 받음. 유저의 회원정보를 수정한다.(아이디 수정 불가능)")
-    @PostMapping("/edit")
+    @PostMapping("/patch/{clientnum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원정보 수정 성공"),
     })
-    public ResponseEntity<CommonResponseDto> editUser(Long clientNum, @RequestBody ShortClientDto shortClientDto){
+    public ResponseEntity<CommonResponseDto> editUser(@PathVariable Long clientnum, @RequestBody ShortClientDto shortClientDto){
         LOGGER.info("[editUser] 회원정보수정");
-        clientService.editClient(clientNum, shortClientDto);
+        clientService.editClient(clientnum, shortClientDto);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponseDto(CommonResponse.SUCCESS, "회원정보 수정 성공", "null"));
     }
 }
