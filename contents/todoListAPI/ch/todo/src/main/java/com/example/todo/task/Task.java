@@ -1,17 +1,23 @@
 package com.example.todo.task;
 
 import com.example.todo.user.User;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Table(name = "task_tb")
+@Getter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Task {
 
     @Id
+    @Column(name = "task_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long task_id;
+    private Long taskId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -23,5 +29,7 @@ public class Task {
 
     private LocalDateTime deadline;
 
-    private Boolean is_completed;
+    @Setter
+    @Column(name = "is_completed")
+    private Boolean isCompleted;
 }
