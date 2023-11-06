@@ -19,9 +19,9 @@ public class MemberService {
     //private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Long save(MemberSaveDto memberSaveDto){
-        //memberSaveDto.setPassword(passwordEncoder.encode(memberSaveDto.getPassword()));
-        return memberRepository.save(memberSaveDto.toEntity()).getId();
+    public Long save(String email, String password,String nickname){
+        /*받은 비밀번호를 암호화*/
+        return memberRepository.save(MemberSaveDto.builder().email(email).password(password).nickname(nickname).build().toEntity()).getId();
     }
 
     @Transactional
