@@ -13,7 +13,7 @@ public class TaskResponseDto {
     private String title;
     private String description;
     private LocalDateTime endDate;
-    boolean isFinished;
+    private boolean isFinished;
     private Long memberId;
 
     public TaskResponseDto(Task task){

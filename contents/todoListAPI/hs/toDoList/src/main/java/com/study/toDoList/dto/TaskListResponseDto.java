@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class TaskListResponseDto {
     private Long id;
     private String title;
-    boolean isFinished;
+    private boolean isFinished;
     private Long memberId;
     private LocalDateTime modifiedDate;
 
