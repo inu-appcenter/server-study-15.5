@@ -1,6 +1,7 @@
 package com.example.todolist.Service;
 
 import com.example.todolist.DTO.Reply.AddReplyReqDTO;
+import com.example.todolist.DTO.Reply.ChangeReplyReqDTO;
 import com.example.todolist.DTO.Reply.ReadReplyResDTO;
 import com.example.todolist.Repository.ReplyRepository;
 import com.example.todolist.Repository.ToDoRepository;
@@ -8,6 +9,7 @@ import com.example.todolist.Repository.UserRepository;
 import com.example.todolist.domain.Reply;
 import com.example.todolist.domain.ToDo;
 import com.example.todolist.domain.User;
+import jakarta.persistence.Column;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +43,7 @@ public class ReplyService {
 
         replyRepository.save(reply);
     }
-    public List<ReadReplyResDTO> readReply(List<Reply> replyList){
+    public List<ReadReplyResDTO> readReply(Long userId,List<Reply> replyList){
 
         List<ReadReplyResDTO> readReplyResDTOList = new ArrayList<>();
 
@@ -53,16 +55,36 @@ public class ReplyService {
                     .replyId(reply.getReplyId())
                     .content(reply.getContent())
                     .writer(reply.getUser().getName())
+                    .isMyReply(isMyReply(userId,reply))
                     .build();
 
             readReplyResDTOList.add(readReplyResDTO);
         }
         return readReplyResDTOList;
     }
-    public void changeReply(){
+    public void changeReply(ChangeReplyReqDTO changeReplyReqDTO){
+        Reply reply = replyRepository.findById(changeReplyReqDTO.getReplyId()).orElseThrow(/*예외처리*/);
+        if(!isMyReply(changeReplyReqDTO.getUserId(), reply)){
+            //예외처리
+        }
 
+        reply.changeContent(changeReplyReqDTO.getContent());
+        replyRepository.save(reply);
     }
-    public void deleteReply(){
+    public void deleteReply(Long userId, Long replyId){
+        Reply reply = replyRepository.findById(replyId).orElseThrow(/*예외처리*/);
 
+        if(!isMyReply(userId,reply)){
+            //예외처리
+        }
+
+        replyRepository.delete(reply);
+    }
+
+    public boolean isMyReply(Long userId, Reply reply){
+        if(userId.equals(reply.getUser().getUserId())){
+            return true;
+        }
+        return false;
     }
 }

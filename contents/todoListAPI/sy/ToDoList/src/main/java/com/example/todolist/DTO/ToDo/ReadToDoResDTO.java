@@ -20,8 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 public class ReadToDoResDTO {
 
-    private Long toDoId;
-
     private String title;
 
     private String content;

@@ -8,13 +8,11 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReadReplyResDTO {
+public class ChangeReplyReqDTO {
+
+    private Long userId;
 
     private Long replyId;
 
-    private String writer;
-
     private String content;
-
-    private boolean isMyReply;
 }
