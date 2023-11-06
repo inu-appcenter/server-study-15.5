@@ -23,8 +23,8 @@ public class TaskService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long save(TaskSaveDto taskSaveDto){
-        Optional<Member> member = memberRepository.findById(1L);//임시설정
+    public Long save(Long id,TaskSaveDto taskSaveDto){
+        Optional<Member> member = memberRepository.findById(id);
         return taskRepository.save(Task.builder().member(member.get()).title(taskSaveDto.getTitle()).description(taskSaveDto.getDescription()).endDate(taskSaveDto.getEndDate()).build()).getId();
     }
 
