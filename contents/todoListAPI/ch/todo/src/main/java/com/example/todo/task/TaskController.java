@@ -35,7 +35,7 @@ public class TaskController {
     }
 
     @PatchMapping("/iscompleted/{taskId}")
-    public void postTask(@PathVariable Long taskId) throws Exception {
+    public void patchIsCompletedTask(@PathVariable Long taskId) throws Exception {
         taskService.changeIsCompleted(taskId);
     }
 }
