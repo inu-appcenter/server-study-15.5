@@ -9,7 +9,6 @@ import com.example.todolist.Repository.UserRepository;
 import com.example.todolist.domain.Reply;
 import com.example.todolist.domain.ToDo;
 import com.example.todolist.domain.User;
-import jakarta.persistence.Column;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
