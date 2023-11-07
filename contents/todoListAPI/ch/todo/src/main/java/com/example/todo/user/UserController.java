@@ -15,15 +15,15 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserResponseDto> getUser(@PathVariable Long userId) {
+    public ResponseEntity<UserResponseDto> getUser(@PathVariable Long userId) throws Exception {
         UserResponseDto userResponseDto = userService.getUser(userId);
         return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
     }
 
     @PostMapping()
-    public ResponseEntity<UserResponseDto> postUser(UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> postUser(@RequestBody UserRequestDto userRequestDto) {
         UserResponseDto userResponseDto = userService.saveUser(userRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
 
     @DeleteMapping("/{userId}")
