@@ -6,7 +6,7 @@ import com.example.todolist.DTO.User.DeleteUserReqDTO;
 import com.example.todolist.DTO.User.ReadUserResDTO;
 import com.example.todolist.Repository.UserRepository;
 import com.example.todolist.domain.User;
-import jakarta.transaction.Transactional;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -5,12 +5,15 @@ import com.example.todolist.DTO.User.ChangeUserReqDTO;
 import com.example.todolist.DTO.User.DeleteUserReqDTO;
 import com.example.todolist.DTO.User.ReadUserResDTO;
 import com.example.todolist.Service.UserService;
-import jakarta.servlet.ServletRequest;
+import javax.servlet.ServletRequest;
+
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = "User")
 public class UserController {
 
     private final UserService userService;
@@ -20,6 +23,10 @@ public class UserController {
         this.userService=userService;
     }
     @PostMapping("/users")
+    @ApiOperation(value = "유저 회원가입")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "유저 생성성공"),
+            @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
     public ResponseEntity<Object> addUser(@RequestBody AddUserReqDTO addUserReqDTO){
 
         userService.addUser(addUserReqDTO);
@@ -28,6 +35,10 @@ public class UserController {
     }
 
     @GetMapping("/users")
+    @ApiOperation(value = "유저 정보조회")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "유저 조회성공",response = ReadUserResDTO.class),
+            @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
     public ResponseEntity<Object> readUser(ServletRequest request){
         /*
             토큰에서 userId값 추출 로직
@@ -39,6 +50,10 @@ public class UserController {
     }
 
     @PatchMapping("/users")
+    @ApiOperation(value = "유저 정보변경")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "유저 정보변경 성공"),
+            @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
     public ResponseEntity<Object> changeUserInfo(@RequestBody ChangeUserReqDTO changeUserReqDTO, ServletRequest request){
         /*
             토큰에서 userId값 추출 로직
@@ -50,6 +65,10 @@ public class UserController {
         return ResponseEntity.status(200).body(null);
     }
     @DeleteMapping("/users")
+    @ApiOperation(value = "유저 삭제")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "유저 삭제성공"),
+            @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
     public ResponseEntity<Object> deleteUser(String password){
         /*
             토큰에서 userId값 추출 로직
