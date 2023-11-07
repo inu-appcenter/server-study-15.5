@@ -1,8 +1,7 @@
 package com.example.todo.user.dto;
 
-import lombok.Builder;
+import com.example.todo.user.User;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 
 @Getter
 public class UserRequestDto {
@@ -13,4 +12,11 @@ public class UserRequestDto {
 
     private String name;
 
+    public static User toEntity(UserRequestDto userRequestDto) {
+        return User.builder()
+                .name(userRequestDto.name)
+                .loginId(userRequestDto.loginId)
+                .password(userRequestDto.password)
+                .build();
+    }
 }

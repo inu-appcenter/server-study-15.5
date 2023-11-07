@@ -1,12 +1,11 @@
 package com.example.todo.user;
 
 import com.example.todo.task.Task;
-import lombok.AllArgsConstructor;
+import com.example.todo.user.dto.UserResponseDto;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.bytebuddy.matcher.FilterableList;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +13,7 @@ import java.util.List;
 @Table(name = "user_tb")
 @Entity
 @Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
     @Column(name = "user_id")
@@ -32,4 +29,20 @@ public class User {
 
     @OneToMany(mappedBy="user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Task> Tasks = new ArrayList<>();
+
+    @Builder
+    public User(String loginId, String password, String name) {
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+    }
+
+    public static UserResponseDto toResponseDto(User user) {
+        return UserResponseDto.builder()
+                .userId(user.userId)
+                .name(user.name)
+                .loginId(user.loginId)
+                .password(user.password)
+                .build();
+    }
 }
