@@ -24,7 +24,7 @@ public class ToDoController {
     @GetMapping("/to-dos")
     public ResponseEntity<Object> readToDoPreviewList(){
         List<ReadToDoPreviewResDTO> readToDoPreviewResDTOList = toDoService.readToDoPreviewList();
-        return ResponseEntity.status(200).body(null);
+        return ResponseEntity.status(200).body(readToDoPreviewResDTOList);
     }
 
     @GetMapping("/to-dos/{toDoId}")
@@ -32,7 +32,7 @@ public class ToDoController {
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 1l;
+        Long userId = 2l;
 
         ReadToDoResDTO readToDoResDTO = toDoService.readToDo(toDoId,userId);
         return ResponseEntity.status(200).body(readToDoResDTO);
@@ -43,7 +43,7 @@ public class ToDoController {
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 1l;
+        Long userId = 2l;
         addToDoReqDTO.setUserId(userId);
 
         toDoService.addToDo(addToDoReqDTO);
@@ -55,7 +55,7 @@ public class ToDoController {
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 1l;
+        Long userId = 2l;
         updateToDoReqDTO.setUserId(userId);
         updateToDoReqDTO.setToDoId(toDoId);
 
@@ -68,7 +68,7 @@ public class ToDoController {
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 1l;
+        Long userId = 2l;
 
         toDoService.deleteToDo(toDoId,userId);
         return ResponseEntity.status(200).body(null);

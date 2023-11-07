@@ -32,7 +32,7 @@ public class UserController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 1l; // 임시로 userId값 설정
+        Long userId = 2l; // 임시로 userId값 설정
         ReadUserResDTO readUserResDTO = userService.readUserInfo(userId);
 
         return ResponseEntity.status(200).body(readUserResDTO);
@@ -43,17 +43,23 @@ public class UserController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 1l; // 임시로 userId값 설정
+        Long userId = 2l; // 임시로 userId값 설정
+        changeUserReqDTO.setUserId(userId);
         userService.changeUserInfo(changeUserReqDTO);
 
         return ResponseEntity.status(200).body(null);
     }
     @DeleteMapping("/users")
-    public ResponseEntity<Object> deleteUser(@RequestBody DeleteUserReqDTO deleteUserReqDTO){
+    public ResponseEntity<Object> deleteUser(String password){
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 1l; // 임시로 userId값 설정
+        Long userId = 2l; // 임시로 userId값 설정
+        DeleteUserReqDTO deleteUserReqDTO = DeleteUserReqDTO.builder()
+                .userId(userId)
+                .password(password)
+                .build();
+
         userService.deleteUser(deleteUserReqDTO);
 
         return ResponseEntity.status(200).body(null);

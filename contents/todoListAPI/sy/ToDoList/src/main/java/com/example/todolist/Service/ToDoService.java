@@ -95,6 +95,7 @@ public class ToDoService {
         for(int i=0;i<toDoList.size();i++){
             ToDo toDo = toDoList.get(i);
             ReadToDoPreviewResDTO readToDoPreviewResDTO = ReadToDoPreviewResDTO.builder()
+                    .toDoId(toDo.getToDoId())
                     .title(toDo.getTitle())
                     .isFinished(toDo.isFinished())
                     .writerName(toDo.getUser().getName())

@@ -37,6 +37,7 @@ public class EmotionService {
                 .user(user)
                 .toDo(toDo)
                 .build();
+        emotionRepository.save(emotion);
     }
 
     public void deleteEmotion(Long userId, Long toDoId){

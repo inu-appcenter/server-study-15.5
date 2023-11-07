@@ -1,5 +1,6 @@
 package com.example.todolist.DTO.ToDo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class UpdateToDoReqDTO {
 
     private String content;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd-HH")
     private LocalDateTime dueDate;
 
     private boolean isFinished;

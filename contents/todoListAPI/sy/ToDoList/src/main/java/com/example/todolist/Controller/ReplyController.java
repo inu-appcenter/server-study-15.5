@@ -18,45 +18,39 @@ public class ReplyController {
     }
 
     @PostMapping("/{toDoId}/replys")
-    public ResponseEntity<Object> addReply(@PathVariable Long toDoId,String content){
+    public ResponseEntity<Object> addReply(@PathVariable Long toDoId,@RequestBody AddReplyReqDTO addReplyReqDTO){
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 1l; // 임시로 userId값 설정
+        Long userId = 2l; // 임시로 userId값 설정
 
-        AddReplyReqDTO addReplyReqDTO = AddReplyReqDTO.builder()
-                .content(content)
-                .toDoId(toDoId)
-                .userId(userId)
-                .build();
+        addReplyReqDTO.setUserId(userId);
+        addReplyReqDTO.setToDoId(toDoId);
 
         replyService.addReply(addReplyReqDTO);
         return ResponseEntity.status(201).body(null);
     }
 
-    @PatchMapping("/to-dos/{replyId}")
-    public ResponseEntity<Object> changeReply(@PathVariable Long replyId,String content){
+    @PatchMapping("/replys/{replyId}")
+    public ResponseEntity<Object> changeReply(@PathVariable Long replyId,@RequestBody ChangeReplyReqDTO changeReplyReqDTO){
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 1l; // 임시로 userId값 설정
+        Long userId = 2l; // 임시로 userId값 설정
 
-        ChangeReplyReqDTO changeReplyReqDTO = ChangeReplyReqDTO.builder()
-                .replyId(replyId)
-                .userId(userId)
-                .content(content)
-                .build();
+        changeReplyReqDTO.setReplyId(replyId);
+        changeReplyReqDTO.setUserId(userId);
 
         replyService.changeReply(changeReplyReqDTO);
         return ResponseEntity.status(200).body(null);
     }
 
-    @DeleteMapping("/to-dos/{replyId}")
+    @DeleteMapping("/replys/{replyId}")
     public ResponseEntity<Object> deleteReply(@PathVariable Long replyId){
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 1l; // 임시로 userId값 설정
+        Long userId = 2l; // 임시로 userId값 설정
 
         replyService.deleteReply(userId,replyId);
         return ResponseEntity.status(200).body(null);
