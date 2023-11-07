@@ -5,8 +5,6 @@ import lombok.*;
 
 @Builder
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserResponseDto {
 
     private Long userId;
