@@ -1,8 +1,12 @@
 package com.example.todo.task;
 
+import com.example.todo.task.dto.TaskRequestDto;
+import com.example.todo.task.dto.TaskResponseDto;
 import com.example.todo.user.User;
-import lombok.*;
-
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -52,4 +56,22 @@ public class Task {
     protected void updateIsComleted() {
         this.isCompleted = !this.isCompleted;
     }
+
+    public static TaskResponseDto toResponseDto(Task task) {
+        return TaskResponseDto.builder()
+                .taskId(task.getTaskId())
+                .title(task.getTitle())
+                .description(task.getDescription())
+                .deadline(task.getDeadline())
+                .userId(task.getUser().getUserId())
+                .build();
+    }
+
+    public Task updateFromDto(TaskRequestDto taskRequestDto) {
+        this.title = taskRequestDto.getTitle();
+        this.description = taskRequestDto.getDescription();
+        this.deadline = taskRequestDto.getDeadline();
+        return this;
+    }
+
 }
