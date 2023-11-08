@@ -24,7 +24,7 @@ public class TodoController {
 
 
     @ApiOperation(value="id 번호로 Todo 조회", notes="TodoId에 해당하는  Todo를 조회합니다.")
-    @GetMapping("{id}")
+    @GetMapping("/{id}") //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<TodoResponseDto> getTodo(@PathVariable("id") Long id) throws RuntimeException{
         TodoResponseDto todoResponseDto = todoService.getTodo(id);
 
@@ -32,17 +32,17 @@ public class TodoController {
     }
 
     @ApiOperation(value = "사용자 id 에 해당하는 Todo 생성", notes = "userId 에 해당하는 사용자로 게시물을 작성합니다.")
-    @PostMapping("{id}")
+    @PostMapping("/{id}") //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<TodoResponseDto> createTodo(@PathVariable("id") Long id, @RequestBody TodoRequestDto todoRequestDto){
         User user = userRepository.findById(id).orElseThrow(()-> new NullPointerException());
 
         TodoResponseDto todoResponseDto = todoService.saveTodo(user.getId(),todoRequestDto);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(todoResponseDto,HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "Todo 수정", notes = "todoId에  해당하는 Todo 를 수정합니다.")
-    @PutMapping("{id}")
+    @PutMapping("/{id}") //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<TodoResponseDto> updateTodo(@PathVariable("id") Long id,@RequestBody TodoRequestDto todoRequestDto ) throws RuntimeException{
         TodoResponseDto todoResponseDto = todoService.updateTodo(id,todoRequestDto);
 
@@ -50,7 +50,7 @@ public class TodoController {
     }
 
     @ApiOperation(value = "Todo 삭제", notes = "todoId에 해당하는 Todo 를 삭제합니다.")
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}") //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<Void> deleteTodo(@PathVariable("id") Long id) throws RuntimeException{
         todoService.deleteTodo(id);
 
@@ -59,7 +59,7 @@ public class TodoController {
 
     @ApiOperation(value = "Todo 성공여부 수정", notes = "todoId에 해당하는 Todo 의 성공여부를 수정합니다.")
     @PutMapping("/check")
-    public ResponseEntity<TodoResponseDto> checkCompletedTodo(@RequestParam("id") Long id, @RequestParam("isCompleted") String isCompleted) throws RuntimeException{
+    public ResponseEntity<TodoResponseDto> checkCompletedTodo(@RequestParam("id") Long id, @RequestParam("isCompleted") Boolean isCompleted) throws RuntimeException{
         TodoResponseDto todoResponseDto = todoService.checkCompleted(id,isCompleted);
 
         return new ResponseEntity<>(todoResponseDto,HttpStatus.OK);

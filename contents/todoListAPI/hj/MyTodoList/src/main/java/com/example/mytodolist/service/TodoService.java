@@ -7,13 +7,10 @@ import com.example.mytodolist.domain.Todo;
 import com.example.mytodolist.domain.User;
 import com.example.mytodolist.dto.TodoRequestDto;
 import com.example.mytodolist.dto.TodoResponseDto;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 @Service
@@ -22,23 +19,11 @@ public class TodoService {
     private final TodoRepository todoRepository;
     private final UserRepository userRepository;
 
-    private TodoResponseDto convertEntityToDto(Todo todo){
-        return TodoResponseDto.builder()
-                .id(todo.getId())
-                .title(todo.getTitle())
-                .content(todo.getContents())
-                .isCompleted(todo.getIsCompleted())
-                .deadLine(todo.getDeadLine())
-                .createdDate(todo.getCreateDate())
-                .modifiedDate(todo.getModifiedDate())
-                .build();
-    }
-
     public TodoResponseDto getTodo(Long id)
     {
         Todo todo = todoRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
 
-        TodoResponseDto todoResponseDto = this.convertEntityToDto(todo);
+        TodoResponseDto todoResponseDto = TodoResponseDto.EntityToDto(todo);
 
         return todoResponseDto;
     }
@@ -46,19 +31,11 @@ public class TodoService {
     public TodoResponseDto saveTodo(Long id, TodoRequestDto todoRequestDto){
         User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
-        Todo todo = Todo.builder()
-                .title(todoRequestDto.getTitle())
-                .contents(todoRequestDto.getContent())
-                .deadLine(todoRequestDto.getDeadLine())
-                .build();
-        todo.assignToUser(user);
-        todo.checkCompleted(false);
-        todo.updateModifiedDate(LocalDateTime.now());
-        todo.setCreateDate(LocalDateTime.now());
+        Todo todo = TodoRequestDto.DtoToEntity(todoRequestDto,user);
 
         todoRepository.save(todo);
 
-        TodoResponseDto todoResponseDto = this.convertEntityToDto(todo);
+        TodoResponseDto todoResponseDto = TodoResponseDto.EntityToDto(todo);
 
         return todoResponseDto;
     }
@@ -67,48 +44,35 @@ public class TodoService {
         Todo todo = todoRepository.findById(id).orElseThrow(()->new NoSuchElementException("업데이트 할 todo가 존재하지 않습니다."));
 
         todo.updateTodo(todoRequestDto.getTitle(),todoRequestDto.getContent(),todoRequestDto.getDeadLine());
-        todo.updateModifiedDate(LocalDateTime.now());
-
         todoRepository.save(todo);
 
-        TodoResponseDto todoResponseDto = this.convertEntityToDto(todo);
-
+        TodoResponseDto todoResponseDto =  TodoResponseDto.EntityToDto(todo);
 
         return todoResponseDto;
     }
-
 
     public void deleteTodo(Long id){
         todoRepository.deleteById(id);
     }
 
+    //todo에서 checkCompleted를 이용하여 필드 값을 바꿔 준 다음, todo를 기반으로 User 객체를 불러와야하는데 안불러짐.. 또 트랜잭션으로 영속을 유지 해야 된다.
+    //이 메서드에서 Todo의 isCompleted를 체크함과 동시에 해당 Todo의 작성자의 레벨이 오른다.
     @Transactional
-    public TodoResponseDto checkCompleted(Long id,String isCompleted){
+    public TodoResponseDto checkCompleted(Long id,Boolean isCompleted){
         Todo todo = todoRepository.findById(id).orElseThrow(()->new NoSuchElementException("체크 할 todo가 존재하지 않습니다."));
 
-        if(isCompleted.equals("Completed")){
-            todo.checkCompleted(true);
+        if(isCompleted){
+            todo.checkCompleted();
 
-            User user = todo.getUser();
-            user.checkLevel(user.getLevel() + 1);
+            User user = todo.getUser();     //여기서 또 영속이 끊김
+            user.LevelUp(user.getLevel() + 1);
             userRepository.save(user);
         }
-        else{
-            todo.checkCompleted(false);
-        }
-
         todoRepository.save(todo);
-        todo.updateModifiedDate(LocalDateTime.now());
 
-        TodoResponseDto todoResponseDto = this.convertEntityToDto(todo);
-
+        TodoResponseDto todoResponseDto =  TodoResponseDto.EntityToDto(todo);
 
         return todoResponseDto;
     }
-
-
-
-
-
 
 }

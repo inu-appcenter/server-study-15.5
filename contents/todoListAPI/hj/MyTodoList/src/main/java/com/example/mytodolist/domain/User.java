@@ -45,7 +45,8 @@ public class User{
         this.email = email;
     }
 
-    public void checkLevel(int level)
+    //메서드 이름 변경.
+    public void LevelUp(int level)
     {
         this.level = level;
     }

@@ -1,14 +1,13 @@
 package com.example.mytodolist.dto;
 
+import com.example.mytodolist.domain.Todo;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.domain.PageRequest;
+
 
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
 public class TodoResponseDto {
     private Long id;
     private String title;
@@ -27,6 +26,20 @@ public class TodoResponseDto {
         this.deadLine= deadLine;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
+    }
+
+    //서비스에서 사용하던 변환 메서스를 dto로 옮김.
+    public static TodoResponseDto EntityToDto(Todo todo)
+    {
+        return TodoResponseDto.builder()
+                .id(todo.getId())
+                .title(todo.getTitle())
+                .content(todo.getContents())
+                .isCompleted(todo.getIsCompleted())
+                .deadLine(todo.getDeadLine())
+                .createdDate(todo.getCreatedDate())
+                .modifiedDate(todo.getModifiedDate())
+                .build();
     }
 
 }

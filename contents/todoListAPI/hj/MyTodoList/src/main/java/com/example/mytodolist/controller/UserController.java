@@ -25,9 +25,8 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-
     @ApiOperation(value="사용자 계정 조회", notes="userId에 해당하는 사용자 계정을 조회합니다.")
-    @GetMapping("{id}")
+    @GetMapping("/{id}")  //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<UserResponseDto> getUser(@PathVariable("id") Long id){
         User user = userRepository.getById(id);
         UserResponseDto userResponseDto = userService.getUser(user.getId());
@@ -40,20 +39,20 @@ public class UserController {
     public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto userRequestDto){
         UserResponseDto userResponseDto = userService.saveUser(userRequestDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
+        return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
     }
 
     @ApiOperation(value = "사용자 계정 수정", notes = "userId에 해당하는 사용자 계정을 수정합니다.")
-    @PutMapping("{id}")
+    @PutMapping("/{id}") //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<UserResponseDto> changeUser(@PathVariable("id") Long id,@RequestBody UserRequestDto userRequestDto){
 
         UserResponseDto userResponseDto = userService.updateUser(id,userRequestDto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 
     @ApiOperation(value = "사용자 계정 삭제", notes = "userId에 해당하는 사용자 계정을 삭제합니다.")
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}") //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) throws RuntimeException{
         userService.deleteUser(id);
 
@@ -66,6 +65,6 @@ public class UserController {
 
         List<TodoResponseDto> userTodoList = userService.getTodosByUserId(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(userTodoList);
+        return new ResponseEntity<>(userTodoList, HttpStatus.OK);
     }
 }
