@@ -27,7 +27,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "유저 생성성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> addUser(@RequestBody AddUserReqDTO addUserReqDTO){
+    public ResponseEntity<Void> addUser(@RequestBody AddUserReqDTO addUserReqDTO){
 
         userService.addUser(addUserReqDTO);
 
@@ -39,7 +39,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "유저 조회성공",response = ReadUserResDTO.class),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> readUser(ServletRequest request){
+    public ResponseEntity<ReadUserResDTO> readUser(ServletRequest request){
         /*
             토큰에서 userId값 추출 로직
         */
@@ -54,7 +54,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "유저 정보변경 성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> changeUserInfo(@RequestBody ChangeUserReqDTO changeUserReqDTO, ServletRequest request){
+    public ResponseEntity<Void> changeUserInfo(@RequestBody ChangeUserReqDTO changeUserReqDTO, ServletRequest request){
         /*
             토큰에서 userId값 추출 로직
         */
@@ -69,7 +69,7 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "유저 삭제성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> deleteUser(String password){
+    public ResponseEntity<Void> deleteUser(String password){
         /*
             토큰에서 userId값 추출 로직
         */

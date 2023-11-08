@@ -31,7 +31,7 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "전체ToDo 조회성공",response = ReadToDoPreviewResDTO.class),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> readToDoPreviewList(){
+    public ResponseEntity<List<ReadToDoPreviewResDTO>> readToDoPreviewList(){
         List<ReadToDoPreviewResDTO> readToDoPreviewResDTOList = toDoService.readToDoPreviewList();
         return ResponseEntity.status(200).body(readToDoPreviewResDTOList);
     }
@@ -41,7 +41,7 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "개별ToDo 조회성공",response = ReadToDoResDTO.class),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> readToDo(@PathVariable Long toDoId){
+    public ResponseEntity<ReadToDoResDTO> readToDo(@PathVariable Long toDoId){
         /*
             토큰에서 userId값 추출하는 로직
         */
@@ -56,7 +56,7 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "ToDo 추가성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> addToDo(@RequestBody AddToDoReqDTO addToDoReqDTO){
+    public ResponseEntity<Void> addToDo(@RequestBody AddToDoReqDTO addToDoReqDTO){
         /*
             토큰에서 userId값 추출하는 로직
         */
@@ -72,7 +72,7 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "ToDo 수정성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> updateToDo(@PathVariable Long toDoId, @RequestBody UpdateToDoReqDTO updateToDoReqDTO){
+    public ResponseEntity<Void> updateToDo(@PathVariable Long toDoId, @RequestBody UpdateToDoReqDTO updateToDoReqDTO){
         /*
             토큰에서 userId값 추출하는 로직
         */
@@ -89,7 +89,7 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "ToDo 삭제성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> deleteToDo(@PathVariable Long toDoId){
+    public ResponseEntity<Void> deleteToDo(@PathVariable Long toDoId){
         /*
             토큰에서 userId값 추출하는 로직
         */

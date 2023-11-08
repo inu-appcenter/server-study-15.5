@@ -27,7 +27,7 @@ public class ReplyController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "댓글 추가성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> addReply(@PathVariable Long toDoId,@RequestBody AddReplyReqDTO addReplyReqDTO){
+    public ResponseEntity<Void> addReply(@PathVariable Long toDoId,@RequestBody AddReplyReqDTO addReplyReqDTO){
         /*
             토큰에서 userId값 추출 로직
         */
@@ -45,7 +45,7 @@ public class ReplyController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "댓글 수정성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> changeReply(@PathVariable Long replyId,@RequestBody ChangeReplyReqDTO changeReplyReqDTO){
+    public ResponseEntity<Void> changeReply(@PathVariable Long replyId,@RequestBody ChangeReplyReqDTO changeReplyReqDTO){
         /*
             토큰에서 userId값 추출 로직
         */
@@ -63,7 +63,7 @@ public class ReplyController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "댓글 삭제성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> deleteReply(@PathVariable Long replyId){
+    public ResponseEntity<Void> deleteReply(@PathVariable Long replyId){
         /*
             토큰에서 userId값 추출 로직
         */

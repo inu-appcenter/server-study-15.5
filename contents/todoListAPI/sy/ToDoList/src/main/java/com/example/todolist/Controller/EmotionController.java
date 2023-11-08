@@ -28,7 +28,7 @@ public class EmotionController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Emotion 추가성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> addEmotion(@PathVariable Long toDoId){
+    public ResponseEntity<Void> addEmotion(@PathVariable Long toDoId){
         /*
             토큰에서 userId값 추출 로직
         */
@@ -43,7 +43,7 @@ public class EmotionController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Emotion 삭제성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Object> deleteEmotion(@PathVariable Long toDoId){
+    public ResponseEntity<Void> deleteEmotion(@PathVariable Long toDoId){
         /*
             토큰에서 userId값 추출 로직
         */
