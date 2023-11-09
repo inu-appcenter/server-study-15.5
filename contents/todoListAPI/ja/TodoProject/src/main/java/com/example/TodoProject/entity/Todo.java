@@ -3,11 +3,11 @@ package com.example.TodoProject.entity;
 
 import com.example.TodoProject.common.Time;
 import javax.persistence.*;
-
-import com.example.TodoProject.dto.RequestTodoDto;
 import lombok.*;
 
 import java.time.LocalDate;
+import static com.example.TodoProject.dto.Todo.TodoResponseDto.*;
+import static com.example.TodoProject.dto.Todo.TodoRequestDto.*;
 
 @Table(name = "todo_tb")
 @Entity

@@ -2,11 +2,7 @@ package com.example.TodoProject.controller;
 
 import com.example.TodoProject.common.CommonResponse;
 import com.example.TodoProject.dto.CommonResponseDto;
-import com.example.TodoProject.dto.RequestTodoDto;
-import com.example.TodoProject.dto.ResponseTodoDto;
-import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.service.TodoService;
-import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -17,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.TodoProject.dto.Todo.TodoRequestDto.*;
+import static com.example.TodoProject.dto.Todo.TodoResponseDto.*;
 
 @RestController
 @RequestMapping("/todos")
@@ -84,7 +83,7 @@ public class TodoController {
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두 삭제 성공" ,todonum));
     }
 
-    @GetMapping ("/title/{clientnum}/{keyword}")
+    @PostMapping ("/title/{clientnum}/{keyword}")
     @Operation(summary = "투두 제목 검색하기", description = "투두를 검색하는 기능이다. keyword가 포함되어있는 제목의 투두를 모두 출력한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "검색 성공"),

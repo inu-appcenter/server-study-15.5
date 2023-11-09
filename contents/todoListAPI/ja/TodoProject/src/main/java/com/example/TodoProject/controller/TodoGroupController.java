@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import static com.example.TodoProject.dto.TodoGroup.TodoGroupRequestDto.*;
 
 @RestController
 @RequestMapping("/todoGroup")
@@ -43,7 +43,7 @@ public class TodoGroupController {
     }
 
     @Operation(summary = "투두 그룹 수정", description = "clientNum과 RequestTodoGroupDto를 파라미터로 받음. 투두 그룹을 수정한다.")
-    @PostMapping("/patch/{todogroupnum}")
+    @PutMapping("/patch/{todogroupnum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 그룹 수정 성공"),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 유저입니다."),

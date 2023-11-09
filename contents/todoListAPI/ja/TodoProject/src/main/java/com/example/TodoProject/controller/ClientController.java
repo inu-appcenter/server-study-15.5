@@ -3,12 +3,7 @@ package com.example.TodoProject.controller;
 
 import com.example.TodoProject.common.CommonResponse;
 import com.example.TodoProject.dto.CommonResponseDto;
-import com.example.TodoProject.dto.RequestClientDto;
-import com.example.TodoProject.dto.RequestTodoDto;
-import com.example.TodoProject.dto.ShortClientDto;
-import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.service.ClientService;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -19,7 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import static com.example.TodoProject.dto.Client.ClientRequestDto.*;
+
 
 @RestController
 @RequestMapping("/clients")
@@ -72,13 +68,13 @@ public class ClientController {
 
     //유저 수정하기
     @Operation(summary = "유저 회원정보 수정", description = "clientNum과 ShortClientDto를 파라미터로 받음. 유저의 회원정보를 수정한다.(아이디 수정 불가능)")
-    @PostMapping("/patch/{clientnum}")
+    @PutMapping("/patch/{clientnum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원정보 수정 성공"),
     })
-    public ResponseEntity<CommonResponseDto> editUser(@PathVariable Long clientnum, @RequestBody ShortClientDto shortClientDto){
+    public ResponseEntity<CommonResponseDto> editUser(@PathVariable Long clientnum, @RequestBody EditClientDto editClientDto){
         LOGGER.info("[editUser] 회원정보수정");
-        clientService.editClient(clientnum, shortClientDto);
+        clientService.editClient(clientnum, editClientDto);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponseDto(CommonResponse.SUCCESS, "회원정보 수정 성공", "null"));
     }
 }

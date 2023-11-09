@@ -2,14 +2,12 @@ package com.example.TodoProject.entity;
 
 import com.example.TodoProject.common.Time;
 import javax.persistence.*;
-
-import com.example.TodoProject.dto.RequestTodoDto;
-import com.example.TodoProject.dto.RequestTodoGroupDto;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.TodoProject.dto.TodoGroup.TodoGroupRequestDto.*;
 @Table(name = "todogroup_tb")
 @Entity
 @Getter
@@ -31,7 +29,6 @@ public class TodoGroup extends Time {
     @JoinColumn(name = "client_num")
     private Client client;
 
-//    @Builder.Default
     @OneToMany(mappedBy = "todoGroup", cascade = CascadeType.ALL)
     private List<Todo> todo = new ArrayList<>();
 

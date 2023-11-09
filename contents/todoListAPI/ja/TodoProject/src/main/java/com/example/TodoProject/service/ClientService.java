@@ -4,20 +4,23 @@ package com.example.TodoProject.service;
 import com.example.TodoProject.config.ex.DuplicatedException;
 import com.example.TodoProject.config.ex.NotFoundException;
 import com.example.TodoProject.controller.ClientController;
-import com.example.TodoProject.dto.*;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.repository.ClientRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.example.TodoProject.dto.Client.ClientRequestDto.*;
+import static com.example.TodoProject.dto.Client.ClientResponseDto.*;
+
 @Service
+@Slf4j
 public class ClientService {
     private final ClientRepository clientRepository;
 
@@ -53,10 +56,10 @@ public class ClientService {
         clientRepository.save(requestClientDto.toEntity(requestClientDto));
     }
 
-    public void editClient(Long clientId, ShortClientDto shortClientDto){
+    public void editClient(Long clientId, EditClientDto editClientDto){
         Client client = clientRepository.findByClientNum(clientId)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
-        client.editUser(shortClientDto);
+        client.editUser(editClientDto);
         clientRepository.save(client);
     }
 

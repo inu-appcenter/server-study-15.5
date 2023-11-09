@@ -1,8 +1,6 @@
 package com.example.TodoProject.service;
 
 import com.example.TodoProject.config.ex.NotFoundException;
-import com.example.TodoProject.dto.RequestTodoDto;
-import com.example.TodoProject.dto.ResponseTodoDto;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.entity.TodoGroup;
@@ -12,11 +10,12 @@ import com.example.TodoProject.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.example.TodoProject.dto.Todo.TodoRequestDto.*;
+import static com.example.TodoProject.dto.Todo.TodoResponseDto.*;
 
 @Service
 public class TodoService {
@@ -53,9 +52,7 @@ public class TodoService {
         Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
 
-        TodoGroup todoGroup = null;
-
-        Todo todo = requestTodoDto.toEntity(client, todoGroup, requestTodoDto);
+        Todo todo = requestTodoDto.toEntity(client, null, requestTodoDto);
 
         todoRepository.save(todo);
     }

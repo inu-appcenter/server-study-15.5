@@ -2,22 +2,24 @@ package com.example.TodoProject.service;
 
 
 import com.example.TodoProject.config.ex.NotFoundException;
-import com.example.TodoProject.dto.*;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.entity.TodoGroup;
 import com.example.TodoProject.repository.ClientRepository;
 import com.example.TodoProject.repository.TodoGroupRepository;
 import com.example.TodoProject.repository.TodoRepository;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.example.TodoProject.dto.TodoGroup.TodoGroupRequestDto.*;
+import static com.example.TodoProject.dto.TodoGroup.TodoGroupResponseDto.*;
+import static com.example.TodoProject.dto.Todo.TodoResponseDto.*;
+import static com.example.TodoProject.dto.Todo.TodoRequestDto.*;
+
 
 @Service
 public class TodoGroupService {
@@ -60,13 +62,13 @@ public class TodoGroupService {
         return todoGroupDtos;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Map<String, Object> getAllTodoGroupsTodo(Long clientNum){
         List<TodoGroup> todoGroups = todoGroupRepository.findByClientClientNum(clientNum);
         List<Todo> todos = todoRepository.findByTodoGroup(null);
 
-        List<AllDto> allDtos = todoGroups.stream()
-                .map( todoGroup -> new AllDto(
+        List<TodoListDto> todoListDtos = todoGroups.stream()
+                .map( todoGroup -> new TodoListDto(
                        todoGroup.getGroupName(),
                         todoGroup.getIsImportant(),
                         todoGroup.getTodo().stream().map(
@@ -97,7 +99,7 @@ public class TodoGroupService {
         Map<String, Object> result = new HashMap<>();
 
         result.put("notTodoGroup", notTodoGroup);
-        result.put("allDtos", allDtos);
+        result.put("allDtos", todoListDtos);
         return result;
     }
 

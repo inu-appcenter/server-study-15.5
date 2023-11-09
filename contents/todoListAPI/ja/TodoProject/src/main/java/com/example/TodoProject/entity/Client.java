@@ -3,9 +3,8 @@ package com.example.TodoProject.entity;
 import com.example.TodoProject.common.Time;
 import javax.persistence.*;
 
-import com.example.TodoProject.dto.ShortClientDto;
 import lombok.*;
-
+import static com.example.TodoProject.dto.Client.ClientRequestDto.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,23 +37,21 @@ public class Client extends Time {
     @Column(nullable = false, name = "client_phone_num")
     private String clientPhoneNum;
 
-//    @Builder.Default
+
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<Todo> todo = new ArrayList<>();
 
-//    @Builder.Default
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<TodoGroup> todoGroup = new ArrayList<>();
 
-    public void editUser(ShortClientDto shortClientDto){
-        this.clientPassword = shortClientDto.getClientPassword();
-        this.clientEmail = shortClientDto.getClientEmail();
-        this.clientPhoneNum = shortClientDto.getClientPhoneNum();
+    public void editUser(EditClientDto editClientDto){
+        this.clientPassword = editClientDto.getClientPassword();
+        this.clientEmail = editClientDto.getClientEmail();
+        this.clientPhoneNum = editClientDto.getClientPhoneNum();
     }
 
     @Builder
-    public Client(Long clientNum,String clientId, String clientPassword, String clientName, String clientEmail, String clientRole,String clientPhoneNum){
-        this.clientNum = clientNum;
+    public Client(String clientId, String clientPassword, String clientName, String clientEmail, String clientRole,String clientPhoneNum){
         this.clientId = clientId;
         this.clientPassword = clientPassword;
         this.clientName = clientName;
