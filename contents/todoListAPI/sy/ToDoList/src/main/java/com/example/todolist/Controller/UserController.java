@@ -43,7 +43,7 @@ public class UserController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 2l; // 임시로 userId값 설정
+        Long userId = 3l; // 임시로 userId값 설정
         ReadUserResDTO readUserResDTO = userService.readUserInfo(userId);
 
         return ResponseEntity.status(200).body(readUserResDTO);
@@ -58,7 +58,7 @@ public class UserController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 2l; // 임시로 userId값 설정
+        Long userId = 3l; // 임시로 userId값 설정
         changeUserReqDTO.setUserId(userId);
         userService.changeUserInfo(changeUserReqDTO);
 
@@ -73,7 +73,7 @@ public class UserController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 2l; // 임시로 userId값 설정
+        Long userId = 3l; // 임시로 userId값 설정
         DeleteUserReqDTO deleteUserReqDTO = DeleteUserReqDTO.builder()
                 .userId(userId)
                 .password(password)

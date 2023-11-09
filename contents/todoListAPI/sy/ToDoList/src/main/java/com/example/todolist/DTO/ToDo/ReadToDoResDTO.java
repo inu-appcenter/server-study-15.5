@@ -1,6 +1,7 @@
 package com.example.todolist.DTO.ToDo;
 
 import com.example.todolist.DTO.Reply.ReadReplyResDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class ReadToDoResDTO {
     private List<ReadReplyResDTO> readReplyResDTOList;
 
     @ApiModelProperty(value = "ToDo 마감일")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd-HH")
     private LocalDateTime dueDate;
 
     @ApiModelProperty(value = "ToDo 끝냈는지 여부", name = "isFinished")
@@ -36,4 +38,11 @@ public class ReadToDoResDTO {
     @ApiModelProperty(value = "ToDo 좋아요 수")
     private Long likeCnt;
 
+    @ApiModelProperty(value = "ToDo 작성일자")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd-HH-mm:SS")
+    private LocalDateTime regDate;
+
+    @ApiModelProperty(value = "ToDo 수정일자")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd-HH-mm:SS")
+    private LocalDateTime modDate;
 }

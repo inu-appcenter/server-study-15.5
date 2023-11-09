@@ -31,7 +31,7 @@ public class ReplyController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 2l; // 임시로 userId값 설정
+        Long userId = 3l; // 임시로 userId값 설정
 
         addReplyReqDTO.setUserId(userId);
         addReplyReqDTO.setToDoId(toDoId);
@@ -49,7 +49,7 @@ public class ReplyController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 2l; // 임시로 userId값 설정
+        Long userId = 3l; // 임시로 userId값 설정
 
         changeReplyReqDTO.setReplyId(replyId);
         changeReplyReqDTO.setUserId(userId);
@@ -67,7 +67,7 @@ public class ReplyController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 2l; // 임시로 userId값 설정
+        Long userId = 3l; // 임시로 userId값 설정
 
         replyService.deleteReply(userId,replyId);
         return ResponseEntity.status(200).body(null);

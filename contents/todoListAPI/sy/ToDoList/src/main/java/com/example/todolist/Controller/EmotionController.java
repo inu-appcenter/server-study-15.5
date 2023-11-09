@@ -32,7 +32,7 @@ public class EmotionController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 2l; // 임시로 userId값 설정
+        Long userId = 3l; // 임시로 userId값 설정
 
         emotionService.addEmotion(userId,toDoId);
         return ResponseEntity.status(201).body(null);
@@ -47,7 +47,7 @@ public class EmotionController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 2l; // 임시로 userId값 설정
+        Long userId = 3l; // 임시로 userId값 설정
 
         emotionService.deleteEmotion(userId,toDoId);
         return ResponseEntity.status(200).body(null);

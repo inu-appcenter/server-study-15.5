@@ -82,6 +82,8 @@ public class ToDoService {
                 .isFinished(toDo.isFinished())
                 .writerName(user.getName())
                 .likeCnt(emotionService.findLikeCnt(toDoId))
+                .regDate(toDo.getRegDate())
+                .modDate(toDo.getModDate())
                 .isMyToDo(isMyToDo)
                 .build();
     }

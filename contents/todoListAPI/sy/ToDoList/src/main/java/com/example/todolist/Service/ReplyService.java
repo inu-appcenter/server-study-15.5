@@ -54,6 +54,8 @@ public class ReplyService {
                     .replyId(reply.getReplyId())
                     .content(reply.getContent())
                     .writer(reply.getUser().getName())
+                    .regDate(reply.getRegDate())
+                    .modDate(reply.getModDate())
                     .isMyReply(isMyReply(userId,reply))
                     .build();
 

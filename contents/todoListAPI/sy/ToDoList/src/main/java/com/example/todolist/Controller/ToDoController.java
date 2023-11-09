@@ -45,7 +45,7 @@ public class ToDoController {
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 2l;
+        Long userId = 3l;
 
         ReadToDoResDTO readToDoResDTO = toDoService.readToDo(toDoId,userId);
         return ResponseEntity.status(200).body(readToDoResDTO);
@@ -60,7 +60,7 @@ public class ToDoController {
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 2l;
+        Long userId = 3l;
         addToDoReqDTO.setUserId(userId);
 
         toDoService.addToDo(addToDoReqDTO);
@@ -76,7 +76,7 @@ public class ToDoController {
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 2l;
+        Long userId = 3l;
         updateToDoReqDTO.setUserId(userId);
         updateToDoReqDTO.setToDoId(toDoId);
 
@@ -93,7 +93,7 @@ public class ToDoController {
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 2l;
+        Long userId = 3l;
 
         toDoService.deleteToDo(toDoId,userId);
         return ResponseEntity.status(200).body(null);
