@@ -2,6 +2,7 @@ package com.example.todolist.DTO.ToDo;
 
 import com.example.todolist.DTO.Reply.ReadReplyResDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -27,6 +28,7 @@ public class ReadToDoResDTO {
     private LocalDateTime dueDate;
 
     @ApiModelProperty(value = "ToDo 끝냈는지 여부", name = "isFinished")
+    @JsonProperty("isFinished")
     private boolean isFinished;
 
     @ApiModelProperty(value = "ToDo 작성자 이름")

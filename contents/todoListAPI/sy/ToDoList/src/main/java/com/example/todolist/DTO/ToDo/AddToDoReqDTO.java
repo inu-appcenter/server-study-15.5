@@ -1,5 +1,6 @@
 package com.example.todolist.DTO.ToDo;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class AddToDoReqDTO {
     private LocalDateTime dueDate;
 
     @ApiModelProperty(value = "ToDo를 끝냈는지 여부")
+    @JsonProperty("isFinished")
     private boolean isFinished;
 
     @ApiModelProperty(value = "유저 고유id")

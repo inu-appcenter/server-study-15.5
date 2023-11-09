@@ -1,6 +1,7 @@
 package com.example.todolist.DTO.Reply;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -22,6 +23,7 @@ public class ReadReplyResDTO {
     private String content;
 
     @ApiModelProperty(value = "댓글이 자신이 쓴 댓글인지 여부")
+    @JsonProperty("isMyReply")
     private boolean isMyReply;
 
     @ApiModelProperty(value = "댓글 작성일자")

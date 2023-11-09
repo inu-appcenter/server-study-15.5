@@ -1,5 +1,6 @@
 package com.example.todolist.DTO.ToDo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -16,6 +17,7 @@ public class ReadToDoPreviewResDTO {
     private String title;
 
     @ApiModelProperty(value = "ToDo를 끝냈는지 여부")
+    @JsonProperty("isFinished")
     private boolean isFinished;
 
     @ApiModelProperty(value = "ToDo 작성자 이름")
