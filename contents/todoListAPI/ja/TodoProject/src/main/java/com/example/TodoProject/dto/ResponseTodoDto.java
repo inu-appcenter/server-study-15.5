@@ -29,11 +29,11 @@ public class ResponseTodoDto {
     @Schema(example = "도서관 지하열람실 이마트24")
     private String todoLocation;
 
-    private Long todoGroupNum;
+    private Object todoGroupNum;
 
 
     @Builder
-    public ResponseTodoDto(Long todoNum, String todoTitle, String todoDescription, LocalDate startDate, LocalDate endDate, Boolean isFinished, String todoLocation, Long todoGroupNum) {
+    public ResponseTodoDto(Long todoNum, String todoTitle, String todoDescription, LocalDate startDate, LocalDate endDate, Boolean isFinished, String todoLocation, Object todoGroupNum) {
         this.todoNum = todoNum;
         this.todoTitle = todoTitle;
         this.todoDescription = todoDescription;

@@ -101,6 +101,11 @@ public class TodoController {
     }
 
     @PutMapping("toggle/{todonum}")
+    @Operation(summary = "투두 토글", description = "todonum을 인자로 받으면 그 todo의 isFinished(Boolean)을 반전시켜준다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "검색 성공"),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 투두입니다.")
+    })
     public ResponseEntity<CommonResponseDto> toggleTodo(@PathVariable Long todonum){
         todoService.toggleTodo(todonum);
         return ResponseEntity.status(HttpStatus.OK)

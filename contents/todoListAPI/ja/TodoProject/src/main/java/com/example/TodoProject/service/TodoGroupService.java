@@ -2,10 +2,7 @@ package com.example.TodoProject.service;
 
 
 import com.example.TodoProject.config.ex.NotFoundException;
-import com.example.TodoProject.dto.AllDto;
-import com.example.TodoProject.dto.RequestTodoDto;
-import com.example.TodoProject.dto.RequestTodoGroupDto;
-import com.example.TodoProject.dto.ResponseTodoDto;
+import com.example.TodoProject.dto.*;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.entity.TodoGroup;
@@ -19,16 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class TodoGroupService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    //@PersistenceContext
     private final TodoRepository todoRepository;
 
     private final ClientRepository clientRepository;
@@ -54,10 +48,11 @@ public class TodoGroupService {
         todoGroupRepository.save(todoGroup);
     }
 
-    public List<RequestTodoGroupDto> getAllTodoGroup(Long clientNum){
+    public List<ResponseTodoGroupDto> getAllTodoGroup(Long clientNum){
         List<TodoGroup> todoGroups = todoGroupRepository.findByClientClientNum(clientNum);
-        List<RequestTodoGroupDto> todoGroupDtos = todoGroups.stream()
-                .map(todoGroup-> new RequestTodoGroupDto(
+        List<ResponseTodoGroupDto> todoGroupDtos = todoGroups.stream()
+                .map(todoGroup-> new ResponseTodoGroupDto(
+                        todoGroup.getGroupNum(),
                         todoGroup.getGroupName(),
                         todoGroup.getIsImportant()
                 ))
@@ -66,8 +61,9 @@ public class TodoGroupService {
     }
 
     @Transactional
-    public List<AllDto> getAllTodoGroupsTodo(Long clientNum){
+    public Map<String, Object> getAllTodoGroupsTodo(Long clientNum){
         List<TodoGroup> todoGroups = todoGroupRepository.findByClientClientNum(clientNum);
+        List<Todo> todos = todoRepository.findByTodoGroup(null);
 
         List<AllDto> allDtos = todoGroups.stream()
                 .map( todoGroup -> new AllDto(
@@ -84,10 +80,25 @@ public class TodoGroupService {
                                         todo.getTodoLocation(),
                                         todoGroup.getGroupNum()
                                 )).collect(Collectors.toList())
+                )).collect(Collectors.toList());
 
-                ))
-                .collect(Collectors.toList());
-        return allDtos;
+        List<ResponseTodoDto> notTodoGroup = todos.stream()
+                .map(todo->new ResponseTodoDto(
+                        todo.getTodoNum(),
+                        todo.getTodoTitle(),
+                        todo.getTodoDescription(),
+                        todo.getStartDate(),
+                        todo.getEndDate(),
+                        todo.getIsFinished(),
+                        todo.getTodoLocation(),
+                        null
+                )).collect(Collectors.toList());
+
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("notTodoGroup", notTodoGroup);
+        result.put("allDtos", allDtos);
+        return result;
     }
 
 }

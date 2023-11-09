@@ -34,6 +34,8 @@ public class TodoService {
         this.todoRepository = todoRepository;
         this.todoGroupRepository = todoGroupRepository;
     }
+
+
     public void saveForTodoGroup(Long clientNum, RequestTodoDto requestTodoDto) {
         Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
@@ -89,22 +91,28 @@ public class TodoService {
     public List<ResponseTodoDto> getUsersAllTodos(Long clientNum) {
         List<Todo> todos = todoRepository.findByClientClientNum(clientNum);
         List<ResponseTodoDto> todoDtos = todos.stream()
-                .map(todo-> new ResponseTodoDto(
-                                todo.getTodoNum(),
-                                todo.getTodoTitle(),
-                                todo.getTodoDescription(),
-                                todo.getStartDate(),
-                                todo.getEndDate(),
-                                todo.getIsFinished(),
-                                todo.getTodoLocation(),
-                                todo.getTodoGroup().getGroupNum()
-                        )).collect(Collectors.toList());
+                .map(todo -> {
+                    Long groupNum = (todo.getTodoGroup() != null) ? todo.getTodoGroup().getGroupNum() : null;
+                    return new ResponseTodoDto(
+                            todo.getTodoNum(),
+                            todo.getTodoTitle(),
+                            todo.getTodoDescription(),
+                            todo.getStartDate(),
+                            todo.getEndDate(),
+                            todo.getIsFinished(),
+                            todo.getTodoLocation(),
+                            groupNum
+                    );
+                }).collect(Collectors.toList());
         return todoDtos;
     }
 
 
     public void toggleTodo(Long todoNum){
         Optional<Todo> todoIsFinished = todoRepository.findByTodoNum(todoNum);
+        if(!todoIsFinished.isPresent()){
+            throw new NotFoundException("투두가 존재하지 않습니다.");
+        }
         Todo todo = todoIsFinished.get();
         todo.todoToggle(todo.getIsFinished() ? false : true);
         todoRepository.save(todo);

@@ -4,9 +4,7 @@ package com.example.TodoProject.service;
 import com.example.TodoProject.config.ex.DuplicatedException;
 import com.example.TodoProject.config.ex.NotFoundException;
 import com.example.TodoProject.controller.ClientController;
-import com.example.TodoProject.dto.RequestClientDto;
-import com.example.TodoProject.dto.RequestTodoGroupDto;
-import com.example.TodoProject.dto.ShortClientDto;
+import com.example.TodoProject.dto.*;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.repository.ClientRepository;
 import org.slf4j.Logger;
@@ -29,10 +27,11 @@ public class ClientService {
         this.clientRepository = clientRepository;
     }
 
-    public List<RequestClientDto> getAllClient() {
+    public List<ResponseClientDto> getAllClient() {
         List<Client> allClients = clientRepository.findAll();
-        List<RequestClientDto> userInfoDtos = allClients.stream()
-                .map(client -> new RequestClientDto(
+        List<ResponseClientDto> userInfoDtos = allClients.stream()
+                .map(client -> new ResponseClientDto(
+                        client.getClientNum(),
                         client.getClientId(),
                         client.getClientPassword(),
                         client.getClientName(),

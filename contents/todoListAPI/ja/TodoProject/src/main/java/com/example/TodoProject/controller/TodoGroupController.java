@@ -62,14 +62,12 @@ public class TodoGroupController {
             @ApiResponse(responseCode = "200", description = "투두 그룹 조회 성공")
     })
     public ResponseEntity<CommonResponseDto> getAllTodoGroups(Long clientNum){
-        List<RequestTodoGroupDto> todoGroups = todoGroupService.getAllTodoGroup(clientNum);
-
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 그룹 전체 조회 성공", todoGroups));
+                .body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 그룹 전체 조회 성공", todoGroupService.getAllTodoGroup(clientNum)));
     }
 
     @Operation(summary = "투두 그룹, 투두 전체 조회", description = "투두 그룹 조회를 하는 컨트롤러")
-    @PostMapping("/all/{clientnum}")
+    @PostMapping("/{clientnum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 그룹 조회 성공")
     })

@@ -13,6 +13,6 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
 
     List<Todo> findByClientClientNum(Long ClientNum);
 
-    List<Todo> findByTodoGroupGroupNum(Long todoGroupNum);
+    List<Todo> findByTodoGroup(String todoGroup);
 
 }

@@ -19,13 +19,12 @@ public class ResponseTodoGroupDto {
     @Schema(example = "true")
     private Boolean isImportant;
 
-    private List<Todo> todo;
 
     @Builder
-    public ResponseTodoGroupDto(Long groupNum, String groupName, Boolean isImportant, List<Todo> todo){
+    public ResponseTodoGroupDto(Long groupNum, String groupName, Boolean isImportant){
         this.groupNum = groupNum;
         this.groupName = groupName;
         this.isImportant = isImportant;
-        this.todo = todo;
+
     }
 }
