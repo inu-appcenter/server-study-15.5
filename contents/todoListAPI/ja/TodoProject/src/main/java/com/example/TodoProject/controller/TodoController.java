@@ -3,8 +3,10 @@ package com.example.TodoProject.controller;
 import com.example.TodoProject.common.CommonResponse;
 import com.example.TodoProject.dto.CommonResponseDto;
 import com.example.TodoProject.dto.RequestTodoDto;
+import com.example.TodoProject.dto.ResponseTodoDto;
 import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.service.TodoService;
+import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -39,6 +41,8 @@ public class TodoController {
     @PostMapping("/create")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "투두 생성 성공"),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 유저입니다."),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 투두 그룹입니다.")
     })
     public ResponseEntity<CommonResponseDto> createTodo(Long clientNum,@RequestBody RequestTodoDto requestTodoDto){
         if(requestTodoDto.getTodoGroupNum() == null){
@@ -51,10 +55,11 @@ public class TodoController {
     }
 
     //투두 수정하기
-    @PostMapping("/patch/{todonum}")
+    @PutMapping("/patch/{todonum}")
     @Operation(summary = "투두 수정하기", description = "todoNum과 RequestTodoDto를 파라미터로 받음. 투두 수정을 한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 수정 성공"),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 투두입니다.")
     })
     public ResponseEntity<CommonResponseDto> editTodo(@PathVariable Long todonum,@RequestBody RequestTodoDto requestTodoDto){
         if(requestTodoDto.getTodoGroupNum() == null){
@@ -67,10 +72,11 @@ public class TodoController {
     }
 
     //투두 삭제하기
-    @Operation(summary = "투두 삭제하기", description = "clientNum을 파라미터로 받음. 투두를 영구 삭제한다.")
+    @Operation(summary = "투두 삭제하기", description = "todoNum을 파라미터로 받음. 투두를 영구 삭제한다.")
     @DeleteMapping("/delete/{todonum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 삭제 성공"),
+            @ApiResponse(responseCode= "400", description = "존재하지 않는 투두입니다.")
     })
     public ResponseEntity<CommonResponseDto> deleteTodo(@PathVariable Long todonum){
         todoService.deleteTodo(todonum);
@@ -78,18 +84,27 @@ public class TodoController {
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두 삭제 성공" ,todonum));
     }
 
-    @GetMapping ("/title/{clientNum}/{keyword}")
+    @GetMapping ("/title/{clientnum}/{keyword}")
     @Operation(summary = "투두 제목 검색하기", description = "투두를 검색하는 기능이다. keyword가 포함되어있는 제목의 투두를 모두 출력한다.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "검색 성공"),
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 유저입니다.")
     })
-    public ResponseEntity<CommonResponseDto> getTodoSearch(@PathVariable Long clientNum, @PathVariable String keyword) {
-        List<RequestTodoDto> todos = todoService.getUsersAllTodos(clientNum);
-        List<RequestTodoDto> matchingTodos = todos.stream()
+    public ResponseEntity<CommonResponseDto> getTodoSearch(@PathVariable Long clientnum, @PathVariable String keyword) {
+        List<ResponseTodoDto> todos = todoService.getUsersAllTodos(clientnum);
+        List<ResponseTodoDto> matchingTodos = todos.stream()
                 .filter(todo -> todo.getTodoTitle().contains(keyword))
                 .collect(Collectors.toList());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"검색 성공",matchingTodos));
     }
+
+    @PutMapping("toggle/{todonum}")
+    public ResponseEntity<CommonResponseDto> toggleTodo(@PathVariable Long todonum){
+        todoService.toggleTodo(todonum);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponseDto(CommonResponse.SUCCESS,"토글 성공", "null"));
+    }
+
 }

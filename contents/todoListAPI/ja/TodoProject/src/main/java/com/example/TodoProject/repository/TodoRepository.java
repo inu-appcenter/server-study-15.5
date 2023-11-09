@@ -12,4 +12,7 @@ public interface TodoRepository extends JpaRepository<Todo, Long> {
     Optional<Todo> findByTodoNum(Long todoNum);
 
     List<Todo> findByClientClientNum(Long ClientNum);
+
+    List<Todo> findByTodoGroupGroupNum(Long todoGroupNum);
+
 }

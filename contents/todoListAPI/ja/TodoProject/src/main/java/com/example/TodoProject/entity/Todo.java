@@ -42,7 +42,6 @@ public class Todo extends Time {
     @JoinColumn(name = "client_num")
     private Client client;
 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = true )
     @JoinColumn(name = "group_num")
     private TodoGroup todoGroup;
@@ -67,6 +66,10 @@ public class Todo extends Time {
         this.isFinished = requestTodoDto.getIsFinished();
         this.todoLocation = requestTodoDto.getTodoLocation();
         this.todoGroup = todoGroup;
+    }
+
+    public void todoToggle(Boolean FT){
+        this.isFinished = FT;
     }
 
 }

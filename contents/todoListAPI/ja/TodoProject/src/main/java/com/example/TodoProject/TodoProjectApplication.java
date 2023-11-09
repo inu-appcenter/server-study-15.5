@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
 @SpringBootApplication
-@EntityScan("com.example.TodoProject.entity")
 public class TodoProjectApplication {
 
     public static void main(String[] args) {

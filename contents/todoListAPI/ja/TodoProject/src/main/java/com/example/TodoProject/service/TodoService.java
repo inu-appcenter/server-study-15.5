@@ -1,6 +1,8 @@
 package com.example.TodoProject.service;
 
+import com.example.TodoProject.config.ex.NotFoundException;
 import com.example.TodoProject.dto.RequestTodoDto;
+import com.example.TodoProject.dto.ResponseTodoDto;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.entity.TodoGroup;
@@ -10,8 +12,11 @@ import com.example.TodoProject.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TodoService {
@@ -31,11 +36,11 @@ public class TodoService {
     }
     public void saveForTodoGroup(Long clientNum, RequestTodoDto requestTodoDto) {
         Client client = clientRepository.findByClientNum(clientNum)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
 
         Long todoGroupNum = requestTodoDto.getTodoGroupNum();
         TodoGroup todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
-                .orElseThrow(()->new RuntimeException());
+                .orElseThrow(()->new NotFoundException("존재하지 않는 투두 그룹입니다."));
 
         Todo todo = requestTodoDto.toEntity(client, todoGroup, requestTodoDto);
 
@@ -44,7 +49,7 @@ public class TodoService {
 
     public void saveForNotTodoGroup(Long clientNum, RequestTodoDto requestTodoDto) {
         Client client = clientRepository.findByClientNum(clientNum)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
 
         TodoGroup todoGroup = null;
 
@@ -55,12 +60,12 @@ public class TodoService {
 
     public void editTodoForTodoGroup(Long todoNum, RequestTodoDto requestTodoDto){
         Todo todo = todoRepository.findByTodoNum(todoNum)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 투두입니다."));
 
         Long todoGroupNum =requestTodoDto.getTodoGroupNum();
 
         TodoGroup todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
-                .orElseThrow(()->new RuntimeException());
+                .orElseThrow(()->new NotFoundException("존재하지 않는 투두 그룹입니다."));
 
         todo.EditTodo(todoGroup, requestTodoDto);
 
@@ -69,29 +74,40 @@ public class TodoService {
 
     public void editTodoForNotTodoGroup(Long todoNum, RequestTodoDto requestTodoDto){
         Todo todo = todoRepository.findByTodoNum(todoNum)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 투두입니다."));
 
-        TodoGroup todoGroup = null;
-
-        todo.EditTodo(todoGroup, requestTodoDto);
+        todo.EditTodo(null, requestTodoDto);
 
         todoRepository.save(todo);
     }
     public void deleteTodo(Long todoNum){
         Todo todo = todoRepository.findByTodoNum(todoNum)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 투두입니다."));
         todoRepository.delete(todo);
     }
-    public List<RequestTodoDto> getUsersAllTodos(Long clientNum) {
+
+    public List<ResponseTodoDto> getUsersAllTodos(Long clientNum) {
         List<Todo> todos = todoRepository.findByClientClientNum(clientNum);
-        List<RequestTodoDto> todoDtos = new ArrayList<>();
-        for (Todo todo : todos) {
-            RequestTodoDto requestTodoDto = new RequestTodoDto(todo.getTodoTitle(), todo.getTodoDescription(), todo.getStartDate(), todo.getEndDate(), todo.getIsFinished(), todo.getTodoLocation(), todo.getTodoNum());
-            todoDtos.add(requestTodoDto);
-        }
+        List<ResponseTodoDto> todoDtos = todos.stream()
+                .map(todo-> new ResponseTodoDto(
+                                todo.getTodoNum(),
+                                todo.getTodoTitle(),
+                                todo.getTodoDescription(),
+                                todo.getStartDate(),
+                                todo.getEndDate(),
+                                todo.getIsFinished(),
+                                todo.getTodoLocation(),
+                                todo.getTodoGroup().getGroupNum()
+                        )).collect(Collectors.toList());
         return todoDtos;
     }
 
 
+    public void toggleTodo(Long todoNum){
+        Optional<Todo> todoIsFinished = todoRepository.findByTodoNum(todoNum);
+        Todo todo = todoIsFinished.get();
+        todo.todoToggle(todo.getIsFinished() ? false : true);
+        todoRepository.save(todo);
 
+    }
 }

@@ -8,6 +8,7 @@ import com.example.TodoProject.dto.RequestTodoDto;
 import com.example.TodoProject.dto.ShortClientDto;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.service.ClientService;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -52,16 +53,16 @@ public class ClientController {
             @ApiResponse(responseCode = "404", description = "잘못된 요청입니다."),
     })
     public ResponseEntity<CommonResponseDto> getAllClient(){
-        List<RequestClientDto> clients = clientService.getAllClient();
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponseDto(CommonResponse.SUCCESS,"조회성공" ,clients));
+                .body(new CommonResponseDto(CommonResponse.SUCCESS,"조회성공" ,clientService.getAllClient()));
     }
 
     //유저 생성하기
     @Operation(summary = "유저 생성(회원가입)", description = "RequestClientDto를 파라미터로 받음. 유저의 회원가입을 담당함.")
     @PostMapping("/sign-up")
     @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "회원가입 성공")
+            @ApiResponse(responseCode = "201", description = "회원가입 성공"),
+            @ApiResponse(responseCode = "400", description = "아이디가 중복되었습니다.")
     })
     public ResponseEntity<CommonResponseDto> signUp(@RequestBody RequestClientDto requestClientDto){
         LOGGER.info("[signUp] 회원가입중... id : {}", requestClientDto.getClientId());

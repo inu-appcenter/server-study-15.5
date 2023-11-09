@@ -20,8 +20,9 @@ spring:
       enabled: always
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    open-in-view: false
+    open-in-view: true
     show-sql: true
     hibernate:
       ddl-auto: update
+
 

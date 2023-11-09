@@ -1,6 +1,8 @@
 package com.example.TodoProject.service;
 
 
+import com.example.TodoProject.config.ex.DuplicatedException;
+import com.example.TodoProject.config.ex.NotFoundException;
 import com.example.TodoProject.controller.ClientController;
 import com.example.TodoProject.dto.RequestClientDto;
 import com.example.TodoProject.dto.RequestTodoGroupDto;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientService {
@@ -28,24 +31,32 @@ public class ClientService {
 
     public List<RequestClientDto> getAllClient() {
         List<Client> allClients = clientRepository.findAll();
-        List<RequestClientDto> userInfoDtos =  new ArrayList<>();
-        for(Client client : allClients ){
-            RequestClientDto clientInfoDto =  new RequestClientDto(client.getClientId(), client.getClientPassword(), client.getClientName(), client.getClientEmail(), client.getClientRole(), client.getClientPhoneNum());
-            userInfoDtos.add(clientInfoDto);
-        }
+        List<RequestClientDto> userInfoDtos = allClients.stream()
+                .map(client -> new RequestClientDto(
+                        client.getClientId(),
+                        client.getClientPassword(),
+                        client.getClientName(),
+                        client.getClientEmail(),
+                        client.getClientRole(),
+                        client.getClientPhoneNum()
+                ))
+                .collect(Collectors.toList());
+
         return userInfoDtos;
     }
 
     public void signUp(RequestClientDto requestClientDto){
         LOGGER.info("[getSignUpResult] 회원 가입 정보 전달");
-        Client client;
-        client = requestClientDto.toEntity(requestClientDto);
-        clientRepository.save(client);
+        Optional<Client> client = clientRepository.findByClientId(requestClientDto.getClientId());
+        if(client.isPresent()){
+            throw new DuplicatedException("중복된 아이디입니다.");
+        }
+        clientRepository.save(requestClientDto.toEntity(requestClientDto));
     }
 
     public void editClient(Long clientId, ShortClientDto shortClientDto){
         Client client = clientRepository.findByClientNum(clientId)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
         client.editUser(shortClientDto);
         clientRepository.save(client);
     }
