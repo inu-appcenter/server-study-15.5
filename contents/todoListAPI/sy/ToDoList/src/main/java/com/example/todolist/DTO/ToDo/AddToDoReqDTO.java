@@ -25,8 +25,13 @@ public class AddToDoReqDTO {
 
     @ApiModelProperty(value = "ToDo를 끝냈는지 여부")
     @JsonProperty("isFinished")
+    @Getter(AccessLevel.NONE)
     private boolean isFinished;
 
     @ApiModelProperty(value = "유저 고유id")
     private Long userId; // 토큰에서 userId값을 가져옴
+
+    public boolean getIsFinished(){
+        return this.isFinished;
+    }
 }

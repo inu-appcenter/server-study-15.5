@@ -32,7 +32,12 @@ public class UpdateToDoReqDTO {
 
     @ApiModelProperty(value = "ToDo 끝냈는지 여부")
     @JsonProperty("isFinished")
+    @Getter(AccessLevel.NONE)
     private boolean isFinished;
+
+    public boolean getIsFinished(){
+        return this.isFinished;
+    }
 
 }
 

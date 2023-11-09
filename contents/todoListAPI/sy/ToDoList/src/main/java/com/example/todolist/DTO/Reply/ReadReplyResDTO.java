@@ -24,6 +24,7 @@ public class ReadReplyResDTO {
 
     @ApiModelProperty(value = "댓글이 자신이 쓴 댓글인지 여부")
     @JsonProperty("isMyReply")
+    @Getter(AccessLevel.NONE)
     private boolean isMyReply;
 
     @ApiModelProperty(value = "댓글 작성일자")
@@ -33,4 +34,8 @@ public class ReadReplyResDTO {
     @ApiModelProperty(value = "댓글 수정일자")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd-HH-mm:SS")
     private LocalDateTime modDate;
+
+    public boolean getIsMyReply(){
+        return this.isMyReply;
+    }
 }

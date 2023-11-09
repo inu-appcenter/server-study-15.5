@@ -18,6 +18,7 @@ public class ReadToDoPreviewResDTO {
 
     @ApiModelProperty(value = "ToDo를 끝냈는지 여부")
     @JsonProperty("isFinished")
+    @Getter(AccessLevel.NONE)
     private boolean isFinished;
 
     @ApiModelProperty(value = "ToDo 작성자 이름")
@@ -25,5 +26,9 @@ public class ReadToDoPreviewResDTO {
 
     @ApiModelProperty(value = "ToDo 좋아요 수")
     private Long likeCnt;
+
+    public boolean getIsFinished(){
+        return this.isFinished;
+    }
 
 }

@@ -40,7 +40,7 @@ public class ToDoService {
                 .title(addToDoReqDTO.getTitle())
                 .content(addToDoReqDTO.getContent())
                 .dueDate(addToDoReqDTO.getDueDate())
-                .isFinished(addToDoReqDTO.isFinished())
+                .isFinished(addToDoReqDTO.getIsFinished())
                 .user(user)
                 .build();
 
@@ -58,7 +58,7 @@ public class ToDoService {
         toDo.changeTitle(updateToDoReqDTO.getTitle());
         toDo.changeContent(updateToDoReqDTO.getContent());
         toDo.changeDueDate(updateToDoReqDTO.getDueDate());
-        toDo.changeIsFinished(updateToDoReqDTO.isFinished());
+        toDo.changeIsFinished(updateToDoReqDTO.getIsFinished());
 
         toDoRepository.save(toDo);
     }

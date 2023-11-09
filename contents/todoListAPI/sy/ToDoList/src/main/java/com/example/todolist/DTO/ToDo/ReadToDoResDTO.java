@@ -29,12 +29,14 @@ public class ReadToDoResDTO {
 
     @ApiModelProperty(value = "ToDo 끝냈는지 여부", name = "isFinished")
     @JsonProperty("isFinished")
+    @Getter(AccessLevel.NONE)
     private boolean isFinished;
 
     @ApiModelProperty(value = "ToDo 작성자 이름")
     private String writerName;
 
     @ApiModelProperty(value = "ToDo가 자신이 쓴 ToDo인지 여부")
+    @Getter(AccessLevel.NONE)
     private boolean isMyToDo;
 
     @ApiModelProperty(value = "ToDo 좋아요 수")
@@ -47,4 +49,12 @@ public class ReadToDoResDTO {
     @ApiModelProperty(value = "ToDo 수정일자")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd-HH-mm:SS")
     private LocalDateTime modDate;
+
+    public boolean getIsMyToDo(){
+        return this.isMyToDo;
+    }
+
+    public boolean getIsFinished(){
+        return this.isFinished;
+    }
 }
