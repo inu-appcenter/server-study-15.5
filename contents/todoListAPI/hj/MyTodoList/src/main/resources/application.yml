@@ -1,0 +1,18 @@
+spring:
+    datasource:
+        url: jdbc:mariadb://localhost:3307/mytodolist?characterEncoding=UTF-8
+        username: root
+        password: ${PASSWORD}
+        driver-class-name: org.mariadb.jdbc.Driver
+    thymeleaf:
+        cache: false
+    mvc:
+        pathmatch:
+            matching-strategy: ant_path_matcher
+
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+        open-in-view: false
+        show-sql: true
+        hibernate:
+            ddl-auto: create-drop

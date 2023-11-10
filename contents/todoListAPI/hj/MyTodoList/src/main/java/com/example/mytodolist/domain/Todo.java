@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "todo_tb")
-public class Todo extends Time{
+public class Todo{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,17 +38,35 @@ public class Todo extends Time{
     @JoinColumn(name = "user_id",nullable = false) //외래키 설정.
     private User user;
 
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    @Column
+    private LocalDateTime modifiedDate;
+
+
+    //당장 Time 슈퍼클래스를 사용할 이유가 없는 듯 하여 Todo클래스 필드에서 createdDate,modfiedDate 사용.
     @Builder
-    public Todo(String title, String contents, LocalDateTime deadLine){
+    public Todo(String title, String contents, LocalDateTime deadLine,Boolean isCompleted,User user){
         this.title = title;
         this.contents = contents;
         this.deadLine = deadLine;
+        this.isCompleted = false;
+        this.user = user;
+        this.createdDate = LocalDateTime.now();
+        this.modifiedDate = LocalDateTime.now();
     }
 
-    //투두에 해당하는 유저를 할당합니다.
-    //연관관계가 설정되어있어 this.user = user를 통해 엔티티간의 연관관계가 설정이 되면,
-    //JPA는 이 변경을 인식하고 관련된 컬렉션에 업데이트를 자동으로 수행.
-    public void assignToUser(User user){
-        this.user = user;
+    public void checkCompleted(){this.isCompleted = !isCompleted;}
+
+    public void updateTodo(String title,String contents ,LocalDateTime deadLine)
+    {
+        this.title = title;
+        this.contents = contents;
+        this.deadLine = deadLine;
+        this.modifiedDate = LocalDateTime.now();
     }
+
 }
