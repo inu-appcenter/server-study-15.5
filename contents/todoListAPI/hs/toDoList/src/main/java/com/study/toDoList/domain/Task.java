@@ -38,15 +38,11 @@ public class Task extends BaseTimeEntity{
 
     }
 
-    public void changeTitle(String title){
+    public void update(String title, String description, LocalDateTime endDate, Boolean isFinished){
         this.title = title;
-    }
-
-    public void changeDescription(String description){
         this.description = description;
+        this.endDate =endDate;
+        this.isFinished = isFinished;
     }
 
-    public void check(){
-        this.isFinished = !isFinished;
-    }
 }

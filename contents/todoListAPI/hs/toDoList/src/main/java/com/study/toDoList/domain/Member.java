@@ -25,29 +25,18 @@ public class Member {
     @Column(unique = true,nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(unique = true)
-    private String phone;
 
     @OneToMany(mappedBy = "member",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Task> tasks;
 
     @Builder
-    public Member (String email, String password,String nickname, String name, String phone){
+    public Member (String email, String password,String nickname){
         this.email = email;
         this.password = password;
         this.nickname = nickname;
-        this.name = name;
-        this.phone = phone;
     }
-
-    public void changePassword(String password){
-        this.password=password;
-    }
-
-    public void changeNickname(String nickname){
-        this.nickname=nickname;
+    public void update(String password,String nickname){
+        this.password = password;
+        this.nickname = nickname;
     }
 }
