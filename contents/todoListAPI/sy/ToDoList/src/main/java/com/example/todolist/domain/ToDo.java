@@ -1,22 +1,22 @@
 package com.example.todolist.domain;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Board extends  BaseEntity{
+public class ToDo extends  BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardId;
+    private Long toDoId;
 
     @Column(nullable = false)
     private String title;
@@ -27,21 +27,22 @@ public class Board extends  BaseEntity{
     @Column(nullable = false)
     private LocalDateTime dueDate;
 
-    @Column
+    @Column(nullable = false)
     private boolean isFinished;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "board",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "toDo",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Reply> reply;
 
     @Builder
-    public Board(String title, LocalDateTime dueDate,String content,User user){
+    public ToDo(String title, LocalDateTime dueDate,String content,boolean isFinished ,User user){
         this.title=title;
         this.dueDate=dueDate;
         this.content=content;
+        this.isFinished=isFinished;
         this.user=user;
     }
 

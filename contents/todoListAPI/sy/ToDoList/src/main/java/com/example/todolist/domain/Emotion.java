@@ -1,10 +1,12 @@
 package com.example.todolist.domain;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
@@ -19,18 +21,20 @@ public class Emotion {
     @Enumerated(EnumType.STRING)
     private EmotionStatus emotionStatus;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "board_boardId",nullable = false)
-    private Board board;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "toDo_Id",nullable = false)
+    private ToDo toDo;
 
     @Builder
-    public Emotion(User user,Board board,EmotionStatus emotionStatus){
+    public Emotion(User user,ToDo toDo,EmotionStatus emotionStatus){
         this.user=user;
-        this.board=board;
+        this.toDo=toDo;
         this.emotionStatus=emotionStatus;
     }
 
