@@ -2,15 +2,13 @@ package com.example.TodoProject.entity;
 
 import com.example.TodoProject.common.Time;
 import javax.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
+import lombok.*;
+import static com.example.TodoProject.dto.Client.ClientRequestDto.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "Client_tb")
+@Table(name = "client_tb")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -39,13 +37,26 @@ public class Client extends Time {
     @Column(nullable = false, name = "client_phone_num")
     private String clientPhoneNum;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-    private List<Todo> todoList = new ArrayList<>();
 
-    @Builder.Default
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<Todo> todo = new ArrayList<>();
+
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     private List<TodoGroup> todoGroup = new ArrayList<>();
 
+    public void editUser(EditClientDto editClientDto){
+        this.clientPassword = editClientDto.getClientPassword();
+        this.clientEmail = editClientDto.getClientEmail();
+        this.clientPhoneNum = editClientDto.getClientPhoneNum();
+    }
 
+    @Builder
+    public Client(String clientId, String clientPassword, String clientName, String clientEmail, String clientRole,String clientPhoneNum){
+        this.clientId = clientId;
+        this.clientPassword = clientPassword;
+        this.clientName = clientName;
+        this.clientEmail = clientEmail;
+        this.clientRole = clientRole;
+        this.clientPhoneNum=clientPhoneNum;
+    }
 }

@@ -3,14 +3,13 @@ package com.example.TodoProject.entity;
 
 import com.example.TodoProject.common.Time;
 import javax.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import static com.example.TodoProject.dto.Todo.TodoResponseDto.*;
+import static com.example.TodoProject.dto.Todo.TodoRequestDto.*;
 
-@Table(name = "Todo_tb")
+@Table(name = "todo_tb")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -40,11 +39,37 @@ public class Todo extends Time {
     private String todoLocation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "clientNum")
+    @JoinColumn(name = "client_num")
     private Client client;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "groupNum")
+    @ManyToOne(fetch = FetchType.LAZY, optional = true )
+    @JoinColumn(name = "group_num")
     private TodoGroup todoGroup;
+
+    @Builder
+    public Todo(String todoTitle, String todoDescription, LocalDate startDate, LocalDate endDate, Boolean isFinished, String todoLocation, Client client, TodoGroup todoGroup) {
+        this.todoTitle = todoTitle;
+        this.todoDescription = todoDescription;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.isFinished = isFinished;
+        this.todoLocation = todoLocation;
+        this.client = client;
+        this.todoGroup = todoGroup;
+    }
+
+    public void EditTodo(TodoGroup todoGroup, RequestTodoDto requestTodoDto){
+        this.todoTitle = requestTodoDto.getTodoTitle();
+        this.todoDescription = requestTodoDto.getTodoDescription();
+        this.startDate = requestTodoDto.getStartDate();
+        this.endDate = requestTodoDto.getEndDate();
+        this.isFinished = requestTodoDto.getIsFinished();
+        this.todoLocation = requestTodoDto.getTodoLocation();
+        this.todoGroup = todoGroup;
+    }
+
+    public void todoToggle(Boolean FT){
+        this.isFinished = FT;
+    }
 
 }
