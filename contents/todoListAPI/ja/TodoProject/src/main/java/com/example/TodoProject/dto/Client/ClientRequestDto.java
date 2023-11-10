@@ -15,6 +15,7 @@ public class ClientRequestDto {
 
         @Schema(example = "inu1234")
         @Column(name = "client_id")
+
         private String clientId;
 
         @Schema(example = "password1234")
@@ -36,16 +37,6 @@ public class ClientRequestDto {
         @Schema(example = "010-5420-9330")
         @Column(nullable = false, name = "client_phone_num")
         private String clientPhoneNum;
-
-        @Builder
-        public RequestClientDto(String clientId, String clientPassword, String clientName, String clientEmail, String clientRole,String clientPhoneNum){
-            this.clientId = clientId;
-            this.clientPassword = clientPassword;
-            this.clientName = clientName;
-            this.clientEmail = clientEmail;
-            this.clientRole = clientRole;
-            this.clientPhoneNum=clientPhoneNum;
-        }
 
         public Client toEntity(RequestClientDto requestClientDto){
             return Client.builder()

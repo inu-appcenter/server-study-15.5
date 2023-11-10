@@ -72,4 +72,17 @@ public class Todo extends Time {
         this.isFinished = FT;
     }
 
+    public ResponseTodoDto toDto(){
+        Long groupNum = (todoGroup != null) ? todoGroup.getGroupNum() : null;
+        return ResponseTodoDto.builder()
+                .todoNum(todoNum)
+                .todoTitle(todoTitle)
+                .todoDescription(todoDescription)
+                .todoLocation(todoLocation)
+                .todoGroupNum(groupNum)
+                .endDate(endDate)
+                .startDate(startDate)
+                .build();
+    }
+
 }

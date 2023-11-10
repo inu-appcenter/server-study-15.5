@@ -68,7 +68,7 @@ public class ClientController {
 
     //유저 수정하기
     @Operation(summary = "유저 회원정보 수정", description = "clientNum과 ShortClientDto를 파라미터로 받음. 유저의 회원정보를 수정한다.(아이디 수정 불가능)")
-    @PutMapping("/patch/{clientnum}")
+    @PutMapping("/{clientnum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원정보 수정 성공"),
     })

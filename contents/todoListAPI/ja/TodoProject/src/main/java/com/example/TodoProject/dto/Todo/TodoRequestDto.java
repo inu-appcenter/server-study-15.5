@@ -32,16 +32,7 @@ public class TodoRequestDto {
 
         @Schema(example = "1")
         private Long todoGroupNum;
-        @Builder
-        public RequestTodoDto(String todoTitle, String todoDescription,LocalDate startDate, LocalDate endDate, Boolean isFinished, String todoLocation, Long todoGroupNum){
-            this.todoTitle = todoTitle;
-            this.todoDescription = todoDescription;
-            this.startDate = startDate;
-            this.endDate = endDate;
-            this.isFinished =isFinished;
-            this.todoLocation = todoLocation;
-            this.todoGroupNum = todoGroupNum;
-        }
+
 
         public Todo toEntity(Client client, TodoGroup todoGroup, RequestTodoDto requestTodoDto) {
             return Todo.builder()

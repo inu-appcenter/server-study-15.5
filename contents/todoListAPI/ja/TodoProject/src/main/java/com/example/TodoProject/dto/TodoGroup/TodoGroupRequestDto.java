@@ -20,11 +20,6 @@ public class TodoGroupRequestDto {
         @Schema(example = "true")
         private Boolean isImportant;
 
-        @Builder
-        public RequestTodoGroupDto(String groupName, Boolean isImportant){
-            this.groupName = groupName;
-            this.isImportant = isImportant;
-        }
         public TodoGroup toEntity(Client client, RequestTodoGroupDto requestTodoGroupDto) {
             return TodoGroup.builder()
                     .client(client)

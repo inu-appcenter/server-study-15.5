@@ -43,7 +43,7 @@ public class TodoGroupController {
     }
 
     @Operation(summary = "투두 그룹 수정", description = "clientNum과 RequestTodoGroupDto를 파라미터로 받음. 투두 그룹을 수정한다.")
-    @PutMapping("/patch/{todogroupnum}")
+    @PutMapping("/{todogroupnum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 그룹 수정 성공"),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 유저입니다."),
@@ -66,13 +66,16 @@ public class TodoGroupController {
                 .body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 그룹 전체 조회 성공", todoGroupService.getAllTodoGroup(clientNum)));
     }
 
-    @Operation(summary = "투두 그룹, 투두 전체 조회", description = "투두 그룹 조회를 하는 컨트롤러")
-    @PostMapping("/{clientnum}")
+    @Operation(summary = "투두 그룹을 가지고 있는 투두 전체 조회", description = "투두 그룹 조회를 하는 컨트롤러")
+    @PostMapping("//{clientnum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 그룹 조회 성공")
     })
-    public ResponseEntity<CommonResponseDto> getAllTodoGroupsAndTodos(@PathVariable Long clientnum){
+    public ResponseEntity<CommonResponseDto> getAllTodosIsTodoGroup(@PathVariable Long clientnum){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 그룹 전체 조회 성공", todoGroupService.getAllTodoGroupsTodo(clientnum)));
+                .body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 그룹 전체 조회 성공", todoGroupService.getAllTodoForTodoGroup(clientnum)));
     }
+
+
+
 }

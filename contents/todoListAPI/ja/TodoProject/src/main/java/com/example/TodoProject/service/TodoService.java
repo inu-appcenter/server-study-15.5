@@ -9,6 +9,7 @@ import com.example.TodoProject.repository.TodoGroupRepository;
 import com.example.TodoProject.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -88,19 +89,8 @@ public class TodoService {
     public List<ResponseTodoDto> getUsersAllTodos(Long clientNum) {
         List<Todo> todos = todoRepository.findByClientClientNum(clientNum);
         List<ResponseTodoDto> todoDtos = todos.stream()
-                .map(todo -> {
-                    Long groupNum = (todo.getTodoGroup() != null) ? todo.getTodoGroup().getGroupNum() : null;
-                    return new ResponseTodoDto(
-                            todo.getTodoNum(),
-                            todo.getTodoTitle(),
-                            todo.getTodoDescription(),
-                            todo.getStartDate(),
-                            todo.getEndDate(),
-                            todo.getIsFinished(),
-                            todo.getTodoLocation(),
-                            groupNum
-                    );
-                }).collect(Collectors.toList());
+                .map(todo -> todo.toDto()
+                ).collect(Collectors.toList());
         return todoDtos;
     }
 
@@ -115,4 +105,16 @@ public class TodoService {
         todoRepository.save(todo);
 
     }
+
+    @Transactional(readOnly = true)
+    public List<ResponseTodoDto> getAllTodosForNotTodoGroup(Long clientNum){
+        List<Todo> todos = todoRepository.findByClientClientNumAndTodoGroup(clientNum,null);
+
+        List<ResponseTodoDto> notTodoGroup = todos.stream()
+                .map( Todo :: toDto
+                ).collect(Collectors.toList());
+
+        return notTodoGroup;
+    }
+
 }

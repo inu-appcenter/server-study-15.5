@@ -33,15 +33,8 @@ public class ClientService {
     public List<ResponseClientDto> getAllClient() {
         List<Client> allClients = clientRepository.findAll();
         List<ResponseClientDto> userInfoDtos = allClients.stream()
-                .map(client -> new ResponseClientDto(
-                        client.getClientNum(),
-                        client.getClientId(),
-                        client.getClientPassword(),
-                        client.getClientName(),
-                        client.getClientEmail(),
-                        client.getClientRole(),
-                        client.getClientPhoneNum()
-                ))
+                .map(client -> client.toDto()
+                )
                 .collect(Collectors.toList());
 
         return userInfoDtos;
