@@ -1,21 +1,27 @@
 package com.example.todo.user;
 
 import com.example.todo.task.Task;
-import net.bytebuddy.matcher.FilterableList;
-
+import com.example.todo.user.dto.UserResponseDto;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "user_tb")
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long user_id;
+    private Long userId;
 
-    @Column(unique = true)
-    private String login_id;
+    @Column(unique = true, name = "login_id")
+    private String loginId;
 
     private String password;
 
@@ -23,4 +29,20 @@ public class User {
 
     @OneToMany(mappedBy="user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Task> Tasks = new ArrayList<>();
+
+    @Builder
+    public User(String loginId, String password, String name) {
+        this.loginId = loginId;
+        this.password = password;
+        this.name = name;
+    }
+
+    public static UserResponseDto toResponseDto(User user) {
+        return UserResponseDto.builder()
+                .userId(user.userId)
+                .name(user.name)
+                .loginId(user.loginId)
+                .password(user.password)
+                .build();
+    }
 }
