@@ -14,9 +14,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
+
 @RestController
+@Validated//RequestParam 에서의 유효성 검사를 위해 사용
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
 public class MemberController {
@@ -28,7 +34,7 @@ public class MemberController {
             @ApiResponse(code = 201,message = "회원가입성공")
     })
     @PostMapping("/")
-    public ResponseEntity<?> join(@RequestParam("email")String email,@RequestParam("password")String password,@RequestParam("nickname")String nickname){
+    public ResponseEntity<?> join(@RequestParam("email")@Email String email, @RequestParam("password") @NotBlank String password, @RequestParam("nickname") @NotBlank String nickname){
         Long id = memberService.save(email,password,nickname);
 
         return new ResponseEntity<>(new ResponseDto(id,"회원가입성공"), HttpStatus.CREATED);
