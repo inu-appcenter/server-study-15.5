@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Entity
@@ -21,7 +21,7 @@ public class Task extends BaseTimeEntity{
     private String description;
 
     @Column(nullable = false)
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     @Column
     boolean isFinished = false;
@@ -30,7 +30,7 @@ public class Task extends BaseTimeEntity{
     @JoinColumn(name = "member_id")
     private Member member;
     @Builder
-    public Task(String title, String description, LocalDateTime endDate, Member member) {
+    public Task(String title, String description, LocalDate endDate, Member member) {
         this.title = title;
         this.description = description;
         this.endDate = endDate;
@@ -38,7 +38,7 @@ public class Task extends BaseTimeEntity{
 
     }
 
-    public void update(String title, String description, LocalDateTime endDate, Boolean isFinished){
+    public void update(String title, String description, LocalDate endDate, Boolean isFinished){
         this.title = title;
         this.description = description;
         this.endDate =endDate;
