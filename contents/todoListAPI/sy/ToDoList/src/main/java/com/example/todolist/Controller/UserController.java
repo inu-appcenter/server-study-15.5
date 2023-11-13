@@ -9,6 +9,7 @@ import javax.servlet.ServletRequest;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +32,7 @@ public class UserController {
 
         userService.addUser(addUserReqDTO);
 
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @GetMapping("/users")
@@ -46,7 +47,7 @@ public class UserController {
         Long userId = 3l; // 임시로 userId값 설정
         ReadUserResDTO readUserResDTO = userService.readUserInfo(userId);
 
-        return ResponseEntity.status(200).body(readUserResDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(readUserResDTO);
     }
 
     @PatchMapping("/users")
@@ -62,7 +63,7 @@ public class UserController {
         changeUserReqDTO.setUserId(userId);
         userService.changeUserInfo(changeUserReqDTO);
 
-        return ResponseEntity.status(200).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
     @DeleteMapping("/users")
     @ApiOperation(value = "유저 삭제")
@@ -81,6 +82,6 @@ public class UserController {
 
         userService.deleteUser(deleteUserReqDTO);
 
-        return ResponseEntity.status(200).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

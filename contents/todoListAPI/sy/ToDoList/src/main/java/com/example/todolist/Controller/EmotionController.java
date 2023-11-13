@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +36,7 @@ public class EmotionController {
         Long userId = 3l; // 임시로 userId값 설정
 
         emotionService.addEmotion(userId,toDoId);
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @DeleteMapping("/emotions/{toDoId}")
@@ -50,6 +51,6 @@ public class EmotionController {
         Long userId = 3l; // 임시로 userId값 설정
 
         emotionService.deleteEmotion(userId,toDoId);
-        return ResponseEntity.status(200).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

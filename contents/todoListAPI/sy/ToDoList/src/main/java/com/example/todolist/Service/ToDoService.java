@@ -8,7 +8,7 @@ import com.example.todolist.Repository.ToDoRepository;
 import com.example.todolist.Repository.UserRepository;
 import com.example.todolist.domain.ToDo;
 import com.example.todolist.domain.User;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,13 +36,8 @@ public class ToDoService {
 
         User user = userRepository.findById(addToDoReqDTO.getUserId()).orElseThrow(/*예외처리*/);
 
-        ToDo toDo = ToDo.builder()
-                .title(addToDoReqDTO.getTitle())
-                .content(addToDoReqDTO.getContent())
-                .dueDate(addToDoReqDTO.getDueDate())
-                .isFinished(addToDoReqDTO.getIsFinished())
-                .user(user)
-                .build();
+        ToDo toDo = addToDoReqDTO.toEntity(addToDoReqDTO);
+        toDo.addUser(user);
 
         toDoRepository.save(toDo);
     }
@@ -55,59 +50,27 @@ public class ToDoService {
             //예외처리
         }
 
-        toDo.changeTitle(updateToDoReqDTO.getTitle());
-        toDo.changeContent(updateToDoReqDTO.getContent());
-        toDo.changeDueDate(updateToDoReqDTO.getDueDate());
-        toDo.changeIsFinished(updateToDoReqDTO.getIsFinished());
-
+        updateToDoReqDTO.changeToDo(toDo,updateToDoReqDTO);
         toDoRepository.save(toDo);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ReadToDoResDTO readToDo(Long toDoId,Long userId){  // 단일 ToDo조회 로직
 
         ToDo toDo = toDoRepository.findById(toDoId).orElseThrow(/*예외처리*/);
         User user = toDo.getUser();
 
-        boolean isMyToDo = true;
-        if(!isMyToDo(userId,user)){ // 자신이 쓴 ToDo가 아니라면
-            isMyToDo=false;
-        }
-
-        return ReadToDoResDTO.builder()
-                .title(toDo.getTitle())
-                .content(toDo.getContent())
-                .dueDate(toDo.getDueDate())
-                .readReplyResDTOList(replyService.readReply(userId,toDo.getReply()))
-                .isFinished(toDo.isFinished())
-                .writerName(user.getName())
-                .likeCnt(emotionService.findLikeCnt(toDoId))
-                .regDate(toDo.getRegDate())
-                .modDate(toDo.getModDate())
-                .isMyToDo(isMyToDo)
-                .build();
+        // dto에 정적팩토리 메소드를 생성하려 했는데 reply와 emotion서비스 로직이 필요해서 ToDoSerivce에 메소드로 뺐습니다.
+        return toReadToDoResDTO(toDo,user,userId,toDoId);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ReadToDoPreviewResDTO> readToDoPreviewList(){
 
         List<ToDo> toDoList = toDoRepository.findAll();
-        List<ReadToDoPreviewResDTO> readToDoPreviewResDTOList = new ArrayList<>();
 
-        for(int i=0;i<toDoList.size();i++){
-            ToDo toDo = toDoList.get(i);
-            ReadToDoPreviewResDTO readToDoPreviewResDTO = ReadToDoPreviewResDTO.builder()
-                    .toDoId(toDo.getToDoId())
-                    .title(toDo.getTitle())
-                    .isFinished(toDo.isFinished())
-                    .writerName(toDo.getUser().getName())
-                    .likeCnt(emotionService.findLikeCnt(toDo.getToDoId()))
-                    .build();
-
-            readToDoPreviewResDTOList.add(readToDoPreviewResDTO);
-        }
-
-        return readToDoPreviewResDTOList;
+        // dto에 정적팩토리 메소드를 생성하려 했는데 reply와 emotion서비스 로직이 필요해서 ToDoSerivce에 메소드로 뺐습니다.
+        return toReadToDoPreviewResDTO(toDoList);
     }
     @Transactional
     public void deleteToDo(Long toDoId, Long userId){
@@ -128,5 +91,45 @@ public class ToDoService {
         }
 
         return true;
+    }
+
+    public ReadToDoResDTO toReadToDoResDTO(ToDo toDo,User user,Long userId, Long toDoId){
+
+        boolean isMyToDo = true;
+        if(!isMyToDo(userId,user)){ // 자신이 쓴 ToDo가 아니라면
+            isMyToDo=false;
+        }
+
+        return ReadToDoResDTO.builder()
+                .title(toDo.getTitle())
+                .content(toDo.getContent())
+                .dueDate(toDo.getDueDate())
+                .readReplyResDTOList(replyService.readReply(userId,toDo.getReply()))
+                .isFinished(toDo.isFinished())
+                .writerName(user.getName())
+                .likeCnt(emotionService.findLikeCnt(toDoId))
+                .regDate(toDo.getRegDate())
+                .modDate(toDo.getModDate())
+                .isMyToDo(isMyToDo)
+                .build();
+    }
+
+    public List<ReadToDoPreviewResDTO> toReadToDoPreviewResDTO(List<ToDo> toDoList){
+
+        List<ReadToDoPreviewResDTO> readToDoPreviewResDTOList = new ArrayList<>();
+
+        for(int i=0;i<toDoList.size();i++){
+            ToDo toDo = toDoList.get(i);
+            ReadToDoPreviewResDTO readToDoPreviewResDTO = ReadToDoPreviewResDTO.builder()
+                    .toDoId(toDo.getToDoId())
+                    .title(toDo.getTitle())
+                    .isFinished(toDo.isFinished())
+                    .writerName(toDo.getUser().getName())
+                    .likeCnt(emotionService.findLikeCnt(toDo.getToDoId()))
+                    .build();
+
+            readToDoPreviewResDTOList.add(readToDoPreviewResDTO);
+        }
+        return readToDoPreviewResDTOList;
     }
 }

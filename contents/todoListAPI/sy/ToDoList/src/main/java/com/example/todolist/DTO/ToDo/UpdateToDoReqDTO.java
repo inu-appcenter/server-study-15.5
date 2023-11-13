@@ -1,5 +1,6 @@
 package com.example.todolist.DTO.ToDo;
 
+import com.example.todolist.domain.ToDo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,6 +38,15 @@ public class UpdateToDoReqDTO {
 
     public boolean getIsFinished(){
         return this.isFinished;
+    }
+
+    public static ToDo changeToDo(ToDo toDo, UpdateToDoReqDTO updateToDoReqDTO){
+        toDo.changeTitle(updateToDoReqDTO.getTitle());
+        toDo.changeContent(updateToDoReqDTO.getContent());
+        toDo.changeDueDate(updateToDoReqDTO.getDueDate());
+        toDo.changeIsFinished(updateToDoReqDTO.getIsFinished());
+
+        return toDo;
     }
 
 }

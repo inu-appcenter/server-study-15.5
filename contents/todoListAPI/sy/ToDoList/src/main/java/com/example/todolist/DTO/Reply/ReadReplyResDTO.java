@@ -1,5 +1,6 @@
 package com.example.todolist.DTO.Reply;
 
+import com.example.todolist.domain.Reply;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,5 +38,19 @@ public class ReadReplyResDTO {
 
     public boolean getIsMyReply(){
         return this.isMyReply;
+    }
+
+    public static ReadReplyResDTO toDto(Reply reply, boolean isMyReply){
+
+        ReadReplyResDTO readReplyResDTO = ReadReplyResDTO.builder()
+                .replyId(reply.getReplyId())
+                .content(reply.getContent())
+                .writer(reply.getUser().getName())
+                .regDate(reply.getRegDate())
+                .modDate(reply.getModDate())
+                .isMyReply(isMyReply)
+                .build();
+
+        return readReplyResDTO;
     }
 }

@@ -34,13 +34,7 @@ public class ReplyService {
         User user = userRepository.findById(addReplyReqDTO.getUserId()).orElseThrow(/*예외처리*/);
         ToDo toDo= toDoRepository.findById(addReplyReqDTO.getToDoId()).orElseThrow(/*예외처리*/);
 
-        Reply reply = Reply.builder()
-                .content(addReplyReqDTO.getContent())
-                .user(user)
-                .toDo(toDo)
-                .build();
-
-        replyRepository.save(reply);
+        replyRepository.save(AddReplyReqDTO.toEntity(addReplyReqDTO,user,toDo));
     }
     public List<ReadReplyResDTO> readReply(Long userId,List<Reply> replyList){
 
@@ -49,17 +43,7 @@ public class ReplyService {
         for(int i=0;i<replyList.size();i++){
 
             Reply reply = replyList.get(i);
-
-            ReadReplyResDTO readReplyResDTO = ReadReplyResDTO.builder()
-                    .replyId(reply.getReplyId())
-                    .content(reply.getContent())
-                    .writer(reply.getUser().getName())
-                    .regDate(reply.getRegDate())
-                    .modDate(reply.getModDate())
-                    .isMyReply(isMyReply(userId,reply))
-                    .build();
-
-            readReplyResDTOList.add(readReplyResDTO);
+            readReplyResDTOList.add(ReadReplyResDTO.toDto(reply,isMyReply(userId,reply)));
         }
         return readReplyResDTOList;
     }

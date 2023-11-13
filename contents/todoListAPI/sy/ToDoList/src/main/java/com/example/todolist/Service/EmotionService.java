@@ -32,12 +32,7 @@ public class EmotionService {
         if(isExistEmotion(userId,toDoId)){
             //예외처리
         }
-        Emotion emotion = Emotion.builder()
-                .emotionStatus(EmotionStatus.Like) // 일단 Like기능만 구현하기로 했습니다.
-                .user(user)
-                .toDo(toDo)
-                .build();
-        emotionRepository.save(emotion);
+        emotionRepository.save(toEmotion(user,toDo));
     }
 
     public void deleteEmotion(Long userId, Long toDoId){
@@ -59,5 +54,14 @@ public class EmotionService {
         User user = userRepository.findById(userId).orElseThrow();
 
         return emotionRepository.existsByUserAndToDo(user,toDo);
+    }
+
+    public Emotion toEmotion(User user, ToDo toDo){
+
+        return Emotion.builder()
+                .emotionStatus(EmotionStatus.Like) // 일단 Like기능만 구현하기로 했습니다.
+                .user(user)
+                .toDo(toDo)
+                .build();
     }
 }

@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +34,7 @@ public class ToDoController {
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
     public ResponseEntity<List<ReadToDoPreviewResDTO>> readToDoPreviewList(){
         List<ReadToDoPreviewResDTO> readToDoPreviewResDTOList = toDoService.readToDoPreviewList();
-        return ResponseEntity.status(200).body(readToDoPreviewResDTOList);
+        return ResponseEntity.status(HttpStatus.OK).body(readToDoPreviewResDTOList);
     }
 
     @GetMapping("/to-dos/{toDoId}")
@@ -48,7 +49,7 @@ public class ToDoController {
         Long userId = 3l;
 
         ReadToDoResDTO readToDoResDTO = toDoService.readToDo(toDoId,userId);
-        return ResponseEntity.status(200).body(readToDoResDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(readToDoResDTO);
     }
 
     @PostMapping("/to-dos")
@@ -64,7 +65,7 @@ public class ToDoController {
         addToDoReqDTO.setUserId(userId);
 
         toDoService.addToDo(addToDoReqDTO);
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @PatchMapping("/to-dos/{toDoId}")
@@ -81,7 +82,7 @@ public class ToDoController {
         updateToDoReqDTO.setToDoId(toDoId);
 
         toDoService.updateToDo(updateToDoReqDTO);
-        return ResponseEntity.status(200).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @DeleteMapping("/to-dos/{toDoId}")
@@ -96,6 +97,6 @@ public class ToDoController {
         Long userId = 3l;
 
         toDoService.deleteToDo(toDoId,userId);
-        return ResponseEntity.status(200).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

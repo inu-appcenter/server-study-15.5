@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class ReplyController {
         addReplyReqDTO.setToDoId(toDoId);
 
         replyService.addReply(addReplyReqDTO);
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @PatchMapping("/replys/{replyId}")
@@ -55,7 +56,7 @@ public class ReplyController {
         changeReplyReqDTO.setUserId(userId);
 
         replyService.changeReply(changeReplyReqDTO);
-        return ResponseEntity.status(200).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @DeleteMapping("/replys/{replyId}")
@@ -70,6 +71,6 @@ public class ReplyController {
         Long userId = 3l; // 임시로 userId값 설정
 
         replyService.deleteReply(userId,replyId);
-        return ResponseEntity.status(200).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }

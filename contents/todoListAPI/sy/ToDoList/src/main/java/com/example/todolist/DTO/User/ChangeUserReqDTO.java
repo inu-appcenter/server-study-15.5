@@ -1,5 +1,6 @@
 package com.example.todolist.DTO.User;
 
+import com.example.todolist.domain.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -21,4 +22,11 @@ public class ChangeUserReqDTO {
 
     @ApiModelProperty(value = "변경할 비밀번호")
     private String newPassword;
+
+    public static User changeUser(ChangeUserReqDTO changeUserReqDTO, User user){
+        user.changeName(changeUserReqDTO.getName());
+        user.changePassword(changeUserReqDTO.getNewPassword());
+
+        return user;
+    }
 }

@@ -15,9 +15,10 @@ public class Emotion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "emotion_id")
     private Long EmotionId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "emotion_status")
     @Enumerated(EnumType.STRING)
     private EmotionStatus emotionStatus;
 

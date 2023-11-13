@@ -1,4 +1,5 @@
 package com.example.todolist.DTO.ToDo;
+import com.example.todolist.domain.ToDo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,5 +34,17 @@ public class AddToDoReqDTO {
 
     public boolean getIsFinished(){
         return this.isFinished;
+    }
+
+    public static ToDo toEntity(AddToDoReqDTO addToDoReqDTO){
+
+        ToDo toDo = ToDo.builder()
+                .title(addToDoReqDTO.getTitle())
+                .content(addToDoReqDTO.getContent())
+                .dueDate(addToDoReqDTO.getDueDate())
+                .isFinished(addToDoReqDTO.getIsFinished())
+                .build();
+
+        return toDo;
     }
 }
