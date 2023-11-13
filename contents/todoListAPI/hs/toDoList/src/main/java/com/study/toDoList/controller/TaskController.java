@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -23,7 +24,7 @@ public class TaskController {
             @ApiResponse(code = 201,message = "할일추가성공")
     })
     @PostMapping("/{id}")
-    public ResponseEntity<?> save(@PathVariable Long id,@RequestBody TaskSaveDto taskSaveDto){
+    public ResponseEntity<?> save(@PathVariable Long id,@Valid @RequestBody TaskSaveDto taskSaveDto){
         Long taskId = taskService.save(id,taskSaveDto);
         return new ResponseEntity<>(new ResponseDto(taskId,"할일추가성공"), HttpStatus.CREATED);
     }
@@ -32,7 +33,7 @@ public class TaskController {
             @ApiResponse(code = 200,message = "할일수정성공")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody TaskUpdateDto taskUpdateDto){
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid@RequestBody TaskUpdateDto taskUpdateDto){
         taskService.update(id,taskUpdateDto);
         return new ResponseEntity<>(new ResponseDto(id,"할일수정성공"), HttpStatus.OK);
     }
