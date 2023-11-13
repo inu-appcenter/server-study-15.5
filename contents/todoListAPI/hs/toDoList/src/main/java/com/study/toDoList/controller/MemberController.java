@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -36,7 +37,6 @@ public class MemberController {
     @PostMapping("/")
     public ResponseEntity<?> join(@RequestParam("email")@Email String email, @RequestParam("password") @NotBlank String password, @RequestParam("nickname") @NotBlank String nickname){
         Long id = memberService.save(email,password,nickname);
-
         return new ResponseEntity<>(new ResponseDto(id,"회원가입성공"), HttpStatus.CREATED);
     }
 
@@ -45,7 +45,7 @@ public class MemberController {
             @ApiResponse(code = 200,message = "회원정보수정성공")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody MemberUpdateDto memberUpdateDto){
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody MemberUpdateDto memberUpdateDto){
         memberService.update(id,memberUpdateDto);
         return new ResponseEntity<>(new ResponseDto(id,"회원정보수정성공"), HttpStatus.OK);
     }
