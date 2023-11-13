@@ -34,8 +34,7 @@ public class MyExceptionHandler{
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
         BindingResult bindingResult = ex.getBindingResult();
         FieldError fieldError = bindingResult.getFieldError();
-        StringBuilder sb = new StringBuilder();
-        sb.append(fieldError.getDefaultMessage());
-        return new ResponseEntity<>(new ResponseDto(-1,sb.toString()),HttpStatus.BAD_REQUEST);
+        String message = fieldError.getDefaultMessage();
+        return new ResponseEntity<>(new ResponseDto(-1,message),HttpStatus.BAD_REQUEST);
     }
 }
