@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmotionController {
 
     private final EmotionService emotionService;
-
+    private final Long userId = 3l;
     @Autowired
     public EmotionController(EmotionService emotionService){
         this.emotionService=emotionService;
@@ -33,8 +33,6 @@ public class EmotionController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 3l; // 임시로 userId값 설정
-
         emotionService.addEmotion(userId,toDoId);
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
@@ -48,8 +46,6 @@ public class EmotionController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 3l; // 임시로 userId값 설정
-
         emotionService.deleteEmotion(userId,toDoId);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }

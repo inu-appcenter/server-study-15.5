@@ -3,6 +3,8 @@ package com.example.todolist.Service;
 import com.example.todolist.DTO.Reply.AddReplyReqDTO;
 import com.example.todolist.DTO.Reply.ChangeReplyReqDTO;
 import com.example.todolist.DTO.Reply.ReadReplyResDTO;
+import com.example.todolist.Exception.CommondException;
+import com.example.todolist.Exception.ExceptionCode;
 import com.example.todolist.Repository.ReplyRepository;
 import com.example.todolist.Repository.ToDoRepository;
 import com.example.todolist.Repository.UserRepository;
@@ -31,8 +33,10 @@ public class ReplyService {
 
     public void addReply(AddReplyReqDTO addReplyReqDTO){
 
-        User user = userRepository.findById(addReplyReqDTO.getUserId()).orElseThrow(/*예외처리*/);
-        ToDo toDo= toDoRepository.findById(addReplyReqDTO.getToDoId()).orElseThrow(/*예외처리*/);
+        User user = userRepository.findById(addReplyReqDTO.getUserId())
+                .orElseThrow(() -> new CommondException(ExceptionCode.USER_NOTFOUND));
+        ToDo toDo= toDoRepository.findById(addReplyReqDTO.getToDoId())
+                .orElseThrow(() -> new CommondException(ExceptionCode.TODO_NOTFOUND));
 
         replyRepository.save(AddReplyReqDTO.toEntity(addReplyReqDTO,user,toDo));
     }
@@ -48,19 +52,21 @@ public class ReplyService {
         return readReplyResDTOList;
     }
     public void changeReply(ChangeReplyReqDTO changeReplyReqDTO){
-        Reply reply = replyRepository.findById(changeReplyReqDTO.getReplyId()).orElseThrow(/*예외처리*/);
+        Reply reply = replyRepository.findById(changeReplyReqDTO.getReplyId())
+                .orElseThrow(() -> new CommondException(ExceptionCode.REPLY_NOTFOUND));
         if(!isMyReply(changeReplyReqDTO.getUserId(), reply)){
-            //예외처리
+            throw new CommondException(ExceptionCode.NOT_MYREPLY);
         }
 
         reply.changeContent(changeReplyReqDTO.getContent());
         replyRepository.save(reply);
     }
     public void deleteReply(Long userId, Long replyId){
-        Reply reply = replyRepository.findById(replyId).orElseThrow(/*예외처리*/);
+        Reply reply = replyRepository.findById(replyId)
+                .orElseThrow(() -> new CommondException(ExceptionCode.REPLY_NOTFOUND));
 
         if(!isMyReply(userId,reply)){
-            //예외처리
+            throw new CommondException(ExceptionCode.NOT_MYREPLY);
         }
 
         replyRepository.delete(reply);

@@ -4,6 +4,8 @@ import com.example.todolist.DTO.ToDo.AddToDoReqDTO;
 import com.example.todolist.DTO.ToDo.ReadToDoPreviewResDTO;
 import com.example.todolist.DTO.ToDo.ReadToDoResDTO;
 import com.example.todolist.DTO.ToDo.UpdateToDoReqDTO;
+import com.example.todolist.Exception.CommondException;
+import com.example.todolist.Exception.ExceptionCode;
 import com.example.todolist.Repository.ToDoRepository;
 import com.example.todolist.Repository.UserRepository;
 import com.example.todolist.domain.ToDo;
@@ -34,7 +36,8 @@ public class ToDoService {
 
     public void addToDo(AddToDoReqDTO addToDoReqDTO){ // Todo추가 로직
 
-        User user = userRepository.findById(addToDoReqDTO.getUserId()).orElseThrow(/*예외처리*/);
+        User user = userRepository.findById(addToDoReqDTO.getUserId())
+                .orElseThrow(() -> new CommondException(ExceptionCode.USER_NOTFOUND));
 
         ToDo toDo = addToDoReqDTO.toEntity(addToDoReqDTO);
         toDo.addUser(user);
@@ -44,10 +47,11 @@ public class ToDoService {
     @Transactional
     public void updateToDo(UpdateToDoReqDTO updateToDoReqDTO){ // ToDo수정 로직
 
-        ToDo toDo = toDoRepository.findById(updateToDoReqDTO.getToDoId()).orElseThrow(/*예외처리*/);
+        ToDo toDo = toDoRepository.findById(updateToDoReqDTO.getToDoId())
+                .orElseThrow(() -> new CommondException(ExceptionCode.TODO_NOTFOUND));
         User user = toDo.getUser();
         if(!isMyToDo(updateToDoReqDTO.getUserId(),user)){ // 자신이 쓴 ToDo가 아니라면
-            //예외처리
+            throw new CommondException(ExceptionCode.NOT_MYTODO);
         }
 
         updateToDoReqDTO.changeToDo(toDo,updateToDoReqDTO);
@@ -57,7 +61,8 @@ public class ToDoService {
     @Transactional(readOnly = true)
     public ReadToDoResDTO readToDo(Long toDoId,Long userId){  // 단일 ToDo조회 로직
 
-        ToDo toDo = toDoRepository.findById(toDoId).orElseThrow(/*예외처리*/);
+        ToDo toDo = toDoRepository.findById(toDoId)
+                .orElseThrow(() -> new CommondException(ExceptionCode.TODO_NOTFOUND));
         User user = toDo.getUser();
 
         // dto에 정적팩토리 메소드를 생성하려 했는데 reply와 emotion서비스 로직이 필요해서 ToDoSerivce에 메소드로 뺐습니다.
@@ -75,10 +80,11 @@ public class ToDoService {
     @Transactional
     public void deleteToDo(Long toDoId, Long userId){
 
-        ToDo toDo = toDoRepository.findById(toDoId).orElseThrow(/*예외처리*/);
+        ToDo toDo = toDoRepository.findById(toDoId)
+                .orElseThrow(() -> new CommondException(ExceptionCode.TODO_NOTFOUND));
         User user = toDo.getUser();
         if(!isMyToDo(userId,user)){ // 자신이 쓴 ToDo가 아니라면
-            //예외처리
+            throw new CommondException(ExceptionCode.NOT_MYTODO);
         }
 
         toDoRepository.delete(toDo);

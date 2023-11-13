@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -21,7 +22,7 @@ import java.util.List;
 public class ToDoController {
 
     private final ToDoService toDoService;
-
+    private final Long userId = 3l;
     @Autowired
     public ToDoController(ToDoService toDoService){
         this.toDoService=toDoService;
@@ -46,8 +47,6 @@ public class ToDoController {
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 3l;
-
         ReadToDoResDTO readToDoResDTO = toDoService.readToDo(toDoId,userId);
         return ResponseEntity.status(HttpStatus.OK).body(readToDoResDTO);
     }
@@ -57,11 +56,10 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "ToDo 추가성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Void> addToDo(@RequestBody AddToDoReqDTO addToDoReqDTO){
+    public ResponseEntity<Void> addToDo(@RequestBody @Valid AddToDoReqDTO addToDoReqDTO){
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 3l;
         addToDoReqDTO.setUserId(userId);
 
         toDoService.addToDo(addToDoReqDTO);
@@ -73,11 +71,10 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "ToDo 수정성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Void> updateToDo(@PathVariable Long toDoId, @RequestBody UpdateToDoReqDTO updateToDoReqDTO){
+    public ResponseEntity<Void> updateToDo(@PathVariable Long toDoId, @RequestBody @Valid UpdateToDoReqDTO updateToDoReqDTO){
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 3l;
         updateToDoReqDTO.setUserId(userId);
         updateToDoReqDTO.setToDoId(toDoId);
 
@@ -94,7 +91,6 @@ public class ToDoController {
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 3l;
 
         toDoService.deleteToDo(toDoId,userId);
         return ResponseEntity.status(HttpStatus.OK).body(null);

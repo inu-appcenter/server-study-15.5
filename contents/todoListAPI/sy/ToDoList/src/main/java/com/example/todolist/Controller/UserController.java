@@ -6,7 +6,8 @@ import com.example.todolist.DTO.User.DeleteUserReqDTO;
 import com.example.todolist.DTO.User.ReadUserResDTO;
 import com.example.todolist.Service.UserService;
 import javax.servlet.ServletRequest;
-
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-
+    private final Long userId = 4l;
     @Autowired
     public UserController(UserService userService){
         this.userService=userService;
@@ -28,10 +29,8 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "유저 생성성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Void> addUser(@RequestBody AddUserReqDTO addUserReqDTO){
-
+    public ResponseEntity<Void> addUser(@RequestBody @Valid AddUserReqDTO addUserReqDTO){
         userService.addUser(addUserReqDTO);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
@@ -44,7 +43,6 @@ public class UserController {
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 3l; // 임시로 userId값 설정
         ReadUserResDTO readUserResDTO = userService.readUserInfo(userId);
 
         return ResponseEntity.status(HttpStatus.OK).body(readUserResDTO);
@@ -55,11 +53,10 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "유저 정보변경 성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Void> changeUserInfo(@RequestBody ChangeUserReqDTO changeUserReqDTO, ServletRequest request){
+    public ResponseEntity<Void> changeUserInfo(@RequestBody @Valid ChangeUserReqDTO changeUserReqDTO, ServletRequest request){
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 3l; // 임시로 userId값 설정
         changeUserReqDTO.setUserId(userId);
         userService.changeUserInfo(changeUserReqDTO);
 
@@ -70,16 +67,11 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "유저 삭제성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Void> deleteUser(String password){
+    public ResponseEntity<Void> deleteUser(@RequestBody @Valid DeleteUserReqDTO deleteUserReqDTO, ServletRequest request){
         /*
             토큰에서 userId값 추출 로직
         */
-        Long userId = 3l; // 임시로 userId값 설정
-        DeleteUserReqDTO deleteUserReqDTO = DeleteUserReqDTO.builder()
-                .userId(userId)
-                .password(password)
-                .build();
-
+        deleteUserReqDTO.setUserId(userId);
         userService.deleteUser(deleteUserReqDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(null);
