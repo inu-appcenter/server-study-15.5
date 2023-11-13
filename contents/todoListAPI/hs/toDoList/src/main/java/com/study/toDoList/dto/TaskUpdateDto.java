@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
@@ -16,11 +16,11 @@ public class TaskUpdateDto {
     @NotBlank
     private String description;
     @FutureOrPresent
-    private LocalDateTime endDate;
+    private LocalDate endDate;
     @NotBlank
     private Boolean isFinished;
     @Builder
-    public TaskUpdateDto(String title, String description, LocalDateTime endDate, Boolean isFinished){
+    public TaskUpdateDto(String title, String description, LocalDate endDate, Boolean isFinished){
         this.title =title;
         this.description = description;
         this.endDate = endDate;

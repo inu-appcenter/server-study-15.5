@@ -4,7 +4,9 @@ import com.study.toDoList.domain.Member;
 import com.study.toDoList.domain.Task;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
 @Getter
 public class TaskListResponseDto {
     private Long id;
