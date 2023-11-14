@@ -10,31 +10,29 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
-import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
-
-import java.lang.reflect.Type;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
 @Log4j2
-public class CommonExceptionHandler extends DefaultHandlerExceptionResolver {
+public class CommonExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map> validationExceptionHandler(MethodArgumentNotValidException ex){
+
         BindingResult bindingResult = ex.getBindingResult();
         Map<String, String> errors = new HashMap<>();
         errors.put("cause","올바르지 않은 입력값입니다");
         bindingResult.getFieldErrors().forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
 
+        log.error(errors.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
 
     @ExceptionHandler(CommondException.class)
     public ResponseEntity<String> commandExceptionHandler(CommondException ex){
-
+        log.error("예외가 발생했습니다. - "+ex.getExceptionCode().getMessage());
         return ResponseEntity
                 .status(ex.getExceptionCode().getStatus())
                 .body(ex.getExceptionCode().getMessage());
@@ -50,25 +48,30 @@ public class CommonExceptionHandler extends DefaultHandlerExceptionResolver {
         map.put("fieldName",fieldName);
         map.put("requiredType",requiredType);
         map.put("message", message);
+        log.error("URI값이 올바르지 않습니다. - "+ map.toString());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(map);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<String> methodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException ex){
         String message = "올바른 요청이 아닙니다.";
+        log.error(message);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(DateTimeParseException.class)
     public ResponseEntity<String> dateTimeparseExceptionHandler(DateTimeParseException ex){
         String message = "올바른 날짜형식이 아닙니다";
+        log.error(message);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> handleException(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 내부에 에러가 발생했습니다.");
+        String message = "서버 내부에 에러가 발생했습니다.";
+        log.error(message);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
     }
 }
 
