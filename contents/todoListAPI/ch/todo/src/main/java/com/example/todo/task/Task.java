@@ -57,13 +57,13 @@ public class Task {
         this.isCompleted = !this.isCompleted;
     }
 
-    public static TaskResponseDto toResponseDto(Task task) {
+    public TaskResponseDto toResponseDto() {
         return TaskResponseDto.builder()
-                .taskId(task.getTaskId())
-                .title(task.getTitle())
-                .description(task.getDescription())
-                .deadline(task.getDeadline())
-                .userId(task.getUser().getUserId())
+                .taskId(this.taskId)
+                .title(this.title)
+                .description(this.description)
+                .deadline(this.deadline)
+                .userId(this.user.getUserId())
                 .build();
     }
 
