@@ -9,6 +9,9 @@ import lombok.Getter;
 @Getter
 public class UserRequestDto {
 
+    @ApiModelProperty(value = "User 식별자", notes = "Long 타입의 정수값")
+    private Long userId;
+
     @ApiModelProperty(value = "User 로그인 Id", notes = "String 문자열")
     private String loginId;
 
@@ -18,11 +21,11 @@ public class UserRequestDto {
     @ApiModelProperty(value = "User 닉네임", notes = "String 문자열")
     private String name;
 
-    public static User toEntity(UserRequestDto userRequestDto) {
+    public User toEntity() {
         return User.builder()
-                .name(userRequestDto.name)
-                .loginId(userRequestDto.loginId)
-                .password(userRequestDto.password)
+                .name(this.name)
+                .loginId(this.loginId)
+                .password(this.password)
                 .build();
     }
 }
