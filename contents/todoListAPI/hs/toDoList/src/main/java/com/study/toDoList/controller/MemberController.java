@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +22,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-
+@Slf4j
 @RestController
 @Validated//RequestParam 에서의 유효성 검사를 위해 사용
 @RequiredArgsConstructor
@@ -37,6 +38,7 @@ public class MemberController {
     @PostMapping("/")
     public ResponseEntity<?> join(@RequestParam("email")@Email String email, @RequestParam("password") @NotBlank String password, @RequestParam("nickname") @NotBlank String nickname){
         Long id = memberService.save(email,password,nickname);
+        log.info("회원 join 호출 id:{}",id);
         return new ResponseEntity<>(new ResponseDto(id,"회원가입성공"), HttpStatus.CREATED);
     }
 
@@ -46,6 +48,7 @@ public class MemberController {
     })
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody MemberUpdateDto memberUpdateDto){
+        log.info("회원 update 호출 회원id:{}",id);
         memberService.update(id,memberUpdateDto);
         return new ResponseEntity<>(new ResponseDto(id,"회원정보수정성공"), HttpStatus.OK);
     }
@@ -55,6 +58,7 @@ public class MemberController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
+        log.info("회원 delete 호출 회원id:{}",id);
         memberService.delete(id);
         return new ResponseEntity<>(new ResponseDto(id,"회원삭제성공"), HttpStatus.NO_CONTENT);
     }
@@ -65,6 +69,7 @@ public class MemberController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<?> getMember(@PathVariable Long id){
+        log.info("회원 정보 호출 회원id:{}",id);
         return new ResponseEntity<>(memberService.getMember(id),HttpStatus.OK);
     }
 
@@ -74,6 +79,7 @@ public class MemberController {
     })
     @GetMapping("/tasks/{id}")
     public ResponseEntity<?> getAllTask(@PathVariable Long id){
+        log.info("회원의 모든 할일 호출 회원id:{}",id);
         return new ResponseEntity<>(taskService.getAllTask(id),HttpStatus.OK);
     }
 }
