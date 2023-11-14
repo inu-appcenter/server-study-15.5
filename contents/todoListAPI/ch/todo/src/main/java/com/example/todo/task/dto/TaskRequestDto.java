@@ -27,11 +27,11 @@ public class TaskRequestDto {
     @ApiModelProperty(value = "마감기한", notes = "Task 마감기한 지정")
     private LocalDateTime deadline;
 
-    public static Task toEntity(TaskRequestDto taskRequestDto, User user) {
+    public Task toEntity(User user) {
         return Task.builder()
-                .title(taskRequestDto.title)
-                .description(taskRequestDto.description)
-                .deadline(taskRequestDto.deadline)
+                .title(this.title)
+                .description(this.description)
+                .deadline(this.deadline)
                 .user(user)
                 .build();
     }

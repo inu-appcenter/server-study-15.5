@@ -40,20 +40,17 @@ public class TaskController {
     }
 
     @PatchMapping("/completed/{taskId}")
-    @ApiOperation(value = "Task 완료 상태 변경 api")
+    @ApiOperation(value = "Task 완료 상태 변경 api", notes = "isCompleted 토글")
     public void changeTaskIsCompleted(
             @ApiParam(value = "Task(할일) 식별자", required = true) @PathVariable Long taskId) throws Exception {
         taskService.changeIsCompleted(taskId);
     }
 
     @PutMapping()
-    @ApiOperation(value = "Task 수정 api")
+    @ApiOperation(value = "Task 수정 api", notes = "Task 수정")
     public ResponseEntity<TaskResponseDto> updateTask(@RequestBody TaskRequestDto taskRequestDto) throws Exception {
         TaskResponseDto taskResponseDto = taskService.updateTask(taskRequestDto);
-        /*
-        고민, HttpStatus를 NO_CONTENT와 CREATED로 나누고 싶은데 컨트롤러에서 어떻게 식별할 수 있을까
-         */
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(taskResponseDto);
+        return  ResponseEntity.status(HttpStatus.OK).body(taskResponseDto);
     }
 
 }
