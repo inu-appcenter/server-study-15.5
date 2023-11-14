@@ -22,7 +22,7 @@ public class UserResponseDto {
     }
 
     //서비스에서 사용하던 변환 메서스를 dto로 옮김.
-    public static UserResponseDto EntityToDto(User user)
+    public static UserResponseDto convertEntityToDto(User user)
     {
         return UserResponseDto.builder()
                 .id(user.getId())

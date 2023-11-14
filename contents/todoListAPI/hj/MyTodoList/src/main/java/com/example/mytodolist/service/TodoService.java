@@ -21,9 +21,9 @@ public class TodoService {
 
     public TodoResponseDto getTodo(Long id)
     {
-        Todo todo = todoRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        Todo todo = todoRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 투두가 존재하지 않습니다."));
 
-        TodoResponseDto todoResponseDto = TodoResponseDto.EntityToDto(todo);
+        TodoResponseDto todoResponseDto = TodoResponseDto.convertEntityToDto(todo);
 
         return todoResponseDto;
     }
@@ -31,11 +31,11 @@ public class TodoService {
     public TodoResponseDto saveTodo(Long id, TodoRequestDto todoRequestDto){
         User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
-        Todo todo = TodoRequestDto.DtoToEntity(todoRequestDto,user);
+        Todo todo = TodoRequestDto.convertDtoToEntity(todoRequestDto,user);
 
         todoRepository.save(todo);
 
-        TodoResponseDto todoResponseDto = TodoResponseDto.EntityToDto(todo);
+        TodoResponseDto todoResponseDto = TodoResponseDto.convertEntityToDto(todo);
 
         return todoResponseDto;
     }
@@ -43,10 +43,10 @@ public class TodoService {
     public TodoResponseDto updateTodo(Long id,TodoRequestDto todoRequestDto){
         Todo todo = todoRepository.findById(id).orElseThrow(()->new NoSuchElementException("업데이트 할 todo가 존재하지 않습니다."));
 
-        todo.updateTodo(todoRequestDto.getTitle(),todoRequestDto.getContent(),todoRequestDto.getDeadLine());
+        todo.updateTodo(todoRequestDto.getTitle(),todoRequestDto.getContent(),TodoRequestDto.stringToTime(todoRequestDto.getDeadLine()));
         todoRepository.save(todo);
 
-        TodoResponseDto todoResponseDto =  TodoResponseDto.EntityToDto(todo);
+        TodoResponseDto todoResponseDto =  TodoResponseDto.convertEntityToDto(todo);
 
         return todoResponseDto;
     }
@@ -63,14 +63,21 @@ public class TodoService {
 
         if(isCompleted){
             todo.checkCompleted();
-
             User user = todo.getUser();     //여기서 또 영속이 끊김
-            user.LevelUp(user.getLevel() + 1);
+            user.LevelUp();
             userRepository.save(user);
+        }
+        else{
+            todo.checkCompleted();
+            User user = todo.getUser();
+            user.LevelDown();
+            userRepository.save(user);
+
+
         }
         todoRepository.save(todo);
 
-        TodoResponseDto todoResponseDto =  TodoResponseDto.EntityToDto(todo);
+        TodoResponseDto todoResponseDto =  TodoResponseDto.convertEntityToDto(todo);
 
         return todoResponseDto;
     }

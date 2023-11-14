@@ -29,13 +29,14 @@ public class TodoResponseDto {
     }
 
     //서비스에서 사용하던 변환 메서스를 dto로 옮김.
-    public static TodoResponseDto EntityToDto(Todo todo)
+    public static TodoResponseDto convertEntityToDto(Todo todo)
     {
+
         return TodoResponseDto.builder()
                 .id(todo.getId())
                 .title(todo.getTitle())
                 .content(todo.getContents())
-                .isCompleted(todo.getIsCompleted())
+                .isCompleted(todo.getCompleted())
                 .deadLine(todo.getDeadLine())
                 .createdDate(todo.getCreatedDate())
                 .modifiedDate(todo.getModifiedDate())

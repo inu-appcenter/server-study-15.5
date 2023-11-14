@@ -24,17 +24,17 @@ public class UserService {
 
         User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("유저가 존재하지 않습니다.")) ;
 
-        UserResponseDto userResponseDto = UserResponseDto.EntityToDto(user);
+        UserResponseDto userResponseDto = UserResponseDto.convertEntityToDto(user);
 
         return userResponseDto;
     }
 
     public UserResponseDto saveUser(UserRequestDto userRequestDto){
         User user;
-        user = UserRequestDto.DtoToEntity(userRequestDto);
+        user = UserRequestDto.convertDtoToEntity(userRequestDto);
         userRepository.save(user);
 
-        UserResponseDto userResponseDto = UserResponseDto.EntityToDto(user);
+        UserResponseDto userResponseDto = UserResponseDto.convertEntityToDto(user);
 
         return userResponseDto;
     }
@@ -44,7 +44,7 @@ public class UserService {
         user.updateUserInfo(userRequestDto.getName(), userRequestDto.getEmail());
         userRepository.save(user);
 
-        UserResponseDto userResponseDto = UserResponseDto.EntityToDto(user);
+        UserResponseDto userResponseDto = UserResponseDto.convertEntityToDto(user);
 
         return userResponseDto;
     }
@@ -61,7 +61,7 @@ public class UserService {
         List<TodoResponseDto> todoDtoList = new ArrayList<>();
 
         for(Todo todo: todos){
-            todoDtoList.add(TodoResponseDto.EntityToDto(todo));
+            todoDtoList.add(TodoResponseDto.convertEntityToDto(todo));
         }
         return todoDtoList;
     }
