@@ -74,10 +74,7 @@ public class TaskService {
     }
 
     public TaskResponseDto updateTask(TaskRequestDto taskRequestDto) throws Exception {
-        Task savedTask;
-        Task puttedTask;
         Optional<Task> selectedTask = taskRepository.findById(taskRequestDto.getTaskId());
-
         if (selectedTask.isPresent()) {
             return updateAndSaveTaskFromDto(selectedTask.get(), taskRequestDto);
         }

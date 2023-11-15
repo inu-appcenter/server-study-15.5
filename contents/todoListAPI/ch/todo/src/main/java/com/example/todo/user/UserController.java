@@ -1,5 +1,7 @@
 package com.example.todo.user;
 
+import com.example.todo.groups.PValidationGroup;
+import com.example.todo.groups.RUDValidationGroup;
 import com.example.todo.user.dto.UserRequestDto;
 import com.example.todo.user.dto.UserResponseDto;
 import io.swagger.annotations.Api;
@@ -8,6 +10,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = {"User"})
@@ -28,7 +31,8 @@ public class UserController {
 
     @PostMapping()
     @ApiOperation(value = "새 User 등록 api", notes = "새로운 유저 정보 등록")
-    public ResponseEntity<UserResponseDto> postUser(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> postUser(
+            @Validated(PValidationGroup.class) @RequestBody UserRequestDto userRequestDto) {
         UserResponseDto userResponseDto = userService.saveUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
@@ -42,7 +46,8 @@ public class UserController {
 
     @PutMapping()
     @ApiOperation(value = "User 정보 수정 api", notes = "기존 유저 정보 수정")
-    public ResponseEntity<UserResponseDto> putUser(@RequestBody UserRequestDto userRequestDto) throws Exception {
+    public ResponseEntity<UserResponseDto> putUser(
+            @Validated(RUDValidationGroup.class) @RequestBody UserRequestDto userRequestDto) throws Exception {
         UserResponseDto userResponseDto = userService.updateUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
     }

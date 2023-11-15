@@ -35,7 +35,6 @@ public class UserService {
 
     public UserResponseDto updateUser(UserRequestDto userRequestDto) throws Exception {
         Optional<User> selectedUser = userRepository.findById(userRequestDto.getUserId());
-        User savedUser;
         if (selectedUser.isPresent()) {
             return updateAndSaveUserFromDto(selectedUser.get(), userRequestDto);
         }

@@ -1,12 +1,18 @@
 package com.example.todo.task;
 
+import com.example.todo.groups.PValidationGroup;
+import com.example.todo.groups.RUDValidationGroup;
 import com.example.todo.task.dto.TaskRequestDto;
 import com.example.todo.task.dto.TaskResponseDto;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Api(tags = {"Task"})
@@ -27,7 +33,8 @@ public class TaskController {
 
     @PostMapping()
     @ApiOperation(value = "새 Task 등록 api", notes = "새 Task 등록")
-    public ResponseEntity<TaskResponseDto> postTask(@RequestBody TaskRequestDto taskRequestDto) throws Exception {
+    public ResponseEntity<TaskResponseDto> postTask(
+            @Validated(PValidationGroup.class) @RequestBody TaskRequestDto taskRequestDto) throws Exception {
         TaskResponseDto taskResponseDto = taskService.save(taskRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(taskResponseDto);
     }
@@ -48,7 +55,9 @@ public class TaskController {
 
     @PutMapping()
     @ApiOperation(value = "Task 수정 api", notes = "Task 수정")
-    public ResponseEntity<TaskResponseDto> updateTask(@RequestBody TaskRequestDto taskRequestDto) throws Exception {
+    public ResponseEntity<TaskResponseDto> updateTask(
+            @Validated(RUDValidationGroup.class)
+            @RequestBody TaskRequestDto taskRequestDto) throws Exception {
         TaskResponseDto taskResponseDto = taskService.updateTask(taskRequestDto);
         return  ResponseEntity.status(HttpStatus.OK).body(taskResponseDto);
     }

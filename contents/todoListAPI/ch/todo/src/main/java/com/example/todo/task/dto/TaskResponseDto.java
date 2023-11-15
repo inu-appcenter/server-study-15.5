@@ -6,18 +6,25 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @ApiModel("Task(할일) 응답 DTO")
 @Getter
 public class TaskResponseDto {
 
+    @NotBlank
+    @Positive
     @ApiModelProperty(value = "Task 식별자", notes = "Long 타입의 정수값")
     private Long taskId;
 
+    @NotBlank
     @ApiModelProperty(value = "제목", notes = "할일 목록에 제목으로 나타남")
     private String title;
 
+    @Size(max = 255)
     @ApiModelProperty(value = "설명", notes = "Task에 대한 자세한 정보")
     private String description;
 
