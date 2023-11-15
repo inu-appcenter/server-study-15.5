@@ -7,10 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -28,9 +25,9 @@ public class TodoRequestDto {
     @Size(min = 1, max = 100)
     private String content;
     
-    @NotNull(message = "마감 기한을 입력해주세요")
+    //의미없는 Notnull 어노테이션 제거
     @ApiModelProperty(value = "마감 기한", example = "2023-12-31T23:59:59")
-    @Pattern(regexp = "(19|20)\\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T](2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]")
+    @Pattern(regexp = "(19|20)\\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])[T](2[0-3]|[01][0-9]):[0-5][0-9]:[0-5][0-9]$")
     private String deadLine;
 
 
@@ -54,7 +51,8 @@ public class TodoRequestDto {
                 .build();
     }
 
-    public  static LocalDateTime stringToTime(String deadLine){
+    //String으로 deadLine을 받았기 떄문에 이를 LocalDateTime으로 변환해줌.(유효성 검사를 하기 위해 String으로 받았다)
+    public static LocalDateTime stringToTime(String deadLine){
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
         LocalDateTime formatDateTime  = LocalDateTime.parse(deadLine,format);
 

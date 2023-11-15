@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter
@@ -28,7 +27,7 @@ public class Todo extends Time{
     private  String contents;
 
     //생성자로 초기화 하지 않으므로 기본값으로 false 가 들어간다.
-    @Column(nullable = false)//데이터베이스에는 camel 형식이 아니기 때문에 조치를 취해야한다.
+    @Column(nullable = false)
     private Boolean completed;
 
     @Column(nullable = false)
@@ -39,7 +38,6 @@ public class Todo extends Time{
     private User user;
 
 
-    //당장 Time 슈퍼클래스를 사용할 이유가 없는 듯 하여 Todo클래스 필드에서 createdDate,modfiedDate 사용.(취소)
     @Builder
     public Todo(String title, String contents, LocalDateTime deadLine,User user){
         this.title = title;

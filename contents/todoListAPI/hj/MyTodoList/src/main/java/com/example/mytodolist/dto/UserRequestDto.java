@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Getter
 @NoArgsConstructor // Json @RequestBody 형식으로 데이터를 입력받고, 객체화 하려면 dto에 기본 생성자가 있어야한다.
@@ -17,7 +18,8 @@ public class UserRequestDto {
 
     @NotBlank(message = "이름을 입력해주세요")
     @ApiModelProperty(value = "사용자 이름", example = "홍길순")
-    @Pattern(regexp = "[가-힣]+")
+    @Size(min = 2, max=10)
+    @Pattern(regexp = "[가-힣]+$")
     private String name;
 
     @NotBlank(message = "이메일을 입력해 주세요")

@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -58,12 +59,8 @@ public class UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
         List<Todo> todos = user.getTodoList();
-        List<TodoResponseDto> todoDtoList = new ArrayList<>();
-
-        for(Todo todo: todos){
-            todoDtoList.add(TodoResponseDto.convertEntityToDto(todo));
-        }
-        return todoDtoList;
+        // stream 형식으로 사용자에게서 얻은 todos 들을  TodoReponseDto 형식의 리스트로 변환하여 리턴
+        return todos.stream().map(TodoResponseDto::convertEntityToDto).collect(Collectors.toList());
     }
 
 }
