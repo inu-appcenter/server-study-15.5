@@ -32,10 +32,10 @@ public class AddToDoReqDTO {
     private LocalDateTime dueDate;
 
     @ApiModelProperty(value = "ToDo를 끝냈는지 여부")
+    @NotNull
     @JsonProperty("isFinished")
     @Getter(AccessLevel.NONE)
-    @NotNull
-    private boolean isFinished;
+    private Boolean isFinished;
 
     @ApiModelProperty(value = "유저 고유id")
     @Null

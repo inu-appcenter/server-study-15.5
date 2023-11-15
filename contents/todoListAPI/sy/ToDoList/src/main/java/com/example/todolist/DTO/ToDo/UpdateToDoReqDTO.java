@@ -42,7 +42,7 @@ public class UpdateToDoReqDTO {
     @JsonProperty("isFinished")
     @Getter(AccessLevel.NONE)
     @NotNull
-    private boolean isFinished;
+    private Boolean isFinished;
 
     public boolean getIsFinished(){
         return this.isFinished;
