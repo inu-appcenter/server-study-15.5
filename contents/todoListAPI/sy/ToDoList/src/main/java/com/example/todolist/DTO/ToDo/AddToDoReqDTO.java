@@ -47,13 +47,12 @@ public class AddToDoReqDTO {
 
     public static ToDo toEntity(AddToDoReqDTO addToDoReqDTO){
 
-        ToDo toDo = ToDo.builder()
+        return ToDo.builder()
                 .title(addToDoReqDTO.getTitle())
                 .content(addToDoReqDTO.getContent())
                 .dueDate(addToDoReqDTO.getDueDate())
                 .isFinished(addToDoReqDTO.getIsFinished())
                 .build();
 
-        return toDo;
     }
 }

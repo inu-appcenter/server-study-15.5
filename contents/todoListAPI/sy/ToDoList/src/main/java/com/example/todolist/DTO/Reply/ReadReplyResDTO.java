@@ -42,7 +42,7 @@ public class ReadReplyResDTO {
 
     public static ReadReplyResDTO toDto(Reply reply, boolean isMyReply){
 
-        ReadReplyResDTO readReplyResDTO = ReadReplyResDTO.builder()
+        return ReadReplyResDTO.builder()
                 .replyId(reply.getReplyId())
                 .content(reply.getContent())
                 .writer(reply.getUser().getName())
@@ -51,6 +51,5 @@ public class ReadReplyResDTO {
                 .isMyReply(isMyReply)
                 .build();
 
-        return readReplyResDTO;
     }
 }

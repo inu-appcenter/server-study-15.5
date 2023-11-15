@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReplyService {
@@ -42,13 +43,9 @@ public class ReplyService {
     }
     public List<ReadReplyResDTO> readReply(Long userId,List<Reply> replyList){
 
-        List<ReadReplyResDTO> readReplyResDTOList = new ArrayList<>();
+        List<ReadReplyResDTO> readReplyResDTOList =
+                replyList.stream().map(e -> ReadReplyResDTO.toDto(e,isMyReply(userId,e))).collect(Collectors.toList());
 
-        for(int i=0;i<replyList.size();i++){
-
-            Reply reply = replyList.get(i);
-            readReplyResDTOList.add(ReadReplyResDTO.toDto(reply,isMyReply(userId,reply)));
-        }
         return readReplyResDTOList;
     }
     public void changeReply(ChangeReplyReqDTO changeReplyReqDTO){

@@ -28,12 +28,11 @@ public class AddUserReqDTO {
 
     public static User toEntity(AddUserReqDTO addUserReqDTO){
 
-        User user = User.builder()
+        return User.builder()
                 .name(addUserReqDTO.getName())
                 .email(addUserReqDTO.getEmail())
                 .password(addUserReqDTO.getPassword())
                 .build();
 
-        return user;
     }
 }

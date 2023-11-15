@@ -19,7 +19,7 @@ import javax.validation.Valid;
 public class ReplyController {
 
     private final ReplyService replyService;
-    private final Long userId = 3l;
+    private final Long userId = 4l;
     @Autowired
     public ReplyController(ReplyService replyService){
         this.replyService=replyService;

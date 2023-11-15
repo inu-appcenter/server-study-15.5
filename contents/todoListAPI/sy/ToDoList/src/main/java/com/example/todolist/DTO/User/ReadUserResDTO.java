@@ -19,11 +19,9 @@ public class ReadUserResDTO {
 
     public static ReadUserResDTO toDto(User user){
 
-        ReadUserResDTO readUserResDTO = ReadUserResDTO.builder()
+        return ReadUserResDTO.builder()
                 .email(user.getEmail())
                 .name(user.getName())
                 .build();
-
-        return readUserResDTO;
     }
 }
