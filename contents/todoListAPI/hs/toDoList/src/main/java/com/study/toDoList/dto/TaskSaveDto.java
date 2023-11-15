@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -16,7 +17,7 @@ import java.time.LocalDate;
 public class TaskSaveDto {
     @NotBlank
     private String title;
-    @NotEmpty
+    @NotNull
     private String description;
     @Future
     private LocalDate endDate;
