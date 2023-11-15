@@ -52,18 +52,5 @@ public class TaskResponseDto {
                 .description(task.getDescription())
                 .deadline(task.getDeadline())
                 .build();
-
-        /*
-        이렇게되면 ReponseDTO에 필요없는 User 정보가 포함되지는 않나?
-        로딩시점을 Lazy로 설정해놓고도, DTO를 만들기 위해 User 엔티티를 조회하게 되는거 아닌가.
-        => 위의 2023.11.14에 대한 피드백을 수용하면서 해결.
-         */
-        /*
-        this.taskId = task.getTaskId();
-        this.userId = task.getUser().getUserId();
-        this.title = task.getTitle();
-        this.description = task.getDescription();
-        this.deadline = task.getDeadline();
-         */
     }
 }

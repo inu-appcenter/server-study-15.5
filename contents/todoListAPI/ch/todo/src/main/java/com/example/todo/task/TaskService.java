@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,11 +39,6 @@ public class TaskService {
     }
 
     public TaskResponseDto save(TaskRequestDto taskRequestDto) throws Exception {
-        /*
-        Optional<User> selectedUser = userRepository.findById(taskRequestDto.getUserId());
-        selectedUser.orElseThrow(() -> new Exception("해당하는 사용자를 찾지 못 함."));
-         */
-        // 피드백: 가독성을 위해 한번에 작성
         User selectedUser = userRepository.findById(taskRequestDto.getUserId())
                 .orElseThrow(() -> new Exception("해당하는 사용자를 찾을 수 없습니다."));
 
@@ -65,69 +61,6 @@ public class TaskService {
     }
 
 
-    public TaskResponseDto updateTask(TaskRequestDto taskRequestDto) throws Exception {
-        /*
-        Optional<Task> selectedTask = taskRepository.findById(taskRequestDto.getTaskId());
-
-        Task savedTask;
-        Task puttedTask;
-        try {
-            selectedTask.orElseThrow(() -> new Exception("해당하는 Task 정보를 찾을 수 없음"));
-            puttedTask = selectedTask.get();
-            puttedTask.updateFromDto(taskRequestDto);
-            savedTask = taskRepository.save(puttedTask);
-        } catch (Exception taskNotFoundException) {
-            Optional<User> taskOwner = userRepository.findById(taskRequestDto.getUserId());
-            taskOwner.orElseThrow(() -> new Exception("해당 Task와 User의 정보를 찾을 수 없음"));
-            puttedTask = taskRequestDto.toEntity(taskOwner.get());
-            savedTask = taskRepository.save(puttedTask);
-        }
-         */
-
-        /*
-        일차적으로 puutedTask를 들어내고 findBy~와 orElseThrow를 한 번에 수행하도록 변경했다.
-        조금 더 간결하고 직관적인 코드가 되었다.
-         */
-        Task selectedTask;
-        Task savedTask;
-        try {
-             selectedTask = taskRepository.findById(taskRequestDto.getTaskId())
-                    .orElseThrow(() -> new Exception("해당하는 Task 정보를 찾을 수 없음"));
-            selectedTask.updateFromDto(taskRequestDto);
-            savedTask = taskRepository.save(selectedTask);
-        } catch (Exception taskNotFoundException) {
-            User taskOwner = userRepository.findById(taskRequestDto.getUserId())
-                    .orElseThrow(() -> new Exception("해당 Task와 User의 정보를 찾을 수 없음"));
-            selectedTask = taskRequestDto.toEntity(taskOwner);
-            savedTask = taskRepository.save(selectedTask);
-        }
-
-        return savedTask.toResponseDto();
-    }
-
-/*
-    public TaskResponseDto updateTask(TaskRequestDto taskRequestDto) throws Exception {
-        Task savedTask;
-        Task puttedTask;
-        Optional<Task> selectedTask = taskRepository.findById(taskRequestDto.getTaskId());
-
-        if (selectedTask.isPresent()) {
-            puttedTask = selectedTask.get();
-            puttedTask.updateFromDto(taskRequestDto);
-            savedTask = taskRepository.save(puttedTask);
-            return savedTask.toResponseDto();
-        }
-
-        User taskOwner = userRepository.findById(taskRequestDto.getUserId())
-                .orElseThrow(() -> new Exception("해당 Task와 User의 정보를 찾을 수 없음"));
-        puttedTask = taskRequestDto.toEntity(taskOwner);
-        savedTask = taskRepository.save(puttedTask);
-        return savedTask.toResponseDto();
-    }
-
- */
-
-/*
     private TaskResponseDto updateAndSaveTaskFromDto(Task task, TaskRequestDto taskRequestDto) {
         task.updateFromDto(taskRequestDto);
         return taskRepository.save(task)
@@ -148,12 +81,9 @@ public class TaskService {
         if (selectedTask.isPresent()) {
             return updateAndSaveTaskFromDto(selectedTask.get(), taskRequestDto);
         }
-
-        User taskOwner = userRepository.findById(taskRequestDto.getUserId())
-                .orElseThrow(() -> new Exception("해당 Task와 User의 정보를 찾을 수 없음"));
-        return createAndSaveTaskFromDto(taskOwner, taskRequestDto);
+        return save(taskRequestDto);
     }
 
- */
+
 
 }

@@ -34,8 +34,18 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    @ApiOperation(value = "기존 유저 정보 삭제 api")
+    @ApiOperation(value = "기존 유저 정보 삭제 api", notes = "회원 탈퇴 등 유저 정보 삭제")
     public void deleteUser(@ApiParam(value = "User 식별자", required = true) @PathVariable Long userId) {
         userService.deleteUser(userId);
     }
+
+
+    @PutMapping()
+    @ApiOperation(value = "User 정보 수정 api", notes = "기존 유저 정보 수정")
+    public ResponseEntity<UserResponseDto> putUser(@RequestBody UserRequestDto userRequestDto) throws Exception {
+        UserResponseDto userResponseDto = userService.updateUser(userRequestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
+    }
+
+
 }

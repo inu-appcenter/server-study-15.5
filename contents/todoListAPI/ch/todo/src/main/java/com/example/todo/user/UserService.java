@@ -5,6 +5,8 @@ import com.example.todo.user.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -24,25 +26,22 @@ public class UserService {
         return savedUser.toResponseDto();
     }
 
-    /*
+
+    private UserResponseDto updateAndSaveUserFromDto(User user, UserRequestDto userRequestDto) {
+        user.updateFromDto(userRequestDto);
+        return userRepository.save(user)
+                .toResponseDto();
+    }
+
     public UserResponseDto updateUser(UserRequestDto userRequestDto) throws Exception {
         Optional<User> selectedUser = userRepository.findById(userRequestDto.getUserId());
-        User puttedUser;
         User savedUser;
-        try {
-            selectedUser.orElseThrow(() -> new Exception("해당하는 User 엔티티를 찾을 수 없습니다."));
-            puttedUser = selectedUser.get();
-            puttedUser.updateFromDto(userRequestDto);
-            savedUser = userRepository.save(puttedUser);
-        } catch (Exception taskNotFoundException) {
-            Optional<User> taskOwner = userRepository.findById(userRequestDto.getUserId());
-            taskOwner.orElseThrow(() -> new Exception("해당 Task와 User의 정보를 찾을 수 없음"));
-            puttedUser = userRequestDto.toEntity(userRequestDto);
-            savedUser = userRepository.save(puttedUser);
+        if (selectedUser.isPresent()) {
+            return updateAndSaveUserFromDto(selectedUser.get(), userRequestDto);
         }
-        return User.toResponseDto(savedUser);
+        return saveUser(userRequestDto);
     }
-     */
+
 
     public void deleteUser(Long userId) {
         userRepository.deleteById(userId);

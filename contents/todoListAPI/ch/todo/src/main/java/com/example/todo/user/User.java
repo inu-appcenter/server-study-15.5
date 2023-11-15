@@ -1,11 +1,13 @@
 package com.example.todo.user;
 
 import com.example.todo.task.Task;
+import com.example.todo.user.dto.UserRequestDto;
 import com.example.todo.user.dto.UserResponseDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +39,21 @@ public class User {
         this.name = name;
     }
 
-    public static UserResponseDto toResponseDto(User user) {
+    public UserResponseDto toResponseDto() {
         return UserResponseDto.builder()
-                .userId(user.userId)
-                .name(user.name)
-                .loginId(user.loginId)
-                .password(user.password)
+                .userId(this.userId)
+                .name(this.name)
+                .loginId(this.loginId)
+                .password(this.password)
                 .build();
     }
+
+
+    public User updateFromDto(UserRequestDto userRequestDto) {
+        this.loginId = userRequestDto.getLoginId();
+        this.password = userRequestDto.getPassword();
+        this.name = userRequestDto.getName();
+        return this;
+    }
+
 }
