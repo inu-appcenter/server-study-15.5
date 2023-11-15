@@ -9,7 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 import static com.example.TodoProject.dto.TodoGroup.TodoGroupRequestDto.*;
 
@@ -34,9 +37,11 @@ public class TodoGroupController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "투두 그룹 생성 성공"),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 유저입니다."),
+            @ApiResponse(responseCode = "400", description = "유효성검사 실패")
 
     })
-    public ResponseEntity<CommonResponseDto> createTodoGroup(Long clientNum, @RequestBody RequestTodoGroupDto requestTodoGroupDto){
+    public ResponseEntity<CommonResponseDto> createTodoGroup(Long clientNum, @Valid @RequestBody RequestTodoGroupDto requestTodoGroupDto){
+
         todoGroupService.saveTodoGroup(clientNum, requestTodoGroupDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두 그룹 생성 성공", "null"));
@@ -47,9 +52,10 @@ public class TodoGroupController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 그룹 수정 성공"),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 유저입니다."),
-            @ApiResponse(responseCode = "400", description = "존재하지 않는 투두 그룹입니다.")
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 투두 그룹입니다."),
+            @ApiResponse(responseCode = "400", description = "유효성검사 실패")
     })
-    public ResponseEntity<CommonResponseDto> editTodoGroup(Long todogroupnum, @RequestBody RequestTodoGroupDto requestTodoGroupDto){
+    public ResponseEntity<CommonResponseDto> editTodoGroup(Long todogroupnum, @Valid @RequestBody RequestTodoGroupDto requestTodoGroupDto){
 
         todoGroupService.editTodoGroup(todogroupnum, requestTodoGroupDto);
         return ResponseEntity.status(HttpStatus.OK)
@@ -75,7 +81,5 @@ public class TodoGroupController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 그룹 전체 조회 성공", todoGroupService.getAllTodoForTodoGroup(clientnum)));
     }
-
-
 
 }

@@ -9,8 +9,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,9 +43,15 @@ public class TodoController {
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "투두 생성 성공"),
             @ApiResponse(responseCode = "400", description = "존재하지 않는 유저입니다."),
-            @ApiResponse(responseCode = "400", description = "존재하지 않는 투두 그룹입니다.")
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 투두 그룹입니다."),
+            @ApiResponse(responseCode = "400", description = "유효성검사 실패")
     })
-    public ResponseEntity<CommonResponseDto> createTodo(Long clientNum,@RequestBody RequestTodoDto requestTodoDto){
+    public ResponseEntity<CommonResponseDto> createTodo(Long clientNum, @Valid @RequestBody RequestTodoDto requestTodoDto, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CommonResponseDto(CommonResponse.FAIL, "입력값이 유효하지 않습니다.", bindingResult.getAllErrors()));
+        }
+
+
         if(requestTodoDto.getTodoGroupNum() == null){
             todoService.saveForNotTodoGroup(clientNum, requestTodoDto);
         } else if (requestTodoDto.getTodoGroupNum() != null) {
@@ -58,9 +66,11 @@ public class TodoController {
     @PutMapping("/{todonum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 수정 성공"),
-            @ApiResponse(responseCode = "400", description = "존재하지 않는 투두입니다.")
+            @ApiResponse(responseCode = "400", description = "존재하지 않는 투두입니다."),
+            @ApiResponse(responseCode = "400", description = "유효성검사 실패")
     })
-    public ResponseEntity<CommonResponseDto> editTodo(@PathVariable Long todonum,@RequestBody RequestTodoDto requestTodoDto){
+    public ResponseEntity<CommonResponseDto> editTodo(@PathVariable Long todonum,@Valid @RequestBody RequestTodoDto requestTodoDto){
+
         if(requestTodoDto.getTodoGroupNum() == null){
             todoService.editTodoForNotTodoGroup(todonum, requestTodoDto);
         }
@@ -75,7 +85,7 @@ public class TodoController {
     @DeleteMapping("/{todonum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 삭제 성공"),
-            @ApiResponse(responseCode= "400", description = "존재하지 않는 투두입니다.")
+            @ApiResponse(responseCode= "400", description = "존재하지 않는 투두입니다."),
     })
     public ResponseEntity<CommonResponseDto> deleteTodo(@PathVariable Long todonum){
         todoService.deleteTodo(todonum);

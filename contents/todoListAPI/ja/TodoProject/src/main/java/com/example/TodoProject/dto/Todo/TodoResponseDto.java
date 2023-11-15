@@ -1,8 +1,5 @@
 package com.example.TodoProject.dto.Todo;
 
-import com.example.TodoProject.entity.Client;
-import com.example.TodoProject.entity.Todo;
-import com.example.TodoProject.entity.TodoGroup;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;

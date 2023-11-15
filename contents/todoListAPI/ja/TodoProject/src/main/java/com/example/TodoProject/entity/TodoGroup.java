@@ -1,5 +1,4 @@
 package com.example.TodoProject.entity;
-
 import com.example.TodoProject.common.Time;
 import javax.persistence.*;
 import lombok.*;
@@ -44,7 +43,7 @@ public class TodoGroup extends Time {
         this.client = client;
     }
 
-    }
+}
 
 
 

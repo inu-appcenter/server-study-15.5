@@ -24,13 +24,13 @@ import static com.example.TodoProject.dto.Client.ClientResponseDto.*;
 public class ClientService {
     private final ClientRepository clientRepository;
 
-    private final Logger LOGGER = LoggerFactory.getLogger(ClientController.class);
     @Autowired
     public ClientService(ClientRepository clientRepository){
         this.clientRepository = clientRepository;
     }
 
     public List<ResponseClientDto> getAllClient() {
+        log.info("[getAllClient] 유저 전체 출력");
         List<Client> allClients = clientRepository.findAll();
         List<ResponseClientDto> userInfoDtos = allClients.stream()
                 .map(client -> client.toDto()
@@ -41,12 +41,13 @@ public class ClientService {
     }
 
     public void signUp(RequestClientDto requestClientDto){
-        LOGGER.info("[getSignUpResult] 회원 가입 정보 전달");
+        log.info("[signUp] 회원 가입 정보 전달");
         Optional<Client> client = clientRepository.findByClientId(requestClientDto.getClientId());
         if(client.isPresent()){
             throw new DuplicatedException("중복된 아이디입니다.");
         }
         clientRepository.save(requestClientDto.toEntity(requestClientDto));
+        log.info("[signUp] 회원 가입 성공. client Num: {}", requestClientDto.getClientId());
     }
 
     public void editClient(Long clientId, EditClientDto editClientDto){
