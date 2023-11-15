@@ -1,10 +1,9 @@
 package com.study.toDoList.exception;
 
 import com.study.toDoList.dto.ResponseDto;
+import com.study.toDoList.exception.ex.MyDuplicateException;
 import com.study.toDoList.exception.ex.MyNotFoundException;
-import com.study.toDoList.exception.ex.MyNotValidException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -30,11 +29,11 @@ public class MyExceptionHandler{
         return new ResponseEntity<>(new ResponseDto(-1,ex.getErrorCode().getMessage()),ex.getErrorCode().getStatus());
     }
 
-    /*@ExceptionHandler(MyNotValidException.class)
-    public ResponseEntity<?> MyNotValidException(MyNotValidException ex){
+    @ExceptionHandler(MyDuplicateException.class)
+    public ResponseEntity<?> MyDuplicateException(MyDuplicateException ex){
         log.error("중복 이메일 예외 발생 msg:{}",ex.getErrorCode().getMessage());
         return new ResponseEntity<>(new ResponseDto(-1,ex.getErrorCode().getMessage()),ex.getErrorCode().getStatus());
-    }*/
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
         BindingResult bindingResult = ex.getBindingResult();
@@ -44,9 +43,4 @@ public class MyExceptionHandler{
         return new ResponseEntity<>(new ResponseDto(-1,message),HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException ex){
-        log.error("데이터 중복 에러 발생");
-        return new ResponseEntity<>(new ResponseDto(-1,"데이터 중복 발생"),HttpStatus.BAD_REQUEST);
-    }
 }
