@@ -24,9 +24,9 @@ public class MemberService {
     @Transactional
     public Long save(String email, String password,String nickname){
         /*받은 비밀번호를 암호화*/
-        if(memberRepository.findByEmail(email).isPresent()){
+        /*if(memberRepository.findByEmail(email).isPresent()){
             throw new MyNotValidException(MyErrorCode.USER_NOT_VAlID);
-        }
+        }*/
         return memberRepository.save(MemberSaveDto.builder().email(email).password(password).nickname(nickname).build().toEntity()).getId();
     }
 
