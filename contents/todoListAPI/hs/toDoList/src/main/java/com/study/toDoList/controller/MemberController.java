@@ -35,9 +35,9 @@ public class MemberController {
     @ApiResponses({
             @ApiResponse(code = 201,message = "회원가입성공")
     })
-    @PostMapping("/")
-    public ResponseEntity<?> join(@RequestParam("email")@Email String email, @RequestParam("password") @NotBlank String password, @RequestParam("nickname") @NotBlank String nickname){
-        Long id = memberService.save(email,password,nickname);
+    @PostMapping("")
+    public ResponseEntity<?> join(@Valid @RequestBody MemberSaveDto memberSaveDto){
+        Long id = memberService.save(memberSaveDto);
         log.info("회원 join 호출 id:{}",id);
         return new ResponseEntity<>(new ResponseDto(id,"회원가입성공"), HttpStatus.CREATED);
     }
