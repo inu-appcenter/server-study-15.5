@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-@Order(value = Ordered.LOWEST_PRECEDENCE)
 @RestControllerAdvice
 public class GlobalControllerAdvice {
 
