@@ -8,7 +8,6 @@ import com.example.todolist.DTO.User.ReadUserResDTO;
 import com.example.todolist.Service.UserService;
 import javax.servlet.ServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -40,7 +40,6 @@ public class ToDoService {
                 .orElseThrow(() -> new CommondException(ExceptionCode.USER_NOTFOUND));
 
         ToDo toDo = addToDoReqDTO.toEntity(addToDoReqDTO);
-        int a=10/0;
         toDo.addUser(user);
 
         toDoRepository.save(toDo);

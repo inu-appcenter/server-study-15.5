@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -62,7 +63,6 @@ public class ToDoController {
             토큰에서 userId값 추출하는 로직
         */
         addToDoReqDTO.setUserId(userId);
-
         toDoService.addToDo(addToDoReqDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(CommonResponseDTO.of("CREATED","todo 추가 성공",null));
     }
