@@ -24,7 +24,6 @@ import javax.validation.constraints.NotBlank;
 
 @Slf4j
 @RestController
-@Validated//RequestParam 에서의 유효성 검사를 위해 사용
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
 public class MemberController {
