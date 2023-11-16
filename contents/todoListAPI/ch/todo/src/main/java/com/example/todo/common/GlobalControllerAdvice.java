@@ -1,5 +1,7 @@
 package com.example.todo.common;
 
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+@Order(value = Ordered.LOWEST_PRECEDENCE)
 @RestControllerAdvice
 public class GlobalControllerAdvice {
 

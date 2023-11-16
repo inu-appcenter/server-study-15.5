@@ -1,7 +1,6 @@
 package com.example.todo.user;
 
-import com.example.todo.groups.PValidationGroup;
-import com.example.todo.groups.RUDValidationGroup;
+import com.example.todo.common.ValidationGroup;
 import com.example.todo.user.dto.UserRequestDto;
 import com.example.todo.user.dto.UserResponseDto;
 import io.swagger.annotations.Api;
@@ -32,7 +31,7 @@ public class UserController {
     @PostMapping()
     @ApiOperation(value = "새 User 등록 api", notes = "새로운 유저 정보 등록")
     public ResponseEntity<UserResponseDto> postUser(
-            @Validated(PValidationGroup.class) @RequestBody UserRequestDto userRequestDto) {
+            @Validated(ValidationGroup.PValidationGroup.class) @RequestBody UserRequestDto userRequestDto) {
         UserResponseDto userResponseDto = userService.saveUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
@@ -47,7 +46,7 @@ public class UserController {
     @PutMapping()
     @ApiOperation(value = "User 정보 수정 api", notes = "기존 유저 정보 수정")
     public ResponseEntity<UserResponseDto> putUser(
-            @Validated(RUDValidationGroup.class) @RequestBody UserRequestDto userRequestDto) throws Exception {
+            @Validated(ValidationGroup.RUDValidationGroup.class) @RequestBody UserRequestDto userRequestDto) throws Exception {
         UserResponseDto userResponseDto = userService.updateUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
     }

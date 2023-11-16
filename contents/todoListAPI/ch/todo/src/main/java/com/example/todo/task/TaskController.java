@@ -1,7 +1,6 @@
 package com.example.todo.task;
 
-import com.example.todo.groups.PValidationGroup;
-import com.example.todo.groups.RUDValidationGroup;
+import com.example.todo.common.ValidationGroup;
 import com.example.todo.task.dto.TaskRequestDto;
 import com.example.todo.task.dto.TaskResponseDto;
 import io.swagger.annotations.Api;
@@ -34,7 +33,7 @@ public class TaskController {
     @PostMapping()
     @ApiOperation(value = "새 Task 등록 api", notes = "새 Task 등록")
     public ResponseEntity<TaskResponseDto> postTask(
-            @Validated(PValidationGroup.class) @RequestBody TaskRequestDto taskRequestDto) throws Exception {
+            @Validated(ValidationGroup.PValidationGroup.class) @RequestBody TaskRequestDto taskRequestDto) throws Exception {
         TaskResponseDto taskResponseDto = taskService.save(taskRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(taskResponseDto);
     }
@@ -56,7 +55,7 @@ public class TaskController {
     @PutMapping()
     @ApiOperation(value = "Task 수정 api", notes = "Task 수정")
     public ResponseEntity<TaskResponseDto> updateTask(
-            @Validated(RUDValidationGroup.class)
+            @Validated(ValidationGroup.RUDValidationGroup.class)
             @RequestBody TaskRequestDto taskRequestDto) throws Exception {
         TaskResponseDto taskResponseDto = taskService.updateTask(taskRequestDto);
         return  ResponseEntity.status(HttpStatus.OK).body(taskResponseDto);

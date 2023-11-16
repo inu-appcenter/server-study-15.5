@@ -1,8 +1,8 @@
 package com.example.todo.task.dto;
 
-import com.example.todo.groups.PValidationGroup;
+import com.example.todo.common.ValidationGroup.PValidationGroup;
 import com.example.todo.task.Task;
-import com.example.todo.groups.RUDValidationGroup;
+import com.example.todo.common.ValidationGroup.RUDValidationGroup;
 import com.example.todo.user.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
