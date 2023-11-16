@@ -1,8 +1,10 @@
 package com.example.todo.common;
 
-public interface ValidationGroup {
-    interface PValidationGroup {}
+import javax.validation.groups.Default;
 
-    interface RUDValidationGroup {}
+public interface ValidationGroup {
+//    interface PValidationGroup {}
+
+    interface RUDValidationGroup extends Default {}
 }
 

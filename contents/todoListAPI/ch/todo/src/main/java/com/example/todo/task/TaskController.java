@@ -33,7 +33,7 @@ public class TaskController {
     @PostMapping()
     @ApiOperation(value = "새 Task 등록 api", notes = "새 Task 등록")
     public ResponseEntity<TaskResponseDto> postTask(
-            @Validated(ValidationGroup.PValidationGroup.class) @RequestBody TaskRequestDto taskRequestDto) throws Exception {
+            @Validated @RequestBody TaskRequestDto taskRequestDto) throws Exception {
         TaskResponseDto taskResponseDto = taskService.save(taskRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(taskResponseDto);
     }

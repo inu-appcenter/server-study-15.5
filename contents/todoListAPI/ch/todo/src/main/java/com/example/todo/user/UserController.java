@@ -31,7 +31,7 @@ public class UserController {
     @PostMapping()
     @ApiOperation(value = "새 User 등록 api", notes = "새로운 유저 정보 등록")
     public ResponseEntity<UserResponseDto> postUser(
-            @Validated(ValidationGroup.PValidationGroup.class) @RequestBody UserRequestDto userRequestDto) {
+            @Validated @RequestBody UserRequestDto userRequestDto) {
         UserResponseDto userResponseDto = userService.saveUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }

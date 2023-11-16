@@ -1,8 +1,7 @@
 package com.example.todo.task.dto;
 
-import com.example.todo.common.ValidationGroup.PValidationGroup;
+import com.example.todo.common.ValidationGroup;
 import com.example.todo.task.Task;
-import com.example.todo.common.ValidationGroup.RUDValidationGroup;
 import com.example.todo.user.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,19 +16,20 @@ import java.time.LocalDateTime;
 @Getter
 public class TaskRequestDto {
 
-    @Positive(groups = { RUDValidationGroup.class})
+    @Positive(groups = {ValidationGroup.RUDValidationGroup.class})
     @ApiModelProperty(value = "Task 식별자", notes = "Long 타입의 양수값")
     private Long taskId;
 
-    @Positive(groups = { RUDValidationGroup.class, PValidationGroup.class })
+    @Positive
     @ApiModelProperty(value = "User 식별자", notes = "Long 타입의 양수값")
     private Long userId;
 
-    @NotBlank(groups = { RUDValidationGroup.class, PValidationGroup.class })
+    @Size(max=50)
+    @NotBlank
     @ApiModelProperty(value = "제목", notes = "할일 목록에 제목으로 나타남")
     private String title;
 
-    @Size(max=255, groups = { RUDValidationGroup.class, PValidationGroup.class })
+    @Size(max = 255)
     @ApiModelProperty(value = "설명", notes = "Task에 대한 자세한 정보")
     private String description;
 
