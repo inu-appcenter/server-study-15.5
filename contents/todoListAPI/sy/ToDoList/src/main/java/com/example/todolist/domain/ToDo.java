@@ -16,6 +16,7 @@ public class ToDo extends  BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "to_do_id")
     private Long toDoId;
 
     @Column(nullable = false)
@@ -27,7 +28,7 @@ public class ToDo extends  BaseEntity{
     @Column(nullable = false)
     private LocalDateTime dueDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "is_finished")
     private boolean isFinished;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -60,5 +61,9 @@ public class ToDo extends  BaseEntity{
 
     public void changeIsFinished(boolean isFinished){
         this.isFinished=isFinished;
+    }
+
+    public void addUser(User user){
+        this.user=user;
     }
 }

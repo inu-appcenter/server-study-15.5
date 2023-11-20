@@ -1,5 +1,6 @@
 package com.example.todolist.Controller;
 
+import com.example.todolist.DTO.CommonResponseDTO;
 import com.example.todolist.DTO.ToDo.AddToDoReqDTO;
 import com.example.todolist.DTO.ToDo.ReadToDoPreviewResDTO;
 import com.example.todolist.DTO.ToDo.ReadToDoResDTO;
@@ -10,9 +11,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,7 +24,7 @@ import java.util.List;
 public class ToDoController {
 
     private final ToDoService toDoService;
-
+    private final Long userId = 4l;
     @Autowired
     public ToDoController(ToDoService toDoService){
         this.toDoService=toDoService;
@@ -31,9 +35,9 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "전체ToDo 조회성공",response = ReadToDoPreviewResDTO.class),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<List<ReadToDoPreviewResDTO>> readToDoPreviewList(){
+    public ResponseEntity<CommonResponseDTO> readToDoPreviewList(){
         List<ReadToDoPreviewResDTO> readToDoPreviewResDTOList = toDoService.readToDoPreviewList();
-        return ResponseEntity.status(200).body(readToDoPreviewResDTOList);
+        return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","todo preview조회 성공",readToDoPreviewResDTOList) );
     }
 
     @GetMapping("/to-dos/{toDoId}")
@@ -41,14 +45,12 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "개별ToDo 조회성공",response = ReadToDoResDTO.class),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<ReadToDoResDTO> readToDo(@PathVariable Long toDoId){
+    public ResponseEntity<CommonResponseDTO> readToDo(@PathVariable Long toDoId){
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 3l;
-
         ReadToDoResDTO readToDoResDTO = toDoService.readToDo(toDoId,userId);
-        return ResponseEntity.status(200).body(readToDoResDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","todo 조회 성공",readToDoResDTO));
     }
 
     @PostMapping("/to-dos")
@@ -56,15 +58,13 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "ToDo 추가성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Void> addToDo(@RequestBody AddToDoReqDTO addToDoReqDTO){
+    public ResponseEntity<CommonResponseDTO> addToDo(@RequestBody @Valid AddToDoReqDTO addToDoReqDTO){
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 3l;
         addToDoReqDTO.setUserId(userId);
-
         toDoService.addToDo(addToDoReqDTO);
-        return ResponseEntity.status(201).body(null);
+        return ResponseEntity.status(HttpStatus.CREATED).body(CommonResponseDTO.of("CREATED","todo 추가 성공",null));
     }
 
     @PatchMapping("/to-dos/{toDoId}")
@@ -72,16 +72,15 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "ToDo 수정성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Void> updateToDo(@PathVariable Long toDoId, @RequestBody UpdateToDoReqDTO updateToDoReqDTO){
+    public ResponseEntity<CommonResponseDTO> updateToDo(@PathVariable Long toDoId, @RequestBody @Valid UpdateToDoReqDTO updateToDoReqDTO){
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 3l;
         updateToDoReqDTO.setUserId(userId);
         updateToDoReqDTO.setToDoId(toDoId);
 
         toDoService.updateToDo(updateToDoReqDTO);
-        return ResponseEntity.status(200).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","todo 변경성공",null));
     }
 
     @DeleteMapping("/to-dos/{toDoId}")
@@ -89,13 +88,12 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "ToDo 삭제성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<Void> deleteToDo(@PathVariable Long toDoId){
+    public ResponseEntity<CommonResponseDTO> deleteToDo(@PathVariable Long toDoId){
         /*
             토큰에서 userId값 추출하는 로직
         */
-        Long userId = 3l;
 
         toDoService.deleteToDo(toDoId,userId);
-        return ResponseEntity.status(200).body(null);
+        return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","todo 삭제성공",null));
     }
 }

@@ -57,4 +57,5 @@ public class ReadToDoResDTO {
     public boolean getIsFinished(){
         return this.isFinished;
     }
+
 }

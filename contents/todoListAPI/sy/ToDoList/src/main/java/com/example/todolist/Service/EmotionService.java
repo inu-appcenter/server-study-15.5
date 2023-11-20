@@ -1,5 +1,7 @@
 package com.example.todolist.Service;
 
+import com.example.todolist.Exception.CommondException;
+import com.example.todolist.Exception.ExceptionCode;
 import com.example.todolist.Repository.EmotionRepository;
 import com.example.todolist.Repository.ToDoRepository;
 import com.example.todolist.Repository.UserRepository;
@@ -26,38 +28,50 @@ public class EmotionService {
 
     public void addEmotion(Long userId, Long toDoId){
 
-        User user = userRepository.findById(userId).orElseThrow(/*예외처리*/);
-        ToDo toDo= toDoRepository.findById(toDoId).orElseThrow(/*예외처리*/);
+        ToDo toDo = toDoRepository.findById(toDoId)
+                .orElseThrow(() -> new CommondException(ExceptionCode.NOT_MYTODO));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CommondException(ExceptionCode.USER_NOTFOUND));
 
         if(isExistEmotion(userId,toDoId)){
-            //예외처리
+            throw new CommondException(ExceptionCode.ALREADY_EXIST_EMOTION);
         }
-        Emotion emotion = Emotion.builder()
-                .emotionStatus(EmotionStatus.Like) // 일단 Like기능만 구현하기로 했습니다.
-                .user(user)
-                .toDo(toDo)
-                .build();
-        emotionRepository.save(emotion);
+        emotionRepository.save(toEmotion(user,toDo));
     }
 
     public void deleteEmotion(Long userId, Long toDoId){
-        ToDo toDo = toDoRepository.findById(toDoId).orElseThrow();
-        User user = userRepository.findById(userId).orElseThrow();
+        ToDo toDo = toDoRepository.findById(toDoId)
+                .orElseThrow(() -> new CommondException(ExceptionCode.NOT_MYTODO));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CommondException(ExceptionCode.USER_NOTFOUND));
 
-        Emotion emotion = emotionRepository.findByUserAndToDo(user,toDo).orElseThrow(/*예외처리*/);
+        Emotion emotion = emotionRepository.findByUserAndToDo(user,toDo)
+                .orElseThrow(() -> new CommondException(ExceptionCode.EMOTION_NOTFOUND));
 
         emotionRepository.delete(emotion);
     }
 
     public Long findLikeCnt(Long toDoId){
-        ToDo toDo = toDoRepository.findById(toDoId).orElseThrow();
+        ToDo toDo = toDoRepository.findById(toDoId)
+                .orElseThrow(() -> new CommondException(ExceptionCode.TODO_NOTFOUND));
         return emotionRepository.countByToDo(toDo);
     }
 
     public boolean isExistEmotion(Long userId, Long toDoId){
-        ToDo toDo = toDoRepository.findById(toDoId).orElseThrow();
-        User user = userRepository.findById(userId).orElseThrow();
+        ToDo toDo = toDoRepository.findById(toDoId)
+                .orElseThrow(() -> new CommondException(ExceptionCode.NOT_MYTODO));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CommondException(ExceptionCode.USER_NOTFOUND));
 
         return emotionRepository.existsByUserAndToDo(user,toDo);
+    }
+
+    public Emotion toEmotion(User user, ToDo toDo){
+
+        return Emotion.builder()
+                .emotionStatus(EmotionStatus.Like) // 일단 Like기능만 구현하기로 했습니다.
+                .user(user)
+                .toDo(toDo)
+                .build();
     }
 }
