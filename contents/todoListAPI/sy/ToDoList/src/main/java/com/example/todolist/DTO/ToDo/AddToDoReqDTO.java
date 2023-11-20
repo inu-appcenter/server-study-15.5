@@ -1,4 +1,5 @@
 package com.example.todolist.DTO.ToDo;
+
 import com.example.todolist.domain.ToDo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,7 +9,6 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 
 @Getter
