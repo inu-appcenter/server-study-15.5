@@ -6,22 +6,27 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
 public class TaskSaveDto {
+    @NotBlank
     private String title;
+    @NotNull
     private String description;
-    private LocalDateTime endDate;
-    //private Member member;
+    @Future
+    private LocalDate endDate;
 
     @Builder
-    public TaskSaveDto(String title, String description, LocalDateTime endDate/*, Member member*/){
+    public TaskSaveDto(String title, String description, LocalDate endDate){
         this.title = title;
         this.description = description;
         this.endDate = endDate;
-        //this.member = member;
     }
 
     public Task toEntity(){
@@ -29,7 +34,6 @@ public class TaskSaveDto {
                 .title(title)
                 .description(description)
                 .endDate(endDate)
-                /*.member()*/
                 .build();
     }
 }

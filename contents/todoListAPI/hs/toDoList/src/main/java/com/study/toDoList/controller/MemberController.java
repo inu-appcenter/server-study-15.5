@@ -12,10 +12,17 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
@@ -27,10 +34,10 @@ public class MemberController {
     @ApiResponses({
             @ApiResponse(code = 201,message = "회원가입성공")
     })
-    @PostMapping("/")
-    public ResponseEntity<?> join(@RequestParam("email")String email,@RequestParam("password")String password,@RequestParam("nickname")String nickname){
-        Long id = memberService.save(email,password,nickname);
-
+    @PostMapping("")
+    public ResponseEntity<?> join(@Valid @RequestBody MemberSaveDto memberSaveDto){
+        Long id = memberService.save(memberSaveDto);
+        log.info("회원 join 호출 id:{}",id);
         return new ResponseEntity<>(new ResponseDto(id,"회원가입성공"), HttpStatus.CREATED);
     }
 
@@ -39,7 +46,8 @@ public class MemberController {
             @ApiResponse(code = 200,message = "회원정보수정성공")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody MemberUpdateDto memberUpdateDto){
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @RequestBody MemberUpdateDto memberUpdateDto){
+        log.info("회원 update 호출 회원id:{}",id);
         memberService.update(id,memberUpdateDto);
         return new ResponseEntity<>(new ResponseDto(id,"회원정보수정성공"), HttpStatus.OK);
     }
@@ -49,6 +57,7 @@ public class MemberController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){
+        log.info("회원 delete 호출 회원id:{}",id);
         memberService.delete(id);
         return new ResponseEntity<>(new ResponseDto(id,"회원삭제성공"), HttpStatus.NO_CONTENT);
     }
@@ -59,6 +68,7 @@ public class MemberController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<?> getMember(@PathVariable Long id){
+        log.info("회원 정보 호출 회원id:{}",id);
         return new ResponseEntity<>(memberService.getMember(id),HttpStatus.OK);
     }
 
@@ -68,6 +78,7 @@ public class MemberController {
     })
     @GetMapping("/tasks/{id}")
     public ResponseEntity<?> getAllTask(@PathVariable Long id){
+        log.info("회원의 모든 할일 호출 회원id:{}",id);
         return new ResponseEntity<>(taskService.getAllTask(id),HttpStatus.OK);
     }
 }
