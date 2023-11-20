@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 
 @Service
@@ -21,9 +22,9 @@ public class TodoService {
 
     public TodoResponseDto getTodo(Long id)
     {
-        Todo todo = todoRepository.findById(id).orElseThrow(() -> new NoSuchElementException());
+        Todo todo = todoRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 투두가 존재하지 않습니다."));
 
-        TodoResponseDto todoResponseDto = TodoResponseDto.EntityToDto(todo);
+        TodoResponseDto todoResponseDto = TodoResponseDto.convertEntityToDto(todo);
 
         return todoResponseDto;
     }
@@ -31,11 +32,15 @@ public class TodoService {
     public TodoResponseDto saveTodo(Long id, TodoRequestDto todoRequestDto){
         User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
-        Todo todo = TodoRequestDto.DtoToEntity(todoRequestDto,user);
+        Todo todo = TodoRequestDto.convertDtoToEntity(todoRequestDto,user);
+        LocalDateTime now = LocalDateTime.now();
+
+        if(now.isAfter(todo.getDeadLine())){
+            throw new RuntimeException("현재시각보다 미래의 날짜를 입력해주세요.");
+        }
 
         todoRepository.save(todo);
-
-        TodoResponseDto todoResponseDto = TodoResponseDto.EntityToDto(todo);
+        TodoResponseDto todoResponseDto = TodoResponseDto.convertEntityToDto(todo);
 
         return todoResponseDto;
     }
@@ -43,10 +48,17 @@ public class TodoService {
     public TodoResponseDto updateTodo(Long id,TodoRequestDto todoRequestDto){
         Todo todo = todoRepository.findById(id).orElseThrow(()->new NoSuchElementException("업데이트 할 todo가 존재하지 않습니다."));
 
-        todo.updateTodo(todoRequestDto.getTitle(),todoRequestDto.getContent(),todoRequestDto.getDeadLine());
+        LocalDateTime inputDeadLine = TodoRequestDto.stringToTime(todoRequestDto.getDeadLine());
+        LocalDateTime now = LocalDateTime.now();
+
+        if(now.isAfter(inputDeadLine)){
+            throw new RuntimeException("현재 날짜 보다 미래의 날짜를 입력해주세요.");
+        }
+
+        todo.updateTodo(todoRequestDto.getTitle(),todoRequestDto.getContent(),inputDeadLine);
         todoRepository.save(todo);
 
-        TodoResponseDto todoResponseDto =  TodoResponseDto.EntityToDto(todo);
+        TodoResponseDto todoResponseDto =  TodoResponseDto.convertEntityToDto(todo);
 
         return todoResponseDto;
     }
@@ -63,14 +75,19 @@ public class TodoService {
 
         if(isCompleted){
             todo.checkCompleted();
-
             User user = todo.getUser();     //여기서 또 영속이 끊김
-            user.LevelUp(user.getLevel() + 1);
+            user.LevelUp();
+            userRepository.save(user);
+        }
+        else{
+            todo.checkCompleted();
+            User user = todo.getUser();
+            user.LevelDown();
             userRepository.save(user);
         }
         todoRepository.save(todo);
 
-        TodoResponseDto todoResponseDto =  TodoResponseDto.EntityToDto(todo);
+        TodoResponseDto todoResponseDto =  TodoResponseDto.convertEntityToDto(todo);
 
         return todoResponseDto;
     }

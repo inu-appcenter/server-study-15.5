@@ -45,10 +45,13 @@ public class User{
         this.email = email;
     }
 
-    //메서드 이름 변경.
-    public void LevelUp(int level)
+    //레벨 업 메소드
+    public void LevelUp()
     {
-        this.level = level;
+        this.level = this.level + 1;
     }
+
+    //레벨 다운 메소드
+    public void LevelDown(){this.level = this.level - 1;}
 
 }
