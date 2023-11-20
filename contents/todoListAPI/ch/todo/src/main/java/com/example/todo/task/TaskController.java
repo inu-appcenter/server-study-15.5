@@ -1,12 +1,17 @@
 package com.example.todo.task;
 
+import com.example.todo.common.ValidationGroup;
 import com.example.todo.task.dto.TaskRequestDto;
 import com.example.todo.task.dto.TaskResponseDto;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Api(tags = {"Task"})
@@ -27,7 +32,8 @@ public class TaskController {
 
     @PostMapping()
     @ApiOperation(value = "새 Task 등록 api", notes = "새 Task 등록")
-    public ResponseEntity<TaskResponseDto> postTask(@RequestBody TaskRequestDto taskRequestDto) throws Exception {
+    public ResponseEntity<TaskResponseDto> postTask(
+            @Validated @RequestBody TaskRequestDto taskRequestDto) throws Exception {
         TaskResponseDto taskResponseDto = taskService.save(taskRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(taskResponseDto);
     }
@@ -40,20 +46,19 @@ public class TaskController {
     }
 
     @PatchMapping("/completed/{taskId}")
-    @ApiOperation(value = "Task 완료 상태 변경 api")
+    @ApiOperation(value = "Task 완료 상태 변경 api", notes = "isCompleted 토글")
     public void changeTaskIsCompleted(
             @ApiParam(value = "Task(할일) 식별자", required = true) @PathVariable Long taskId) throws Exception {
         taskService.changeIsCompleted(taskId);
     }
 
     @PutMapping()
-    @ApiOperation(value = "Task 수정 api")
-    public ResponseEntity<TaskResponseDto> updateTask(@RequestBody TaskRequestDto taskRequestDto) throws Exception {
+    @ApiOperation(value = "Task 수정 api", notes = "Task 수정")
+    public ResponseEntity<TaskResponseDto> updateTask(
+            @Validated(ValidationGroup.RUDValidationGroup.class)
+            @RequestBody TaskRequestDto taskRequestDto) throws Exception {
         TaskResponseDto taskResponseDto = taskService.updateTask(taskRequestDto);
-        /*
-        고민, HttpStatus를 NO_CONTENT와 CREATED로 나누고 싶은데 컨트롤러에서 어떻게 식별할 수 있을까
-         */
-        return  ResponseEntity.status(HttpStatus.NO_CONTENT).body(taskResponseDto);
+        return  ResponseEntity.status(HttpStatus.OK).body(taskResponseDto);
     }
 
 }

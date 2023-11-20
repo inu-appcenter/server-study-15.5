@@ -18,7 +18,13 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
-    public List<TaskResponseDto> getAllByUserId(Long userId) throws Exception {
+
+    /*
+    파라미터에 final 키워드를 붙이는 것을 어떨까? 피드백을 받았다.
+    코드를 작성하며 final 키워드에 대해 많이 생각해보지 않았는데,
+    음.. final은 어디에 붙이면 좋을까? 값을 바꾸지 않는 부분은 많은데 모든 곳에 붙이는 게 좋을까?
+     */
+    public List<TaskResponseDto> getAllByUserId(final Long userId) throws Exception {
         List<TaskResponseDto> taskResponseDtos;
         List<Task> taskList;
 
@@ -28,53 +34,53 @@ public class TaskService {
             throw new Exception("User를 찾을 수 없습니다.");
         }
 
-        taskResponseDtos = taskList.stream().map(TaskResponseDto::new).collect(Collectors.toList());
+        taskResponseDtos = taskList.stream().map(TaskResponseDto::from).collect(Collectors.toList());
         return taskResponseDtos;
     }
 
     public TaskResponseDto save(TaskRequestDto taskRequestDto) throws Exception {
-        Optional<User> selectedUser = userRepository.findById(taskRequestDto.getUserId());
-        selectedUser.orElseThrow(() -> new Exception("해당하는 사용자를 찾지 못 함."));
+        User selectedUser = userRepository.findById(taskRequestDto.getUserId())
+                .orElseThrow(() -> new Exception("해당하는 사용자를 찾을 수 없습니다."));
 
-        Task task = TaskRequestDto.toEntity(taskRequestDto, selectedUser.get());
+        Task task = taskRequestDto.toEntity(selectedUser);
         Task savedTask = taskRepository.save(task);
-        return Task.toResponseDto(savedTask);
+        return savedTask.toResponseDto();
     }
 
     public void delete(Long taskId) throws Exception {
-        Optional<Task> selectedTask = taskRepository.findById(taskId);
-        if (selectedTask.isEmpty()) {
-            throw new Exception();
-        }
-        taskRepository.delete(selectedTask.get());
+        Task selectedTask = taskRepository.findById(taskId)
+                .orElseThrow(() -> new Exception("해당하는 task를 찾을 수 없습니다."));
+        taskRepository.delete(selectedTask);
     }
 
     public void changeIsCompleted(Long taskId) throws Exception {
-        Optional<Task> selectedTask = taskRepository.findById(taskId);
-        selectedTask.orElseThrow(() -> new Exception("해당하는 task를 찾을 수 없습니다."));
+        Task selectedTask = taskRepository.findById(taskId)
+                .orElseThrow(() -> new Exception("해당하는 task를 찾을 수 없습니다."));
+        selectedTask.updateIsComleted();
+        taskRepository.save(selectedTask);
+    }
 
-        Task task = selectedTask.get();
-        task.updateIsComleted();
-        taskRepository.save(task);
+
+    private TaskResponseDto updateAndSaveTaskFromDto(Task task, TaskRequestDto taskRequestDto) {
+        task.updateFromDto(taskRequestDto);
+        return taskRepository.save(task)
+                .toResponseDto();
+    }
+
+    private TaskResponseDto createAndSaveTaskFromDto(User taskOwner, TaskRequestDto taskRequestDto) {
+        Task createdTask = taskRequestDto.toEntity(taskOwner);
+        return taskRepository.save(createdTask)
+                .toResponseDto();
     }
 
     public TaskResponseDto updateTask(TaskRequestDto taskRequestDto) throws Exception {
         Optional<Task> selectedTask = taskRepository.findById(taskRequestDto.getTaskId());
-
-        Task savedTask;
-        Task puttedTask;
-        try {
-            selectedTask.orElseThrow(() -> new Exception("해당하는 Task 정보를 찾을 수 없음"));
-            puttedTask = selectedTask.get();
-            puttedTask.updateFromDto(taskRequestDto);
-            savedTask = taskRepository.save(puttedTask);
-        } catch (Exception taskNotFoundException) {
-            Optional<User> taskOwner = userRepository.findById(taskRequestDto.getUserId());
-            taskOwner.orElseThrow(() -> new Exception("해당 Task와 User의 정보를 찾을 수 없음"));
-            puttedTask = TaskRequestDto.toEntity(taskRequestDto, taskOwner.get());
-            savedTask = taskRepository.save(puttedTask);
+        if (selectedTask.isPresent()) {
+            return updateAndSaveTaskFromDto(selectedTask.get(), taskRequestDto);
         }
-        return Task.toResponseDto(savedTask);
+        return save(taskRequestDto);
     }
+
+
 
 }
