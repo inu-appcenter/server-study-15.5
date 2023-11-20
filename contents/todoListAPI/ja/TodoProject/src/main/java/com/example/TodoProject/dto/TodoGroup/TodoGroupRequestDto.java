@@ -1,30 +1,25 @@
 package com.example.TodoProject.dto.TodoGroup;
 
 import com.example.TodoProject.entity.Client;
-import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.entity.TodoGroup;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
+import javax.validation.constraints.NotBlank;
 
 public class TodoGroupRequestDto {
 
     @Getter
     public static class RequestTodoGroupDto {
 
-        @Schema(example = "중요한 일 모음")
+        @NotBlank(message = "투두 그룹의 이름은 필수 요소입니다.")
+        @Schema(description = "투두 그룹의 이름", example = "중요한 일 모음")
         private String groupName;
 
-        @Schema(example = "true")
+        @NotBlank(message="투두 그룹의 중요도를 설정 해 주세요.")
+        @Schema(description = "투두 그룹이 중요한가 아닌가에 대한 여부.",example = "true")
         private Boolean isImportant;
 
-        @Builder
-        public RequestTodoGroupDto(String groupName, Boolean isImportant){
-            this.groupName = groupName;
-            this.isImportant = isImportant;
-        }
         public TodoGroup toEntity(Client client, RequestTodoGroupDto requestTodoGroupDto) {
             return TodoGroup.builder()
                     .client(client)

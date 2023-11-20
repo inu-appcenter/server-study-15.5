@@ -8,6 +8,7 @@ import com.example.TodoProject.entity.TodoGroup;
 import com.example.TodoProject.repository.ClientRepository;
 import com.example.TodoProject.repository.TodoGroupRepository;
 import com.example.TodoProject.repository.TodoRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,7 @@ import static com.example.TodoProject.dto.Todo.TodoRequestDto.*;
 
 
 @Service
+@Slf4j
 public class TodoGroupService {
 
     //@PersistenceContext
@@ -38,19 +40,24 @@ public class TodoGroupService {
         this.todoGroupRepository = todoGroupRepository;
     }
     public void saveTodoGroup(Long clientNum, RequestTodoGroupDto requestTodoGroupDto){
+        log.info("[saveTodoGroup] 투두 그룹 생성중");
         Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
         todoGroupRepository.save(requestTodoGroupDto.toEntity(client, requestTodoGroupDto));
+        log.info("[saveTodoGroup] 투두 그룹 생성완료");
     }
 
     public void editTodoGroup(Long todoGroupNum, RequestTodoGroupDto requestTodoGroupDto){
+        log.info("[editTodoGroup] 투두 그룹 수정중");
         TodoGroup todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 투두입니다."));
         todoGroup.EditTodoGroup(requestTodoGroupDto);
         todoGroupRepository.save(todoGroup);
+        log.info("[editTodoGroup] 투두 그룹 수정완료");
     }
 
     public List<ResponseTodoGroupDto> getAllTodoGroup(Long clientNum){
+        log.info("[getAllTodoGroup] 유저가 가지고 있는 전체 투두 소환");
         List<TodoGroup> todoGroups = todoGroupRepository.findByClientClientNum(clientNum);
         List<ResponseTodoGroupDto> todoGroupDtos = todoGroups.stream()
                 .map(todoGroup-> new ResponseTodoGroupDto(
@@ -63,44 +70,21 @@ public class TodoGroupService {
     }
 
     @Transactional(readOnly = true)
-    public Map<String, Object> getAllTodoGroupsTodo(Long clientNum){
+    public List<TodoListDto> getAllTodoForTodoGroup(Long clientNum){
+        log.info("[getAllTodoForTodoGroup] 유저가 가지고 있는 투두 그룹의 전체 투두 소환");
         List<TodoGroup> todoGroups = todoGroupRepository.findByClientClientNum(clientNum);
-        List<Todo> todos = todoRepository.findByTodoGroup(null);
 
         List<TodoListDto> todoListDtos = todoGroups.stream()
                 .map( todoGroup -> new TodoListDto(
                        todoGroup.getGroupName(),
                         todoGroup.getIsImportant(),
                         todoGroup.getTodo().stream().map(
-                                todo->new ResponseTodoDto(
-                                        todo.getTodoNum(),
-                                        todo.getTodoTitle(),
-                                        todo.getTodoDescription(),
-                                        todo.getStartDate(),
-                                        todo.getEndDate(),
-                                        todo.getIsFinished(),
-                                        todo.getTodoLocation(),
-                                        todoGroup.getGroupNum()
-                                )).collect(Collectors.toList())
+                                todo->todo.toDto()
+                                ).collect(Collectors.toList())
                 )).collect(Collectors.toList());
-
-        List<ResponseTodoDto> notTodoGroup = todos.stream()
-                .map(todo->new ResponseTodoDto(
-                        todo.getTodoNum(),
-                        todo.getTodoTitle(),
-                        todo.getTodoDescription(),
-                        todo.getStartDate(),
-                        todo.getEndDate(),
-                        todo.getIsFinished(),
-                        todo.getTodoLocation(),
-                        null
-                )).collect(Collectors.toList());
-
-        Map<String, Object> result = new HashMap<>();
-
-        result.put("notTodoGroup", notTodoGroup);
-        result.put("allDtos", todoListDtos);
-        return result;
+        return todoListDtos;
     }
+
+
 
 }

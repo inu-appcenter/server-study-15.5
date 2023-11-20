@@ -1,5 +1,4 @@
 package com.example.TodoProject.entity;
-
 import com.example.TodoProject.common.Time;
 import javax.persistence.*;
 import lombok.*;
@@ -37,13 +36,14 @@ public class TodoGroup extends Time {
        this.isImportant = requestTodoGroupDto.getIsImportant();
     }
 
-        @Builder
-        public TodoGroup(String groupName, Boolean isImportant, Client client){
-            this.groupName = groupName;
-            this.isImportant = isImportant;
-            this.client = client;
-        }
+    @Builder
+    public TodoGroup(String groupName, Boolean isImportant, Client client){
+        this.groupName = groupName;
+        this.isImportant = isImportant;
+        this.client = client;
     }
+
+}
 
 
 

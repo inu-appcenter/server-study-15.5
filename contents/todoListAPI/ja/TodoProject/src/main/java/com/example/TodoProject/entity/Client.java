@@ -5,6 +5,7 @@ import javax.persistence.*;
 
 import lombok.*;
 import static com.example.TodoProject.dto.Client.ClientRequestDto.*;
+import static com.example.TodoProject.dto.Client.ClientResponseDto.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,5 +59,17 @@ public class Client extends Time {
         this.clientEmail = clientEmail;
         this.clientRole = clientRole;
         this.clientPhoneNum=clientPhoneNum;
+    }
+
+    public ResponseClientDto toDto(){
+        return ResponseClientDto.builder()
+                .clientId(clientId)
+                .clientEmail(clientEmail)
+                .clientName(clientName)
+                .clientRole(clientRole)
+                .clientPassword(clientPassword)
+                .clientPhoneNum(clientPhoneNum)
+                .clientNum(clientNum)
+                .build();
     }
 }

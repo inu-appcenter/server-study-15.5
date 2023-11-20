@@ -14,8 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static com.example.TodoProject.dto.Client.ClientRequestDto.*;
+import javax.validation.Valid;
 
+import static com.example.TodoProject.dto.Client.ClientRequestDto.*;
+import static com.example.TodoProject.dto.Client.ClientResponseDto.*;
 
 @RestController
 @RequestMapping("/clients")
@@ -58,23 +60,31 @@ public class ClientController {
     @PostMapping("/sign-up")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "회원가입 성공"),
-            @ApiResponse(responseCode = "400", description = "아이디가 중복되었습니다.")
+            @ApiResponse(responseCode = "400", description = "아이디가 중복되었습니다."),
+            @ApiResponse(responseCode = "400", description = "유효성검사 실패")
     })
-    public ResponseEntity<CommonResponseDto> signUp(@RequestBody RequestClientDto requestClientDto){
+    public ResponseEntity<CommonResponseDto> signUp(@RequestBody @Valid RequestClientDto requestClientDto) {
         LOGGER.info("[signUp] 회원가입중... id : {}", requestClientDto.getClientId());
+
+        // 회원가입 로직 실행
         clientService.signUp(requestClientDto);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponseDto(CommonResponse.SUCCESS, "회원가입 성공", requestClientDto.getClientId()));
     }
 
     //유저 수정하기
     @Operation(summary = "유저 회원정보 수정", description = "clientNum과 ShortClientDto를 파라미터로 받음. 유저의 회원정보를 수정한다.(아이디 수정 불가능)")
-    @PutMapping("/patch/{clientnum}")
+    @PutMapping("/{clientnum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원정보 수정 성공"),
     })
-    public ResponseEntity<CommonResponseDto> editUser(@PathVariable Long clientnum, @RequestBody EditClientDto editClientDto){
+    public ResponseEntity<CommonResponseDto> editUser(@PathVariable Long clientnum,@Valid @RequestBody EditClientDto editClientDto){
+
         LOGGER.info("[editUser] 회원정보수정");
         clientService.editClient(clientnum, editClientDto);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponseDto(CommonResponse.SUCCESS, "회원정보 수정 성공", "null"));
     }
+
+
+
 }
