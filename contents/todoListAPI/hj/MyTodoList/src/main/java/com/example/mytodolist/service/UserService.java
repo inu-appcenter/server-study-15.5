@@ -8,9 +8,8 @@ import com.example.mytodolist.dto.UserRequestDto;
 import com.example.mytodolist.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -54,7 +53,9 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    @Transactional //repository에서 List형식으로 가져오면 영속이 끊긴 상태로 가져오기 때문에 Transaction으로 영속을 유지시켜준다.
+    //repository에서 List형식으로 가져오면 영속이 끊긴 상태로 가져오기 때문에 Transaction으로 영속을 유지시켜준다.
+    //읽기만 하기 때문에 readOnly 설정
+    @Transactional(readOnly = true) 
     public List<TodoResponseDto> getTodosByUserId(Long id){
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
