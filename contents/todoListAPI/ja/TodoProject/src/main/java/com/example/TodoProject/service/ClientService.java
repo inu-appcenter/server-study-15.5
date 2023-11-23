@@ -3,12 +3,9 @@ package com.example.TodoProject.service;
 
 import com.example.TodoProject.config.ex.DuplicatedException;
 import com.example.TodoProject.config.ex.NotFoundException;
-import com.example.TodoProject.controller.ClientController;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.repository.ClientRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +52,13 @@ public class ClientService {
                 .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
         client.editUser(editClientDto);
         clientRepository.save(client);
+    }
+
+    public void deleteClient(Long clientId){
+        Client client = clientRepository.findByClientNum(clientId)
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
+
+        clientRepository.delete(client);
     }
 
 }

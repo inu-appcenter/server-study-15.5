@@ -34,7 +34,6 @@ public class ClientRequestDto {
 
         @Schema(description = "클라이언트 이메일",example = "example@google.com")
         @NotBlank(message = "이메일은 필수 입력 값입니다.")
-        @Email(message = "이메일 형식이 틀렸습니다.")
         @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")
         private String clientEmail;
 
@@ -68,7 +67,6 @@ public class ClientRequestDto {
         private String clientPassword;
 
         @NotBlank(message = "이메일은 필수 입력 값입니다.")
-        @Email(message = "이메일 형식이 틀렸습니다.")
         @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z]{2,6}$")
         @Schema(description = "클라이언트 이메일",example = "example@google.com")
         private String clientEmail;

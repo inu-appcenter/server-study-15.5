@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,25 +27,26 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = DuplicatedException.class)
-    public ResponseEntity<CommonResponseDto> handleDuplicatedException(DuplicatedException duplicatedException) {
+    public ResponseEntity<CommonResponseDto> handleDuplicatedException(DuplicatedException duplicatedException, WebRequest webRequest) {
         log.error(duplicatedException.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CommonResponseDto(CommonResponse.FAIL, duplicatedException.getMessage(), "null"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CommonResponseDto(CommonResponse.FAIL, duplicatedException.getMessage(), webRequest.getDescription(false)));
     }
 
     @ExceptionHandler(value = NotFoundException.class)
-    public ResponseEntity<CommonResponseDto> handleNotFoundException(NotFoundException notFoundException) {
+    public ResponseEntity<CommonResponseDto> handleNotFoundException(NotFoundException notFoundException, WebRequest request) {
         log.error(notFoundException.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CommonResponseDto(CommonResponse.FAIL, notFoundException.getMessage(), "null"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CommonResponseDto(CommonResponse.FAIL, notFoundException.getMessage(), request.getDescription(false)));
     }
 
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        List<String> errors = ex.getBindingResult().getAllErrors().stream()
-                .filter(error -> error instanceof FieldError)
-                .map(error -> ((FieldError) error).getDefaultMessage())
-                .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CommonResponseDto(CommonResponse.FAIL, "유효성 검사 실패", "null"));
+        List<String> errors = new ArrayList<>();
+        ex.getBindingResult().getFieldErrors().forEach(error -> {
+            errors.add(error.getField() + ": " + error.getDefaultMessage());
+        });
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CommonResponseDto(CommonResponse.FAIL, "유효성 검사 실패", errors));
     }
 }

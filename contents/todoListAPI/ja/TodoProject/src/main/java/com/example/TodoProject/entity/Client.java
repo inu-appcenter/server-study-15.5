@@ -4,6 +4,7 @@ import com.example.TodoProject.common.Time;
 import javax.persistence.*;
 
 import lombok.*;
+
 import static com.example.TodoProject.dto.Client.ClientRequestDto.*;
 import static com.example.TodoProject.dto.Client.ClientResponseDto.*;
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class Client extends Time {
     }
 
     @Builder
-    public Client(String clientId, String clientPassword, String clientName, String clientEmail, String clientRole,String clientPhoneNum){
+    public Client(String clientId, String clientPassword, String clientName, String clientEmail, String clientRole, String clientPhoneNum){
         this.clientId = clientId;
         this.clientPassword = clientPassword;
         this.clientName = clientName;
