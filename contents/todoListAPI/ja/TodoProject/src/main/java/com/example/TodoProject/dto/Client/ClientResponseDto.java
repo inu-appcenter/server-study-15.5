@@ -25,7 +25,7 @@ public class ClientResponseDto {
         private String clientPassword;
 
 
-        @Schema(example = "김정아", description = "회원가입하는 유저의 이름")
+        @Schema(example = "홍길동", description = "회원가입하는 유저의 이름")
         private String clientName;
 
 

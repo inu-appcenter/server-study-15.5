@@ -13,6 +13,8 @@ public interface TodoGroupRepository extends JpaRepository<TodoGroup, Long> {
     Optional<TodoGroup> findByGroupNum(Long todoGroupNum);
     List<TodoGroup> findByClientClientNum(Long ClientNum);
 
+    Optional<TodoGroup> getByGroupNum(Long todoGroupNum);
+
 
 
 }

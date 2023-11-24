@@ -1,7 +1,8 @@
 package com.example.TodoProject.service;
 
 
-import com.example.TodoProject.config.ex.NotFoundException;
+import com.example.TodoProject.config.ex.NotFoundElementException;
+import com.example.TodoProject.config.ex.NotRightThisObject;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.entity.TodoGroup;
@@ -18,31 +19,29 @@ import java.util.stream.Collectors;
 
 import static com.example.TodoProject.dto.TodoGroup.TodoGroupRequestDto.*;
 import static com.example.TodoProject.dto.TodoGroup.TodoGroupResponseDto.*;
-import static com.example.TodoProject.dto.Todo.TodoResponseDto.*;
-import static com.example.TodoProject.dto.Todo.TodoRequestDto.*;
 
 
 @Service
 @Slf4j
 public class TodoGroupService {
 
-    //@PersistenceContext
-    private final TodoRepository todoRepository;
 
     private final ClientRepository clientRepository;
 
     private final TodoGroupRepository todoGroupRepository;
 
+    private final TodoService todoService;
+
     @Autowired
-    public TodoGroupService(TodoRepository todoRepository, ClientRepository clientRepository, TodoGroupRepository todoGroupRepository){
+    public TodoGroupService(ClientRepository clientRepository, TodoGroupRepository todoGroupRepository, TodoService todoService){
         this.clientRepository = clientRepository;
-        this.todoRepository = todoRepository;
         this.todoGroupRepository = todoGroupRepository;
+        this.todoService = todoService;
     }
     public void saveTodoGroup(Long clientNum, RequestTodoGroupDto requestTodoGroupDto){
         log.info("[saveTodoGroup] 투두 그룹 생성중");
         Client client = clientRepository.findByClientNum(clientNum)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new NotFoundElementException("존재하지 않는 사용자입니다."));
         todoGroupRepository.save(requestTodoGroupDto.toEntity(client, requestTodoGroupDto));
         log.info("[saveTodoGroup] 투두 그룹 생성완료");
     }
@@ -50,15 +49,20 @@ public class TodoGroupService {
     public void editTodoGroup(Long todoGroupNum, RequestTodoGroupDto requestTodoGroupDto){
         log.info("[editTodoGroup] 투두 그룹 수정중");
         TodoGroup todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 투두입니다."));
+                .orElseThrow(() -> new NotFoundElementException("존재하지 않는 투두입니다."));
         todoGroup.EditTodoGroup(requestTodoGroupDto);
         todoGroupRepository.save(todoGroup);
         log.info("[editTodoGroup] 투두 그룹 수정완료");
     }
 
     public List<ResponseTodoGroupDto> getAllTodoGroup(Long clientNum){
-        log.info("[getAllTodoGroup] 유저가 가지고 있는 전체 투두 소환");
+        log.info("[getAllTodoGroup] 유저가 가지고 있는 전체 투두그룹을 데이터베이스에서 가져오는 작업");
+
+        clientRepository.findByClientNum(clientNum)
+                .orElseThrow(() -> new NotFoundElementException("존재하지 않는 유저입니다."));
+
         List<TodoGroup> todoGroups = todoGroupRepository.findByClientClientNum(clientNum);
+
         List<ResponseTodoGroupDto> todoGroupDtos = todoGroups.stream()
                 .map(todoGroup-> new ResponseTodoGroupDto(
                         todoGroup.getGroupNum(),
@@ -66,12 +70,47 @@ public class TodoGroupService {
                         todoGroup.getIsImportant()
                 ))
                 .collect(Collectors.toList());
+        log.info("[getAllTodoGroup] 전체 투두그룹 가져오기 성공");
         return todoGroupDtos;
+    }
+
+    @Transactional
+    public void deleteTodoGroup(Long clientNum, Long TodoGroupNum){
+        log.info("[deleteTodoGroup] 투두 그룹 삭제");
+        log.info("[deleteTodoGroup] (1) 투두 그룹 실존여부 확인");
+        TodoGroup todoGroup = todoGroupRepository.getByGroupNum(TodoGroupNum)
+                        .orElseThrow(() -> new NotFoundElementException("존재하지 않는 투두 그룹입니다."));
+        log.info("[deleteTodoGroup] (1) 확인완료");
+        log.info("[deleteTodoGroup] (2) 투두 그룹을 지우려는 사용자가 그 그룹 소유주가 맞는지 확인");
+
+        Client client = clientRepository.findByTodoGroupGroupNum(TodoGroupNum)
+                        .orElseThrow(() -> new NotFoundElementException("존재하지 않는 유저입니다."));
+        if(client.getClientNum() != clientNum){
+            throw new NotRightThisObject("투두 그룹 소유주가 아닙니다.");
+        }
+        log.info("[deleteTodoGroup] (2) 확인완료");
+        log.info("[deleteTodoGroup] (3) 투두 그룹을 삭제하기 전 투두 그룹에 속한 투두들의 그룹을 null로 변환");
+
+        todoGroup.getTodo().forEach(todo -> {
+            todoService.editTodoGroup(todo);
+        });
+        log.info("[deleteTodoGroup] (3) 성공");
+        log.info("[deleteTodoGroup] (4) 투두그룹에 연결된 투두리스트 비우기");
+        todoGroup.makeTodoListEmpty();
+
+        log.info(("[deleteTodoGroup] (4) 완료"));
+        log.info("[deleteTodoGroup] (5) 투두 그룹 삭제");
+        todoGroupRepository.delete(todoGroup);
+        log.info("[deleteTodoGroup] 전체 작업 완료");
     }
 
     @Transactional(readOnly = true)
     public List<TodoListDto> getAllTodoForTodoGroup(Long clientNum){
         log.info("[getAllTodoForTodoGroup] 유저가 가지고 있는 투두 그룹의 전체 투두 소환");
+
+        clientRepository.findByClientNum(clientNum)
+                .orElseThrow(() -> new NotFoundElementException("존재하지 않는 유저입니다."));
+
         List<TodoGroup> todoGroups = todoGroupRepository.findByClientClientNum(clientNum);
 
         List<TodoListDto> todoListDtos = todoGroups.stream()
@@ -82,9 +121,8 @@ public class TodoGroupService {
                                 todo->todo.toDto()
                                 ).collect(Collectors.toList())
                 )).collect(Collectors.toList());
+        log.info("[getAllTodoForTodoGroup] 전체 투두 리스트 전달 성공");
         return todoListDtos;
     }
-
-
 
 }

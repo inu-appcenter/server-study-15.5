@@ -43,7 +43,7 @@ public class ClientController {
     }
 
     //유저 전체 조회
-    @Operation(summary = "유저 전체 조회", description = "관리자가 유저를 관리할 때 쓸 수 있는 도구. 시큐리티 추가 후 권한 설정 예정")
+    @Operation(summary = "유저 전체 조회", description = "관리자가 유저를 관리할 때 쓸 수 있는 도구. 시큐리티 추가 후 권한 설정 예정<br><br>입력: 없음<br> 출력: ResponseClientDto를 List 형식으로 data에 반환.")
     @GetMapping("")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseClientListDto.class))),
@@ -58,7 +58,7 @@ public class ClientController {
     }
 
     //유저 생성하기
-    @Operation(summary = "유저 생성(회원가입)", description = "RequestClientDto를 파라미터로 받음. 유저의 회원가입을 담당함.")
+    @Operation(summary = "유저 생성(회원가입)", description = "유저의 회원가입을 담당함.<br><br> 입력: RequestClientDto <br> 출력: data에 null을 반환.")
     @PostMapping("/sign-up")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "회원가입 성공"),
@@ -74,11 +74,12 @@ public class ClientController {
         // 회원가입 로직 실행
         clientService.signUp(requestClientDto);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponseDto(CommonResponse.SUCCESS, "회원가입 성공", null));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new CommonResponseDto(CommonResponse.SUCCESS, "회원가입 성공", null));
     }
 
     //유저 수정하기
-    @Operation(summary = "유저 회원정보 수정", description = "clientNum과 ShortClientDto를 파라미터로 받음. 유저의 회원정보를 수정한다.(아이디 수정 불가능)")
+    @Operation(summary = "유저 회원정보 수정", description = "유저의 회원정보를 수정한다.<br><br> 특이사항: 아이디 수정 불가능합니다. 헷갈리지 마십쇼! <br><br> 입력: EditClientDto <br> 출력: data에 null 반환")
     @PutMapping("/{clientnum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원정보 수정 성공"),
@@ -88,19 +89,21 @@ public class ClientController {
 
         log.info("[editUser] 회원정보수정");
         clientService.editClient(clientnum, editClientDto);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponseDto(CommonResponse.SUCCESS, "회원정보 수정 성공", null));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponseDto(CommonResponse.SUCCESS, "회원정보 수정 성공", null));
     }
 
-    @Operation(summary="유저 회원탈퇴", description = "유저의 번호를 파라미터로 입력하면 유저를 영구 삭제함.")
+    @Operation(summary="유저 회원탈퇴", description = "유저의 번호를 파라미터로 입력하면 유저를 영구 삭제함. <br><br> 특이사항: 유저가 가지고 있는 투두까지 삭제됨 <br><br> 입력: 삭제하고싶은 클라이언트의 데이터베이스 상 PK <br> 출력: data에 null로 반환함.")
     @DeleteMapping("/{clientnum}")
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "회원 탈퇴 성공"),
+            @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
             @ApiResponse(responseCode = "404", description = "유저를 찾을 수가 없네요;;")
     })
     public ResponseEntity<CommonResponseDto> deleteClient(@PathVariable Long clientnum){
         log.info("[deleteClient] 회원탈퇴");
         clientService.deleteClient(clientnum);
-        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponseDto(CommonResponse.SUCCESS, "회원탈퇴 성공", null));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponseDto(CommonResponse.SUCCESS, "회원탈퇴 성공", null));
     }
 
 

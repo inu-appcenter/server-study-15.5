@@ -68,8 +68,8 @@ public class Todo extends Time {
         this.todoGroup = todoGroup;
     }
 
-    public void todoToggle(Boolean FT){
-        this.isFinished = FT;
+    public void EditTodosTodoGroup(){
+        this.todoGroup = null;
     }
 
     public ResponseTodoDto toDto(){
