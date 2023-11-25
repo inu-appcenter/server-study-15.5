@@ -89,7 +89,7 @@ public class TodoController {
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두 삭제 성공" ,todonum));
     }
 
-    @GetMapping ("/{clientnum}/{keyword}")
+    @GetMapping ("/{keyword}")
     @Operation(summary = "투두 제목 검색하기", description = "투두를 검색하는 기능이다. keyword가 포함되어있는 제목의 투두를 모두 출력한다.<br><br> 입력: <br>  1. 검색하는 유저의 데이터베이스 상 pk(clientnum) <br> 2. 검색할 단어(keyword) <br><br> 출력: data에 제목에 검색어가 포함된 투두의 ResponseTodoDto를 list로 반환함.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 검색 성공", content = @Content(schema = @Schema(implementation = ResponseListDto.class))),
@@ -98,7 +98,7 @@ public class TodoController {
     @io.swagger.annotations.ApiResponses(
             @io.swagger.annotations.ApiResponse(code = 200, message = "투두 검색 성공", response = ResponseListDto.class)
     )
-    public ResponseEntity<CommonResponseDto> getTodoSearch(@PathVariable Long clientnum, @PathVariable String keyword) {
+    public ResponseEntity<CommonResponseDto> getTodoSearch(Long clientnum, @PathVariable String keyword) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"검색 성공", todoService.getUsersSearchTodos(clientnum,keyword)));
     }
