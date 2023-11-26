@@ -43,6 +43,10 @@ public class TodoGroup extends Time {
         this.client = client;
     }
 
+    public void makeTodoListEmpty(){
+        this.todo = null;
+    }
+
 }
 
 

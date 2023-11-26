@@ -8,43 +8,36 @@ import lombok.Getter;
 import lombok.ToString;
 
 import javax.persistence.Column;
+import java.util.List;
 
 public class ClientResponseDto {
 
     @Getter
-    @ApiModel("최경민멍청이")
-    @ToString
     public static class ResponseClientDto {
 
         private Long clientNum;
 
-        @Schema(example = "inu1234")
-        @Column(name = "client_id")
+        @Schema(example = "inu1234", description = "회원가입 할 아이디")
         private String clientId;
 
 
-        @Schema(example = "password1234")
-        @Column(name="client_password")
+        @Schema(example = "password1234", description = "회원가입 할 유저가 입력한 비밀번호")
         private String clientPassword;
 
 
-        @Schema(example = "김정아")
-        @Column(name = "client_name")
+        @Schema(example = "홍길동", description = "회원가입하는 유저의 이름")
         private String clientName;
 
 
         @Schema(example = "example@google.com")
-        @Column(name = "client_email")
         private String clientEmail;
 
 
         @Schema(example = "ROLE_USER")
-        @Column(name = "client_role")
         private String clientRole;
 
 
-        @Schema(example = "010-5420-9330")
-        @Column(nullable = false, name = "client_phone_num")
+        @Schema(example = "010-1234-5678")
         private String clientPhoneNum;
 
         @Builder
@@ -57,6 +50,19 @@ public class ClientResponseDto {
             this.clientRole = clientRole;
             this.clientPhoneNum=clientPhoneNum;
         }
+    }
+
+    @Getter
+    public static class ResponseClientSignDto{
+
+        @Schema(example = "2", description = "유저의 데이터베이스 상 번호가 들어감니다.")
+        private String clientNum;
+
+    }
+
+    @Getter
+    public static class ResponseClientListDto{
+        private List<ResponseClientDto> data;
     }
 
 }

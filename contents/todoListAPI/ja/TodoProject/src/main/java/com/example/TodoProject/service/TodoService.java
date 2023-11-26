@@ -1,6 +1,6 @@
 package com.example.TodoProject.service;
 
-import com.example.TodoProject.config.ex.NotFoundException;
+import com.example.TodoProject.config.ex.NotFoundElementException;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.entity.TodoGroup;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.example.TodoProject.dto.Todo.TodoRequestDto.*;
@@ -38,91 +37,83 @@ public class TodoService {
     }
 
 
-    public void saveForTodoGroup(Long clientNum, RequestTodoDto requestTodoDto) {
-        log.info("[saveForTodoGroup]투두 그룹이 있는 투두 저장중. 사용자 id: {} , 투두 제목: {}",clientNum ,requestTodoDto.getTodoTitle());
+    public void CreateTodo(Long clientNum, RequestTodoDto requestTodoDto) {
+        log.info("[saveForTodoGroup]투두 저장중. 사용자 id: {} , 투두 제목: {}",clientNum ,requestTodoDto.getTodoTitle());
         Client client = clientRepository.findByClientNum(clientNum)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
+                .orElseThrow(() -> new NotFoundElementException("존재하지 않는 유저입니다."));
 
-        Long todoGroupNum = requestTodoDto.getTodoGroupNum();
-        TodoGroup todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
-                .orElseThrow(()->new NotFoundException("존재하지 않는 투두 그룹입니다."));
+        TodoGroup todoGroup;
+
+        if(requestTodoDto.getTodoGroupNum() != null){
+            Long todoGroupNum = requestTodoDto.getTodoGroupNum();
+            todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
+                    .orElseThrow(()->new NotFoundElementException("존재하지 않는 투두 그룹입니다."));
+        }
+        else{
+            todoGroup = null;
+        }
 
         Todo todo = requestTodoDto.toEntity(client, todoGroup, requestTodoDto);
-        log.info("[saveForTodoGroup]투두 그룹이 있는 투두 저장완료. 사용자 id: {} , 투두 제목: {}",clientNum ,requestTodoDto.getTodoTitle());
+        log.info("[saveForTodoGroup]투두 저장완료. 사용자 id: {} , 투두 제목: {}",clientNum ,requestTodoDto.getTodoTitle());
         todoRepository.save(todo);
     }
 
-    public void saveForNotTodoGroup(Long clientNum, RequestTodoDto requestTodoDto) {
-        log.info("[saveForNotTodoGroup]투두 그룹이 있는 투두 저장중. 사용자 id: {} , 투두 제목: {}",clientNum ,requestTodoDto.getTodoTitle());
-        Client client = clientRepository.findByClientNum(clientNum)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
 
-        Todo todo = requestTodoDto.toEntity(client, null, requestTodoDto);
-        log.info("[saveForNotTodoGroup]투두 그룹이 있는 투두 저장완료. 사용자 id: {} , 투두 제목: {}",clientNum ,requestTodoDto.getTodoTitle());
-        todoRepository.save(todo);
-    }
-
-    public void editTodoForTodoGroup(Long todoNum, RequestTodoDto requestTodoDto){
+    public void editTodo(Long todoNum, RequestTodoDto requestTodoDto){
         log.info("[editTodoForTodoGroup] 투두 그룹이 있는 투두 수정. todo id: {}", todoNum);
         Todo todo = todoRepository.findByTodoNum(todoNum)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 투두입니다."));
+                .orElseThrow(() -> new NotFoundElementException("존재하지 않는 투두입니다."));
 
-        Long todoGroupNum =requestTodoDto.getTodoGroupNum();
+        TodoGroup todoGroup;
 
-        TodoGroup todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
-                .orElseThrow(()->new NotFoundException("존재하지 않는 투두 그룹입니다."));
-
+        if(requestTodoDto.getTodoGroupNum() != null){
+            Long todoGroupNum =requestTodoDto.getTodoGroupNum();
+            todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
+                    .orElseThrow(()->new NotFoundElementException("존재하지 않는 투두 그룹입니다."));
+        }
+        else{
+            todoGroup = null;
+        }
         todo.EditTodo(todoGroup, requestTodoDto);
         log.info("[editTodoForTodoGroup] 투두 그룹이 있는 투두 수정완료. todo id: {}", todoNum);
         todoRepository.save(todo);
     }
 
-    public void editTodoForNotTodoGroup(Long todoNum, RequestTodoDto requestTodoDto){
-        log.info("[editTodoForNotTodoGroup] 투두 그룹이 없는 투두 수정. todo id: {}", todoNum);
-        Todo todo = todoRepository.findByTodoNum(todoNum)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 투두입니다."));
-
-        todo.EditTodo(null, requestTodoDto);
-        log.info("[editTodoForNotTodoGroup] 투두 그룹이 없는 투두 수정완료. todo id: {}", todoNum);
+    public void editTodoGroup(Todo todo){
+        todo.EditTodosTodoGroup();
         todoRepository.save(todo);
     }
+
     public void deleteTodo(Long todoNum){
         log.info("[deleteTodo] 투두 삭제하기. todo id: {}", todoNum);
         Todo todo = todoRepository.findByTodoNum(todoNum)
-                .orElseThrow(() -> new NotFoundException("존재하지 않는 투두입니다."));
+                .orElseThrow(() -> new NotFoundElementException("존재하지 않는 투두입니다."));
         todoRepository.delete(todo);
         log.info("[deleteTodo] 투두 삭제완료. todo id: {}", todoNum);
     }
 
-    public List<ResponseTodoDto> getUsersAllTodos(Long clientNum) {
+    public List<ResponseTodoDto> getUsersSearchTodos(Long clientNum, String keyword) {
         log.info("[getUsersAllTodos] 그 유저의 투두 전체소환. client Num: {}", clientNum);
-        List<Todo> todos = todoRepository.findByClientClientNum(clientNum);
+
+        List<Todo> todos = todoRepository.findAllByClientClientNumAndTodoTitleContains(clientNum, keyword);
+
         List<ResponseTodoDto> todoDtos = todos.stream()
                 .map(todo -> todo.toDto()
                 ).collect(Collectors.toList());
         return todoDtos;
     }
 
-
-    public void toggleTodo(Long todoNum){
-        Optional<Todo> todoIsFinished = todoRepository.findByTodoNum(todoNum);
-        if(!todoIsFinished.isPresent()){
-            throw new NotFoundException("투두가 존재하지 않습니다.");
-        }
-        Todo todo = todoIsFinished.get();
-        todo.todoToggle(todo.getIsFinished() ? false : true);
-        todoRepository.save(todo);
-
-    }
-
     @Transactional(readOnly = true)
     public List<ResponseTodoDto> getAllTodosForNotTodoGroup(Long clientNum){
         log.info("[getAllTodosForNotTodoGroup] 투두 그룹이 없는 투두 전체 소환. clientNum id: {}", clientNum);
+        clientRepository.findByClientNum(clientNum)
+                .orElseThrow(() -> new NotFoundElementException("존재하지 않는 유저입니다."));
+
         List<Todo> todos = todoRepository.findByClientClientNumAndTodoGroup(clientNum,null);
 
         List<ResponseTodoDto> notTodoGroup = todos.stream()
-                .map( Todo :: toDto
-                ).collect(Collectors.toList());
+                .map( Todo :: toDto)
+                .collect(Collectors.toList());
 
         return notTodoGroup;
     }

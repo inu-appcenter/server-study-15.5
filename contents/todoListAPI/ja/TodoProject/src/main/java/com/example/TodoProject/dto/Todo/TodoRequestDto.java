@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 public class TodoRequestDto {
@@ -22,15 +23,15 @@ public class TodoRequestDto {
         @Schema(description ="투두에 대한 설명이다. 빈칸가능." , example = "도서관에 가서 신라면에 꿀단지를 먹을 것이다.")
         private String todoDescription;
 
-        @NotBlank(message = "투두 시작 날짜를 입력해주세요.")
+        @NotNull(message = "투두 시작 날짜를 입력해주세요.")
         @Schema(description = "투두 시작 날짜")
         private LocalDate startDate;
 
-        @NotBlank(message = "투두의 마지막 날짜를 입력해주세요")
+        @NotNull(message = "투두의 마지막 날짜를 입력해주세요")
         @Schema(description = "투두 마지막 날짜")
         private LocalDate endDate;
 
-        @NotBlank(message = "isFinished가 비었습니다.")
+        @NotNull(message = "isFinished가 비었습니다.")
         @Schema(description = "투두가 완수되었는가 아닌가에 대한 Boolean값", example = "False")
         private Boolean isFinished;
 

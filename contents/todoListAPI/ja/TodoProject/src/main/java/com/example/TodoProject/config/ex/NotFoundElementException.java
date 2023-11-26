@@ -6,13 +6,13 @@ package com.example.TodoProject.config.ex;
 
     @author 김정아
  */
-public class NotFoundException extends RuntimeException {
+public class NotFoundElementException extends RuntimeException {
 
-    public NotFoundException(String m){
+    public NotFoundElementException(String m){
         super(m);
     }
 
-    public NotFoundException(String m, Throwable cause){
+    public NotFoundElementException(String m, Throwable cause){
         super(m, cause);
     }
 }

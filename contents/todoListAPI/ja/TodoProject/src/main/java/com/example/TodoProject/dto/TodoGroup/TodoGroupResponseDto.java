@@ -50,4 +50,10 @@ public class TodoGroupResponseDto {
         }
     }
 
+    @Getter
+    public static class ResponseTodoGroupListDto{
+        private List<ResponseTodoGroupListDto> data;
+    }
+
+
 }
