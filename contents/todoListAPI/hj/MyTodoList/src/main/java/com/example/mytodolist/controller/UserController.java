@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Api(tags = {"유저 정보"},description = "유저 생성,조회,수정,삭제")
-@Slf4j
+@Slf4j //private static final Logger log = LoggerFactory.getLogger(UserController.class) 자동 생성
 
 @RequestMapping("/users") // 클라이언트의 요청과 요청을 처리하는 핸들러 메서드를 매핑
 @RestController  //해당 클래스가 REST API의 리소스를 처리하기위한 API 엔드포인트로 동작함을 선언
@@ -83,7 +82,7 @@ public class UserController {
             @ApiParam(value = "유저 아이디",required = true,example = "1")
             @PathVariable("id") Long id)throws NoSuchElementException{
 
-        log.info("[UserGetTodo] 유저 아이디로 해당 유저의 Todo들을 조회합니다. 유저 id : {}",id);
+        log.info("[UserGetTodo] 유저 아이디로 해당 유저의 Todo 들을 조회합니다. 유저 id : {}",id);
         List<TodoResponseDto> userTodoList = userService.getTodosByUserId(id);
 
         return new ResponseEntity<>(userTodoList, HttpStatus.OK);

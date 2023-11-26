@@ -1,7 +1,6 @@
 package com.example.mytodolist.dto;
 
 import com.example.mytodolist.domain.User;
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +16,7 @@ import javax.validation.constraints.Size;
 public class UserRequestDto {
 
     @NotBlank(message = "이름을 입력해주세요")
-    @ApiModelProperty(value = "사용자 이름", example = "홍길순")
+    @ApiModelProperty(value = "사용자 이름", example = "홍길순") //문서화 정보를 제공
     @Size(min = 2, max=10)
     @Pattern(regexp = "[가-힣]+$")
     private String name;
