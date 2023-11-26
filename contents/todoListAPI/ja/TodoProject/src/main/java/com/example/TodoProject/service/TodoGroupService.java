@@ -49,7 +49,7 @@ public class TodoGroupService {
     public void editTodoGroup(Long todoGroupNum, RequestTodoGroupDto requestTodoGroupDto){
         log.info("[editTodoGroup] 투두 그룹 수정중");
         TodoGroup todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
-                .orElseThrow(() -> new NotFoundElementException("존재하지 않는 투두입니다."));
+                .orElseThrow(() -> new NotFoundElementException("존재하지 않는 투두 그룹입니다."));
         todoGroup.EditTodoGroup(requestTodoGroupDto);
         todoGroupRepository.save(todoGroup);
         log.info("[editTodoGroup] 투두 그룹 수정완료");

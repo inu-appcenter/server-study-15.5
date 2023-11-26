@@ -106,7 +106,7 @@ public class TodoController {
     @Operation(summary = "투두 그룹을 가지고 있지 않은 투두 전체 조회", description = "투두 그룹을 가지고 있지 않은 투두를 조회를 하는 컨트롤러.<br><br> 입력: 사용자의 데이터베이스 상 pk(clientnum)<br>출력: data에 투두 그룹이 null인 투두들을 ResponseTodoDto 형식으로 바꾼 후, list로 반환")
     @GetMapping("/{clientnum}")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "투두 그룹 조회 성공", content = @Content(schema = @Schema(implementation = ResponseListDto.class))),
+            @ApiResponse(responseCode = "200", description = "투두 그룹을 가지고 있지 않은 투두 전체 조회", content = @Content(schema = @Schema(implementation = ResponseListDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자입니다")
     })
     @io.swagger.annotations.ApiResponses(
@@ -114,6 +114,6 @@ public class TodoController {
     )
     public ResponseEntity<CommonResponseDto> getAllTodosNotTodoGroup(@PathVariable Long clientnum){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 그룹 전체 조회 성공", todoService.getAllTodosForNotTodoGroup(clientnum)));
+                .body(new CommonResponseDto(CommonResponse.SUCCESS, "getAllTodosNotTodoGroup 전체 조회 성공", todoService.getAllTodosForNotTodoGroup(clientnum)));
     }
 }

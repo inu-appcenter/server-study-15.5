@@ -46,7 +46,7 @@ public class ClientController {
     @Operation(summary = "유저 전체 조회", description = "관리자가 유저를 관리할 때 쓸 수 있는 도구. 시큐리티 추가 후 권한 설정 예정<br><br>입력: 없음<br> 출력: ResponseClientDto를 List 형식으로 data에 반환.")
     @GetMapping("")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "조회 성공", content = @Content(schema = @Schema(implementation = ResponseClientListDto.class))),
+            @ApiResponse(responseCode = "200", description = "유저 전체 조회", content = @Content(schema = @Schema(implementation = ResponseClientListDto.class))),
             @ApiResponse(responseCode = "403", description = "권한이 없다 이 바보야!")
     })
     @io.swagger.annotations.ApiResponses(
@@ -62,7 +62,7 @@ public class ClientController {
     @PostMapping("/sign-up")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "회원가입 성공"),
-            @ApiResponse(responseCode = "400", description = "아이디가 중복되었습니다."),
+            @ApiResponse(responseCode = "409", description = "아이디가 중복되었습니다."),
             @ApiResponse(responseCode = "400", description = "유효성검사 실패")
     })
 //    @io.swagger.annotations.ApiResponses(
@@ -82,7 +82,7 @@ public class ClientController {
     @Operation(summary = "유저 회원정보 수정", description = "유저의 회원정보를 수정한다.<br><br> 특이사항: 아이디 수정 불가능합니다. 헷갈리지 마십쇼! <br><br> 입력: EditClientDto <br> 출력: data에 null 반환")
     @PutMapping("/{clientnum}")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "회원정보 수정 성공"),
+            @ApiResponse(responseCode = "200", description = "유저 회원정보 수정 성공"),
             @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다")
     })
     public ResponseEntity<CommonResponseDto> editClient(@PathVariable Long clientnum,@Valid @RequestBody EditClientDto editClientDto){

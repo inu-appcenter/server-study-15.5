@@ -31,7 +31,7 @@ public class ClientRequestDto {
 
         @Schema(description = "클라이언트 이메일",example = "example@google.com")
         @NotBlank(message = "이메일은 필수 입력 값입니다.")
-        @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$")
+        @Email
         private String clientEmail;
 
         @Schema(description = "클라이언트의 권한역할. 일반 유저는 ROLE_USER, 관리자는 ROLE_ADMIN", example = "ROLE_USER")
