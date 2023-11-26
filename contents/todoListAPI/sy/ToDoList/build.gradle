@@ -8,7 +8,7 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    sourceCompatibility = '17'
+    sourceCompatibility = '11'
 }
 
 configurations {
@@ -27,7 +27,7 @@ dependencies {
     // 스프링부트 기본 설정
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.projectlombok:lombok:1.18.26'
-    //롬복
+    // 롬복
     testImplementation 'org.projectlombok:lombok:1.18.26'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -36,15 +36,17 @@ dependencies {
     // devtools
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     //마리아 db
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.11'
+    runtimeOnly 'com.mysql:mysql-connector-j'
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // swagger
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-    implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-swagger-ui:3.0.0'
     //유효성 검사를 위한 설정
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     //implementation 'org.springframework.boot:spring-boot-starter-security'
+
 }
 
 tasks.named('test') {
