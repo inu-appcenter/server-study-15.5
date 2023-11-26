@@ -10,9 +10,9 @@ import com.example.todolist.Repository.ToDoRepository;
 import com.example.todolist.Repository.UserRepository;
 import com.example.todolist.domain.ToDo;
 import com.example.todolist.domain.User;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public enum ExceptionCode {
 
-    USER_NOTFOUND(HttpStatus.UNAUTHORIZED,"존재하지 않는 유저입니다"),
+    USER_NOTFOUND(HttpStatus.BAD_REQUEST,"존재하지 않는 유저입니다"),
 
     NOT_MYTODO(HttpStatus.FORBIDDEN,"ToDo에 대한 권한이 없습니다."),
     NOT_MYREPLY(HttpStatus.FORBIDDEN,"Reply에 대한 권한이 없습니다."),
