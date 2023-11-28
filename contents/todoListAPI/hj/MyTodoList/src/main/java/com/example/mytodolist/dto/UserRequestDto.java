@@ -18,7 +18,7 @@ public class UserRequestDto {
     @NotBlank(message = "이름을 입력해주세요")
     @ApiModelProperty(value = "사용자 이름", example = "홍길순") //문서화 정보를 제공
     @Size(min = 2, max=10)
-    @Pattern(regexp = "[가-힣]+$")
+    @Pattern(regexp = "[가-힣]+$", message = "이름은 한글로 2자 이상 입력해야합니다.")
     private String name;
 
     @NotBlank(message = "이메일을 입력해 주세요")

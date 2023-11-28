@@ -1,6 +1,6 @@
 spring:
     datasource:
-        url: jdbc:mariadb://localhost:3307/mytodolist?characterEncoding=UTF-8
+        url: jdbc:mariadb://localhost:3306/mytodolist?characterEncoding=UTF-8
         username: root
         password: ${PASSWORD}
         driver-class-name: org.mariadb.jdbc.Driver
@@ -15,7 +15,7 @@ spring:
         open-in-view: false
         show-sql: true
         hibernate:
-            ddl-auto: create-drop
+            ddl-auto: create
 
     logging:
         file:
