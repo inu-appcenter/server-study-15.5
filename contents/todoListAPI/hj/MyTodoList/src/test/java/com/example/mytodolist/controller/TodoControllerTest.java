@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TodoControllerTest.class)
-@Import(TodoController.class) //UserController 클래스가 다른 컴포넌트들과 연관이 있고, 특정 빈 설정이 필요하다면 @Import를 사용하여 해당 설정을 가져올 수 있ek
+@Import(TodoController.class) //UserController 클래스가 다른 컴포넌트들과 연관이 있고, 특정 빈 설정이 필요하다면 @Import를 사용하여 해당 설정을 가져올 수 있다.
 public class TodoControllerTest {
 
     @Autowired

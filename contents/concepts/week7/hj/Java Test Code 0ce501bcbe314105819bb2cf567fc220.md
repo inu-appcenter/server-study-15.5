@@ -43,33 +43,7 @@
 
 ---
 
-## 1.3 spring-boot-starter-test 라이브러리
-
-스프링 부트에서 제공하는 spring-boot-starter-test 라이브러리는 JUnit, Mockito, assertJ 등의 다양한 테스트도구를 제공합니다.   
-
-**대표적인 라이브러리**
-
-- **JUnit5**: 자바 애플리케이션 단위 테스트를 지원
-- **Spring Test & Spring Boot Test**: 스프링 부트 애플리케이션에 대한 유틸리티와 통합 테스트를 지원합니다.
-- **AssertJ**: 다양한 단정문(assert)을 지원하는 라이브러리입니다.
-- **Hamcrest:** Matcher를 지원하는 라이브러리입니다.
-- **Mockito**: 자바 Mock 객체를 지원하는 프레임워크입니다.
-- **Jsonassert**: JSON용 단정문 라이브러리입니다.
-- **JsonPath**: JSON용 XPath를 지원합니다.
-
----
-
-### Mockito?
-
-- Mockito는 개발자가 동작을 직접 제어할 수 있는 가짜(Mock) 객체를 지원하는 테스트 프레임워크.
-- 일반적으로 Spring과 같은 웹 어플리케이션을 개발한다고 하면, 여러 객체들 간의 의존성이 존재한다.
-- 이러한 의존성은 단위 테스트를 작성하는 것을 어렵게 하는데, 이를 해결하기 위해 가짜 객체를 주입 시켜주는 Mockito 라이브러리를 활용할 수 있다.
-- Mockito를 활용함으로써 가짜 객체에 원하는 결과를 Stub 하여 단위 테스트를 진행할 수 있다.
-
-<p style="border: 1px solid #e0e0e0; background-color: #cccccc; padding: 10px; color: #000000;">
-💡Stub = “A stub is a short article in need of expansion”, “스텁은 확장이 필요한 짧은 기사” 라는 뜻으로, 아직 다 완성되지 않은 기사나 제목만 있는 기사처럼 함수 이름만 있거나 내용이 완전치 않은 코드를 뜻함. 테스팅에서 사용되는 테스트 스텁은 테스트를 위하여 작성된 코드로 특정한 목적을 위해 사용됩니다.</p>
-
-## 1.4 JUnit에서 테스트를 지원하는 어노테이션
+## 1.3 JUnit에서 테스트를 지원하는 어노테이션
 
 ### Junit의 생명주기 관련 어노테이션
 
@@ -220,3 +194,110 @@ public class TestLifeCycle {
 ![Untitled](Java%20Test%20Code%200ce501bcbe314105819bb2cf567fc220/Untitled%209.png)
 
 ![Untitled](Java%20Test%20Code%200ce501bcbe314105819bb2cf567fc220/Untitled%2010.png)
+
+---
+
+## 추가 어노테이션 설명
+
+**@TestMethodOrder & Order**
+
+- 테스트 클래스 내에서 메서드의 실행 순서를 선택할 수 있습니다.
+
+```java
+@Test
+    @Order(1)
+    void firstTest() {
+        // 첫 번째 테스트
+        System.out.println("Executing first test");
+    }
+
+    @Test
+    @Order(2)
+    void secondTest() {
+        // 두 번째 테스트
+        System.out.println("Executing second test");
+    }
+
+    @Test
+    @Order(3)
+    void thirdTest() {
+        // 세 번째 테스트
+        System.out.println("Executing third test");
+    }
+```
+
+---
+
+**@ExtendWith**
+
+- 테스트 실행에 대한 확장을 지정하는 데 사용.
+- 테스트 확장을 통해 다양한 기능을 추가하거나 커스터마이징 할 수 있다.
+
+![Untitled](Java%20Test%20Code%200ce501bcbe314105819bb2cf567fc220/Untitled%2011.png)
+
+**Mockito의 기능을 사용하기 위해 확장**
+
+---
+
+**@TestFactory**
+
+- JUnit Jupiter에서 동적으로 테스트를 생성하고 실행할 때 사용되는 어노테이션.
+- 동적 테스트는 반복적이거나 매개변수화 된 테스트를 작성할 때 유용하다.
+- 테스트가 런타임 시점에 생성된다.
+
+![Untitled](Java%20Test%20Code%200ce501bcbe314105819bb2cf567fc220/Untitled%2012.png)
+
+---
+
+**@Nested**
+
+- 중첩된 테스트 클래스를 정의할 때 사용
+- 중첩된 테스트 클래스는 외부 테스트 클래스의 상태를 공유하고, 특정 부분을 더 작은 단위로 나누어 테스트 하는데 유용하다.
+- 예를 들어, 특정 클래스나 기능에 대한 테스트를 작서앟고 싶을 때, 해당 테스트를 여러 단계로 나누어 구성할 수 있다.
+
+```java
+class Calculator {
+
+    int add(int a, int b) {
+        return a + b;
+    }
+
+    int subtract(int a, int b) {
+        return a - b;
+    }
+
+    @Nested
+    class AddTests {
+
+        @Test
+        void testAddingPositiveNumbers() {
+            assertEquals(5, add(2, 3));
+        }
+
+        @Test
+        void testAddingNegativeNumbers() {
+            assertEquals(-1, add(2, -3));
+        }
+    }
+
+    @Nested
+    class SubtractTests {
+
+        @Test
+        void testSubtractingPositiveNumbers() {
+            assertEquals(2, subtract(5, 3));
+        }
+
+        @Test
+        void testSubtractingNegativeNumbers() {
+            assertEquals(-5, subtract(2, 7));
+        }
+    }
+}
+```
+
+**@DisplayName**
+
+- 사용자 정의 이름을 표시 목적으로 테스트 메서드 또는 클래스에 지정할 수 있습니다.
+
+![Untitled](Java%20Test%20Code%200ce501bcbe314105819bb2cf567fc220/Untitled%2013.png)
