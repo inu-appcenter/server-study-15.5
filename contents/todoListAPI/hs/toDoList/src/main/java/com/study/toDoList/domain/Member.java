@@ -16,13 +16,13 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(unique = true,nullable = false)
+    @Column(nullable = false)
     private String nickname;
 
 
@@ -38,5 +38,13 @@ public class Member {
     public void update(String password,String nickname){
         this.password = password;
         this.nickname = nickname;
+    }
+
+    public void setIdForTest(Long id){
+        this.id = id;
+    }
+
+    public void setEmailForTest(String email){
+        this.email = email;
     }
 }

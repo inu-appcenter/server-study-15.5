@@ -31,7 +31,7 @@ public class MyExceptionHandler{
 
     @ExceptionHandler(MyDuplicateException.class)
     public ResponseEntity<?> MyDuplicateException(MyDuplicateException ex){
-        log.error("중복 이메일 예외 발생 msg:{}",ex.getErrorCode().getMessage());
+        log.error("중복 값 예외 발생 msg:{}",ex.getErrorCode().getMessage());
         return new ResponseEntity<>(new ResponseDto(-1,ex.getErrorCode().getMessage()),ex.getErrorCode().getStatus());
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)

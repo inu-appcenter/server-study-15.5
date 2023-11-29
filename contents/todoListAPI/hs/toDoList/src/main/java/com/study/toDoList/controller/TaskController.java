@@ -2,8 +2,8 @@ package com.study.toDoList.controller;
 
 import com.study.toDoList.dto.*;
 import com.study.toDoList.service.TaskService;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class TaskController {
 
     @Operation(summary = "할일추가",description = "url 경로변수에 멤버아이디, 바디에 {title,description,endDate(yyyy-mm-dd)}을 json 형식으로 보내주세요.")
     @ApiResponses({
-            @ApiResponse(code = 201,message = "할일추가성공")
+            @ApiResponse(responseCode = "201",description = "할일추가성공")
     })
     @PostMapping("/{id}")
     public ResponseEntity<?> save(@PathVariable Long id,@Valid @RequestBody TaskSaveDto taskSaveDto){
@@ -32,7 +32,7 @@ public class TaskController {
     }
     @Operation(summary = "할일수정",description = "url 경로변수에 할일아이디,바디에 {title,description,endDate,isFinished(bool)}을 json 형식으로 보내주세요.")
     @ApiResponses({
-            @ApiResponse(code = 200,message = "할일수정성공")
+            @ApiResponse(responseCode = "200",description = "할일수정성공")
     })
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @Valid@RequestBody TaskUpdateDto taskUpdateDto){
@@ -42,7 +42,7 @@ public class TaskController {
     }
     @Operation(summary = "할일 가져오기",description = "url 경로변수에 할일아이디를 담아 보내주세요")
     @ApiResponses({
-            @ApiResponse(code = 200,message = "할일가져오기성공")
+            @ApiResponse(responseCode = "200",description = "할일가져오기성공")
     })
     @GetMapping("/{id}")
     public ResponseEntity<?> getTask(@PathVariable Long id){
@@ -51,7 +51,7 @@ public class TaskController {
     }
     @Operation(summary = "할일삭제",description = "url 경로변수에 할일아이디를 보내주세요.")
     @ApiResponses({
-            @ApiResponse(code = 204,message = "할일삭제성공")
+            @ApiResponse(responseCode = "204",description = "할일삭제성공")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id){

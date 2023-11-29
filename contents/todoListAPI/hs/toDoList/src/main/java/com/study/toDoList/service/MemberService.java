@@ -1,6 +1,7 @@
 package com.study.toDoList.service;
 
 import com.study.toDoList.domain.Member;
+import com.study.toDoList.dto.MemberListResponseDto;
 import com.study.toDoList.dto.MemberResponseDto;
 import com.study.toDoList.dto.MemberSaveDto;
 import com.study.toDoList.dto.MemberUpdateDto;
@@ -11,6 +12,9 @@ import com.study.toDoList.repositoy.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -26,12 +30,18 @@ public class MemberService {
         if(memberRepository.existsByEmail(memberSaveDto.getEmail())){
             throw new MyDuplicateException(MyErrorCode.USER_DUPLICATE_EMAIL);
         }
+        if(memberRepository.existsByNickname(memberSaveDto.getNickname())){
+            throw new MyDuplicateException(MyErrorCode.USER_DUPLICATE_NICKNAME);
+        }
         return memberRepository.save(MemberSaveDto.builder().email(memberSaveDto.getEmail()).password(encodedPassword).nickname(memberSaveDto.getNickname()).build().toEntity()).getId();
     }
 
     @Transactional
     public Long update(Long id, MemberUpdateDto memberUpdateDto){
         Member member = memberRepository.findById(id).orElseThrow(()->new MyNotFoundException(MyErrorCode.USER_NOT_FOUND));
+        if(memberRepository.existsByNickname(memberUpdateDto.getNickname())){
+            throw new MyDuplicateException(MyErrorCode.USER_DUPLICATE_NICKNAME);
+        }
         member.update(memberUpdateDto.getPassword(),memberUpdateDto.getNickname());
         return id;
     }
@@ -46,5 +56,10 @@ public class MemberService {
     public MemberResponseDto getMember(Long id){
         Member member = memberRepository.findById(id).orElseThrow(()-> new MyNotFoundException(MyErrorCode.USER_NOT_FOUND));
         return new MemberResponseDto(member);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MemberListResponseDto> getAllMember(){
+        return memberRepository.findAll().stream().map(member -> new MemberListResponseDto(member.getId(), member.getEmail(), member.getPassword(), member.getNickname())).collect(Collectors.toList());
     }
 }
