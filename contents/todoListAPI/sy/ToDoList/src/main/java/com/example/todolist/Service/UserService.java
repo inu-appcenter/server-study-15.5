@@ -26,7 +26,7 @@ public class UserService {
 
     public void addUser(AddUserReqDTO addUserReqDTO){  // 회원가입 로직
 
-        if(!userRepository.existsByEmail(addUserReqDTO.getEmail())){ // email값이 중복일 경우
+        if(userRepository.existsByEmail(addUserReqDTO.getEmail())){ // email값이 중복일 경우
             throw new CommondException(ExceptionCode.EMAIL_DUPLICATED);
         }
 

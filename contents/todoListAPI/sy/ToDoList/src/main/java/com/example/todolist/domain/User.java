@@ -10,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Table(name = "Users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
