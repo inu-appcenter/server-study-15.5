@@ -9,6 +9,7 @@ import com.study.toDoList.dto.MemberSaveDto;
 import com.study.toDoList.dto.MemberUpdateDto;
 import com.study.toDoList.dto.TaskListResponseDto;
 import com.study.toDoList.repositoy.MemberRepository;
+import com.study.toDoList.repositoy.TaskRepository;
 import com.study.toDoList.service.MemberService;
 import com.study.toDoList.service.TaskService;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MemberController.class)
+@MockBean(JpaMetamodelMappingContext.class)
 public class MemberControllerTest {
 
     @Autowired
@@ -47,6 +51,7 @@ public class MemberControllerTest {
 
     @MockBean
     MemberRepository memberRepository;
+
 
     @Test
     @DisplayName("멤버 가져오기 테스트")
@@ -93,7 +98,7 @@ public class MemberControllerTest {
     @DisplayName("회원 수정 테스트")
     void updateTest() throws Exception{
         MemberUpdateDto memberUpdateDto = MemberUpdateDto.builder().password("123").nickname("test1").build();
-        given(memberService.update(123L, MemberUpdateDto.builder().password("123").nickname("test1").build())).willReturn(123L);
+        given(memberService.update(123L, memberUpdateDto)).willReturn(123L);
         Long memberId = 123L;
 
         Gson gson = new Gson();
@@ -106,7 +111,7 @@ public class MemberControllerTest {
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.msg").exists())
                 .andDo(print());
-        verify(memberService).update(any(),any());
+        verify(memberService).update(eq(123L),any());
     }
     @Test
     @DisplayName("회원 삭제 테스트")
@@ -120,7 +125,7 @@ public class MemberControllerTest {
                 .andExpect(jsonPath("$.data").exists())
                 .andExpect(jsonPath("$.msg").exists())
                 .andDo(print());
-        verify(memberService).delete(any());
+        verify(memberService).delete(123L);
     }
 
     @Test
@@ -136,7 +141,6 @@ public class MemberControllerTest {
         List<TaskListResponseDto> taskListResponseDtos = Arrays.asList(new TaskListResponseDto(task1),new TaskListResponseDto(task2));
         when(taskService.getAllTask(123L)).thenReturn(taskListResponseDtos);
 
-        List<TaskListResponseDto> dtos = taskService.getAllTask(123L);
 
         Long memberId = 123L;
         mockMvc.perform(
@@ -146,7 +150,7 @@ public class MemberControllerTest {
                 .andExpect(jsonPath("$[0].title").exists())
                 .andExpect(jsonPath("$[1].title").exists())
                 .andDo(print());
-        //verify(taskService).getAllTask(any());
+        verify(taskService).getAllTask(123L);
     }
 
 }
