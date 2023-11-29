@@ -67,6 +67,7 @@ public class UserServiceTest {
         assertThat(user.getName()).isEqualTo("testName");
         assertThat(user.getPassword()).isEqualTo("1234");
         verify(userRepository).save(any());
+
     }
 
     @Test

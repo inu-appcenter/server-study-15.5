@@ -13,6 +13,8 @@ FIRST원칙은 clean code에서 제시된 효율적이고 좋은 단위테스트
 4. Self-Validating: 테스트는 성공 또는 실패로 boolean 값으로 결과를 내어 자체적으로 검증되어야 한다.
 5. Timely: 테스트는 적시에 즉, 테스트하려는 실제 코드를 구현하기 직전에 구현해야 한다.
 
+빠르게 동작하기 위해서는 테스트는 가벼워야하며 독립적으로 수행되기 위해 다른 계층과 결합이 최소화 되어야한다. 또한 assertion을 통해 테스트의 통과여부를 판단해야한다.
+
 ## Repository layer의 테스트 시 필요한 것.
 
 service와의 결합이 존재해서는 안된다.
@@ -43,6 +45,61 @@ transaction rollback
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 class RepositoryTest {
 
+}
+```
+# BDD란?
+
+BDD(Behavior Driven Development)란 비즈니스 중심의 행위 주도 개발 방법론을 말한다.
+
+테스트 대상의 상태 변화를 테스트하는 것이고 시나리오를 기반으로 테스트하는 패턴을 권장한다.
+
+TDD(Test-Driven Development)는 단위 테스트 코드 자체에 중점을 두지만, BDD는 TDD를 포함하며 시나리오 기반이다 보니 큰 관점에서 비즈니스 요구 사항 중심의 개발 방법론이라고 보는 것이다.
+
+예를들어 controller에서 특정 service 메소드가 예외를 던지거나 dto를 반환할 수 있고 요청이 들어올 때 요청바디의 데이터가 유효성검사를 실패하거나 성공하거나 여러가지 상황이 있을 수 있는데 이러한 시나리오를 가정하여 각 상황에 대한 테스트를 진행하는 것이다.
+
+## Given-When-Then 패턴
+
+- Given : 테스트 메서드에다가 시나리오 진행에 필요한 조건을 미리 설정해두는 단계이다. 
+- When : 실제 테스트를 진행하는 단계로 테스트의 결과를 받아온다.
+- Then : 테스트의결과를 검증하는 단계. when단계에서 나온 결과값이 올바른지 검증하는 단계이다.
+
+```java
+@Test
+@DisplayName("유저 회원가입 성공")
+public void addUserTest1(){
+    //given
+    when(userRepository.existsByEmail(any())).thenReturn(false);
+
+    //when
+    userService.addUser(addUserReqDTO);
+    User user = addUserReqDTO.toEntity(addUserReqDTO);
+
+    //then
+    assertThat(user.getEmail()).isEqualTo("test@naver.com");
+    assertThat(user.getName()).isEqualTo("testName");
+    assertThat(user.getPassword()).isEqualTo("1234");
+    verify(userRepository).save(any());
+}
+```
+
+그런데 given 부분을 보면 Mockito.when() 메서드를 사용하고 있다. 네이밍 규칙 관점에서 보면 충분히 혼동을 줄 수 있다. 그래서 이 혼동을 없애고자 등장한 것이 BDDMockito이다.
+
+```java
+@Test
+@DisplayName("유저 회원가입 성공")
+public void addUserTest1(){
+    //given
+    given(userRepository.existsByEmail(any())).willReturn(false);
+
+    //when
+    userService.addUser(addUserReqDTO);
+    User user = addUserReqDTO.toEntity(addUserReqDTO);
+
+    //then
+    assertThat(user.getEmail()).isEqualTo("test@naver.com");
+    assertThat(user.getName()).isEqualTo("testName");
+    assertThat(user.getPassword()).isEqualTo("1234");
+    verify(userRepository).save(any());
 }
 ```
 
