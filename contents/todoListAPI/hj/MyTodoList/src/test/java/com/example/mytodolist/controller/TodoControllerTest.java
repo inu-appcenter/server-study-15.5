@@ -38,6 +38,7 @@ public class TodoControllerTest {
     @DisplayName("MockMvc를 통한 Todo 데이터 가져오기")
     void getTodoTest() throws Exception{
 
+        //given
         LocalDateTime deadLine = LocalDateTime.of(2023,12,31,10,10,10);
         LocalDateTime time = LocalDateTime.now();
         given(todoService.getTodo(1L)).willReturn(TodoResponseDto.builder()
@@ -50,7 +51,9 @@ public class TodoControllerTest {
                 .modifiedDate(time)
                 .build());
 
+        //when
         mockMvc.perform(get("/todos/{id}",1))
+        //then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.title").exists())
@@ -68,6 +71,7 @@ public class TodoControllerTest {
     @DisplayName("Todo 데이터 생성 테스트")
     void createTodoTest() throws Exception{
 
+        //given
         LocalDateTime deadLine = LocalDateTime.of(2023,12,31,10,10,10);
         LocalDateTime time = LocalDateTime.now();
 
@@ -92,8 +96,10 @@ public class TodoControllerTest {
         Gson gson = new Gson();
         String content = gson.toJson(todoRequestDto);
 
+        //when
         mockMvc.perform(post("/todos/{id}",1L)
                         .content(content).contentType(MediaType.APPLICATION_JSON))
+        //then
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.title").exists())
@@ -111,6 +117,7 @@ public class TodoControllerTest {
     @DisplayName("Todo 데이터 수정 테스트")
     void changeTodoTest() throws Exception{
 
+        //given
         LocalDateTime deadLine = LocalDateTime.of(2024,12,31,00,00,00);
         LocalDateTime time = LocalDateTime.now();
 
@@ -135,8 +142,10 @@ public class TodoControllerTest {
         Gson gson = new Gson();
         String content = gson.toJson(todoRequestDto);
 
+        //when
         mockMvc.perform(put("/todos/{id}",1L)
                         .content(content).contentType(MediaType.APPLICATION_JSON))
+        //then
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.title").exists())
                 .andExpect(jsonPath("$.content").exists())
@@ -153,7 +162,9 @@ public class TodoControllerTest {
     @DisplayName("Todo 데이터 삭제 테스트")
     void deleteTodoTest() throws Exception{
 
+        //when
         mockMvc.perform(delete("/todos/{id}",1L))
+        //than
                 .andExpect(status().isOk())
                 .andDo(print());
 
@@ -165,6 +176,7 @@ public class TodoControllerTest {
     @DisplayName("Todo 성공여부 체크 테스트")
     void checkCompletedTodoTest() throws Exception{
 
+        //given
         LocalDateTime deadLine = LocalDateTime.of(2024,12,31,00,00,00);
         LocalDateTime time = LocalDateTime.now();
 
@@ -179,8 +191,10 @@ public class TodoControllerTest {
                 .build());
 
 
+        //when
         mockMvc.perform(put("/todos/check")
                         .param("id","1").param("completed","true"))
+        //then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.title").exists())

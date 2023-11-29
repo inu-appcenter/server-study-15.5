@@ -42,6 +42,7 @@ public class UserControllerTest {
     @DisplayName("MockMvc를 통한 User 데이터 가져오기")
     void getUserTest() throws Exception{
 
+        //given
         given(userService.getUser(1L)).willReturn(UserResponseDto.builder()
                 .id(1L)
                 .name("홍길순")
@@ -49,7 +50,9 @@ public class UserControllerTest {
                 .level(0)
                 .build());
 
+        //when
         mockMvc.perform(get("/users/{id}",1))
+        //then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").exists())
@@ -64,6 +67,7 @@ public class UserControllerTest {
     @DisplayName("User 데이터 생성 테스트")
     void createUserTest() throws Exception{
 
+        //given
         UserRequestDto userRequestDto = UserRequestDto.builder()
                 .name("홍길순")
                 .email("popora99@naver.com")
@@ -81,8 +85,10 @@ public class UserControllerTest {
         Gson gson = new Gson();
         String content = gson.toJson(userRequestDto);
 
+        //when
         mockMvc.perform(post("/users")
                         .content(content).contentType(MediaType.APPLICATION_JSON))
+        //then
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").exists())
@@ -97,6 +103,7 @@ public class UserControllerTest {
     @DisplayName("User 데이터 수정 테스트")
     void changeUserTest() throws Exception{
 
+        //given
         UserRequestDto userRequestDto = UserRequestDto.builder()
                 .name("업데이트홍길순")
                 .email("popora99@gmail.net")
@@ -114,8 +121,10 @@ public class UserControllerTest {
         Gson gson = new Gson();
         String content = gson.toJson(userRequestDto);
 
+       //when
         mockMvc.perform(put("/users/{id}",1L)
                         .content(content).contentType(MediaType.APPLICATION_JSON))
+       //then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").exists())
@@ -130,7 +139,9 @@ public class UserControllerTest {
     @DisplayName("User 데이터 삭제 테스트")
     void deleteUserTest() throws Exception{
 
+        //when
         mockMvc.perform(delete("/users/{id}",1L))
+        //then
                         .andExpect(status().isOk())
                                 .andDo(print());
 
@@ -141,6 +152,7 @@ public class UserControllerTest {
     @DisplayName("User의 게시물들을 조회 테스트")
     void getTodoListTest()throws Exception{
 
+        //given
         LocalDateTime localDateTime = LocalDateTime.of(2023,12,31,00,00,00);
 
         List<TodoResponseDto> todoList = Collections.singletonList(TodoResponseDto.builder()
@@ -154,7 +166,9 @@ public class UserControllerTest {
 
         given(userService.getTodosByUserId(1L)).willReturn(todoList);
 
+        //when
         mockMvc.perform(get("/users/search/{id}",1L))
+        //then
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id").exists())
                 .andExpect(jsonPath("$.[0].title").exists())

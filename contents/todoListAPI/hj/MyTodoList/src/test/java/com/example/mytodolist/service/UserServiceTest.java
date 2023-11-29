@@ -15,13 +15,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Import;
+import org.springframework.dao.DuplicateKeyException;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,6 +41,7 @@ public class UserServiceTest {
     @DisplayName("given_when_then 방식으로 getUser 테스트")
     void getUserTest(){
 
+        //given
         User givenUser = User.builder()
                 .name("홍길순")
                 .email("popora99@naver.com")
@@ -46,8 +50,10 @@ public class UserServiceTest {
         Mockito.when(userRepository.findById(1L))
                 .thenReturn(Optional.of(givenUser));
 
+        //when
         UserResponseDto userResponseDto = userService.getUser(1L);
 
+        //then
         Assertions.assertEquals(userResponseDto.getId(),givenUser.getId());
         Assertions.assertEquals(userResponseDto.getName(),givenUser.getName());
         Assertions.assertEquals(userResponseDto.getEmail(),givenUser.getEmail());
@@ -60,6 +66,7 @@ public class UserServiceTest {
     @DisplayName("given_when_then 방식으로 saveUser 테스트")
     void saveUserTest(){
 
+        //given
         UserRequestDto userRequestDto = UserRequestDto.builder()
                 .name("홍길순")
                 .email("popora99@naver.com")
@@ -68,8 +75,10 @@ public class UserServiceTest {
         Mockito.when(userRepository.save(any(User.class)))
                 .then(returnsFirstArg());
 
+        //when
         UserResponseDto userResponseDto = userService.saveUser(userRequestDto);
 
+        //then
         Assertions.assertEquals(userResponseDto.getName(),"홍길순");
         Assertions.assertEquals(userResponseDto.getEmail(),"popora99@naver.com");
 
@@ -80,6 +89,7 @@ public class UserServiceTest {
     @DisplayName("given_when_then 방식으로 updateUser 테스트")
     void updateUserTest(){
 
+        //given
         User givenUser = User.builder()
                 .name("홍길순")
                 .email("popora99@naver.com")
@@ -94,8 +104,10 @@ public class UserServiceTest {
         Mockito.when(userRepository.findById(1L))
                 .thenReturn(Optional.of(givenUser));
 
+        //when
         UserResponseDto userResponseDto = userService.updateUser(1L, userRequestDto);
 
+        //then
         Assertions.assertEquals(userResponseDto.getName(),"업데이트홍길순");
         Assertions.assertEquals(userResponseDto.getEmail(),"popora99@gmail.net");
 
@@ -106,7 +118,9 @@ public class UserServiceTest {
     @Test
     @DisplayName("deleteUser 테스트")
     void deleteUserTest(){
+        //when
         userService.deleteUser(1L);
+        //then
         verify(userRepository).deleteById(1L);
     }
 
