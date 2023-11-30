@@ -3,20 +3,23 @@ package com.example.todo.user;
 import com.example.todo.user.dto.UserResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+//@WebMvcTest({UserController.class})  // @WebMvcTest - DefaultCacheAwareContextLoaderDelegate.java
 @SpringBootTest
-@Testcontainers
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserControllerTest {
 
     @Autowired
@@ -25,18 +28,22 @@ class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    @Autowired
-    private UserRepository userRepository;
-
+    /*
+    단위테스트나 통합테스트의 책임과는 무관하게
+    @Transactional: 이상하게 Controller에서는 실제 데이터베이스에 작성되는 반면,
+    Service Layer의 테스트에서는 작성되지 않았다.
+    -> @DataJpaTest에는 기본적으로 @Transactional 어노테이션이 포함된다.
+    따라서 테스트 메서드가 종료되면서 롤백되기 때문이다!
+     */
     @Test
-//    @Transactional  // 이상하게 Controller에서는 실제 데이터베이스에 작성된다.
-//    @Rollback       // Service Layer에서는 테스트 후 데이터베이스에 남지않는다.
     void getUser() throws Exception {
-        User mockUser = new User("namu1234@gmail.com", "test123", "namu");
-        userRepository.save(mockUser);
-
-        Long userId = mockUser.getUserId();
-        UserResponseDto mockUserResponseDto = mockUser.toResponseDto();
+        Long userId = 1L;
+        UserResponseDto mockUserResponseDto = UserResponseDto.builder()
+                .userId(userId)
+                .loginId("namu1234@gmail.com")
+                .password("test123")
+                .name("namu")
+                .build();
 
         given(userService.getUser(userId)).willReturn(mockUserResponseDto);
 
@@ -48,15 +55,4 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("namu"));
     }
 
-    @Test
-    void postUser() {
-    }
-
-    @Test
-    void deleteUser() {
-    }
-
-    @Test
-    void putUser() {
-    }
 }

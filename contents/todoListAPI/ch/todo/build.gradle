@@ -39,12 +39,12 @@ dependencies {
     implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.11'
     // runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
+    // TC관련 종속성
     testImplementation "org.testcontainers:mariadb:1.19.3"
     testImplementation "org.testcontainers:testcontainers:1.19.3"
 
     // @TestContainers 어노테이션
     testImplementation "org.testcontainers:junit-jupiter:1.19.3"
-
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
