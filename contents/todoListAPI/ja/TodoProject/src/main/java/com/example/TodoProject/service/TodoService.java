@@ -60,7 +60,7 @@ public class TodoService {
 
 
     public void editTodo(Long todoNum, RequestTodoDto requestTodoDto){
-        log.info("[editTodoForTodoGroup] 투두 그룹이 있는 투두 수정. todo id: {}", todoNum);
+        log.info("[editTodoForTodoGroup] 투두 수정. todo id: {}", todoNum);
         Todo todo = todoRepository.findByTodoNum(todoNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 투두입니다."));
 
@@ -75,7 +75,7 @@ public class TodoService {
             todoGroup = null;
         }
         todo.EditTodo(todoGroup, requestTodoDto);
-        log.info("[editTodoForTodoGroup] 투두 그룹이 있는 투두 수정완료. todo id: {}", todoNum);
+        log.info("[editTodoForTodoGroup] 투두 수정완료. todo id: {}", todoNum);
         todoRepository.save(todo);
     }
 

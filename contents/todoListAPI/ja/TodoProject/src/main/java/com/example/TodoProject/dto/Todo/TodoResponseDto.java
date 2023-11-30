@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.Column;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
