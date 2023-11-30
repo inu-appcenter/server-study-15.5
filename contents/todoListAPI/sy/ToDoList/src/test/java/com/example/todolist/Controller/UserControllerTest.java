@@ -6,6 +6,7 @@ import com.example.todolist.DTO.User.ReadUserResDTO;
 import com.example.todolist.Exception.CommondException;
 import com.example.todolist.Exception.ExceptionCode;
 import com.example.todolist.Service.UserService;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,10 +46,20 @@ public class UserControllerTest {
     @Test
     @DisplayName("유저 회원가입 성공")
     public void addUserTest1() throws Exception {
+        //given
+        AddUserReqDTO addUserReqDTO = AddUserReqDTO.builder()
+                .email("string@naver.com")
+                .name("testname")
+                .password("1234")
+                .build();
+
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(addUserReqDTO);
+
         //when,then
         this.mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"email\": \"string@naver.com\" , \"name\": \"testname\", \"password\":\"1234\"}"))
+                        .content(requestBody))
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"))
                 .andDo(print());
@@ -58,10 +69,20 @@ public class UserControllerTest {
     @Test
     @DisplayName("유저 회원가입 email유효성 검사 실패")
     public void addUserTest2() throws Exception {
+        //given
+        AddUserReqDTO addUserReqDTO = AddUserReqDTO.builder()
+                .email("string")
+                .name("testname")
+                .password("1234")
+                .build();
+
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(addUserReqDTO);
+
         //when,then
         this.mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"email\": \"string\" , \"name\": \"testname\", \"password\":\"1234\"}"))
+                        .content(requestBody))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.data.email").value("must be a well-formed email address"))
                 .andDo(print());
@@ -70,10 +91,19 @@ public class UserControllerTest {
     @Test
     @DisplayName("유저 회원가입 notNull유효성 검사 실패")
     public void addUserTest3() throws Exception {
+        //given
+        AddUserReqDTO addUserReqDTO = AddUserReqDTO.builder()
+                .email("string")
+                .password("1234")
+                .build();
+
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(addUserReqDTO);
+
         //when,then
         this.mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"email\": \"string\" , \"password\":\"1234\"}"))
+                        .content(requestBody))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.data.name").value("must not be blank"))
                 .andExpect(jsonPath("$.data.email").value("must be a well-formed email address"))
@@ -84,15 +114,22 @@ public class UserControllerTest {
     @DisplayName("유저 회원가입, email중복 예외")
     public void addUserTest4() throws Exception {
         //given
+        AddUserReqDTO addUserReqDTO = AddUserReqDTO.builder()
+                .email("string@naver.com")
+                .name("testname")
+                .password("1234")
+                .build();
+
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(addUserReqDTO);
         doThrow(new CommondException(ExceptionCode.EMAIL_DUPLICATED)).when(userService).addUser(any());
 
         //when,then
         this.mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"email\": \"string\" , \"password\":\"1234\"}"))
+                        .content(requestBody))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.data.name").value("must not be blank"))
-                .andExpect(jsonPath("$.data.email").value("must be a well-formed email address"))
+                .andExpect(jsonPath("$.message").value("중복된 이메일입니다."))
                 .andDo(print());
     }
 
@@ -135,10 +172,19 @@ public class UserControllerTest {
     @Test
     @DisplayName("유저 정보 변경성공")
     public void changeUserTest1() throws Exception{
+        //given
+        ChangeUserReqDTO changeUserReqDTO = ChangeUserReqDTO.builder()
+                .name("string")
+                .oldPassword("1234")
+                .newPassword("12345")
+                .build();
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(changeUserReqDTO);
+
         //when,then
         this.mockMvc.perform(patch("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"name\": \"string\" , \"oldPassword\":\"1234\", \"newPassword\": \"12345\"}"))
+                        .content(requestBody))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("유저정보 변경성공"));
 
@@ -149,10 +195,18 @@ public class UserControllerTest {
     @Test
     @DisplayName("유저 정보 변경 유효성검사실패")
     public void changeUserTest2() throws Exception{
+        //given
+        ChangeUserReqDTO changeUserReqDTO = ChangeUserReqDTO.builder()
+                .name("string")
+                .newPassword("12345")
+                .build();
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(changeUserReqDTO);
+
         //when,then
         this.mockMvc.perform(patch("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"name\": \"string\" , \"newPassword\": \"12345\"}"))
+                        .content(requestBody))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.data.oldPassword").value("must not be blank"));
     }
@@ -161,12 +215,20 @@ public class UserControllerTest {
     @DisplayName("유저 정보 변경, 비밀번호 불일치")
     public  void changeUserTest3() throws Exception{
         //given
+        ChangeUserReqDTO changeUserReqDTO = ChangeUserReqDTO.builder()
+                .name("string")
+                .oldPassword("1234")
+                .newPassword("12345")
+                .build();
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(changeUserReqDTO);
+
         doThrow(new CommondException(ExceptionCode.PASSWORD_NOTMATCH)).when(userService).changeUserInfo(any());
 
         //when, then
         this.mockMvc.perform(patch("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{ \"name\": \"string\" ,\"oldPassword\": \"1234\" ,\"newPassword\": \"12345\"}"))
+                        .content(requestBody))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value("비밀번호가 일치하지 않습니다"));
     }
