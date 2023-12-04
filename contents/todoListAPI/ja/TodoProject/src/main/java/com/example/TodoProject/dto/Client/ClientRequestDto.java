@@ -3,6 +3,7 @@ package com.example.TodoProject.dto.Client;
 import com.example.TodoProject.entity.Client;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
@@ -40,7 +41,7 @@ public class ClientRequestDto {
 
         @Schema(description = "클라이언트 전화번호", example = "010-1234-5678")
         @NotBlank(message = "전화번호는 필수 입력 값입니다.")
-        @Pattern(regexp = "^[0-9].{3}+[0-9].{3,4}+[0.9].{3,4}$")
+        @Pattern(regexp = "^[0-9].{3}+[0-9].{3,4}+[0-9].{3,4}$")
         private String clientPhoneNum;
 
         public Client toEntity(RequestClientDto requestClientDto){
@@ -52,6 +53,16 @@ public class ClientRequestDto {
                     .clientRole(requestClientDto.getClientRole())
                     .clientPhoneNum(requestClientDto.getClientPhoneNum())
                     .build();
+        }
+
+        @Builder
+        public RequestClientDto(String clientId, String clientPassword, String clientName, String clientEmail, String clientRole, String clientPhoneNum){
+            this.clientId = clientId;
+            this.clientPassword = clientPassword;
+            this.clientName = clientName;
+            this.clientEmail = clientEmail;
+            this.clientRole = clientRole;
+            this.clientPhoneNum=clientPhoneNum;
         }
     }
 
@@ -72,6 +83,13 @@ public class ClientRequestDto {
         @Pattern(regexp = "^\\d{3,4}-\\d{3,4}-\\d{4}$")
         @Schema(description = "클라이언트 전화번호", example = "010-5420-9330")
         private String clientPhoneNum;
+
+        @Builder
+        public EditClientDto(String clientPassword, String clientName, String clientEmail, String clientRole, String clientPhoneNum){
+            this.clientPassword = clientPassword;
+            this.clientEmail = clientEmail;
+            this.clientPhoneNum=clientPhoneNum;
+        }
     }
 
 }

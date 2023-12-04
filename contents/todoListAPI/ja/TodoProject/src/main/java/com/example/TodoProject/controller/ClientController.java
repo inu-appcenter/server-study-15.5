@@ -83,7 +83,7 @@ public class ClientController {
     @PutMapping("/{clientnum}")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "유저 회원정보 수정 성공"),
-            @ApiResponse(responseCode = "404", description = "유저를 찾을 수 없습니다")
+            @ApiResponse(responseCode   = "404", description = "유저를 찾을 수 없습니다")
     })
     public ResponseEntity<CommonResponseDto> editClient(@PathVariable Long clientnum,@Valid @RequestBody EditClientDto editClientDto){
 

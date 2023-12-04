@@ -21,7 +21,7 @@ public class ClientResponseDto {
         private String clientId;
 
 
-        @Schema(example = "password1234", description = "회원가입 할 유저가 입력한 비밀번호")
+        @Schema(example = "password1234@", description = "회원가입 할 유저가 입력한 비밀번호")
         private String clientPassword;
 
 
