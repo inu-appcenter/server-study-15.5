@@ -38,6 +38,10 @@ dependencies {
     //마리아 db
     implementation 'org.mariadb.jdbc:mariadb-java-client:2.7.11'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    //임베디드 db 사용을 위한 h2
+    implementation 'com.h2database:h2'
+    //GSON
+    implementation 'com.google.code.gson:gson:2.8.7'
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     // swagger
