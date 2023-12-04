@@ -6,6 +6,7 @@ import com.study.toDoList.domain.Task;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 public class TaskResponseDto {
@@ -13,15 +14,19 @@ public class TaskResponseDto {
     private String title;
     private String description;
     private LocalDate endDate;
-    private boolean isFinished;
+    private Boolean isFinished;
     private Long memberId;
+    private LocalDateTime createDate;
+    private LocalDateTime modifiedDate;
 
     public TaskResponseDto(Task task){
         this.id = task.getId();
         this.title = task.getTitle();
         this.description = task.getDescription();
         this.endDate = task.getEndDate();
-        this.isFinished = task.isFinished();
+        this.isFinished = task.getIsFinished();
         this.memberId = task.getMember().getId();
+        this.createDate = task.getCreateDate();
+        this.modifiedDate = task.getModifiedDate();
     }
 }

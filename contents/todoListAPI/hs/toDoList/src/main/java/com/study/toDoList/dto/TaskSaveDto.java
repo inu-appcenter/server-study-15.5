@@ -6,10 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 
 @Getter
@@ -19,7 +16,7 @@ public class TaskSaveDto {
     private String title;
     @NotNull
     private String description;
-    @Future
+    @FutureOrPresent
     private LocalDate endDate;
 
     @Builder

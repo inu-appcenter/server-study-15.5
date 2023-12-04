@@ -24,7 +24,7 @@ public class Task extends BaseTimeEntity{
     private LocalDate endDate;
 
     @Column
-    boolean isFinished = false;
+    private Boolean isFinished;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -35,7 +35,7 @@ public class Task extends BaseTimeEntity{
         this.description = description;
         this.endDate = endDate;
         this.member = member;
-
+        this.isFinished = false;
     }
 
     public void update(String title, String description, LocalDate endDate, Boolean isFinished){

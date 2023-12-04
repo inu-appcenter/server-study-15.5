@@ -18,7 +18,7 @@ public class TaskUpdateDto {
     private String description;
     @FutureOrPresent
     private LocalDate endDate;
-    @NotBlank
+    @NotNull
     private Boolean isFinished;
     @Builder
     public TaskUpdateDto(String title, String description, LocalDate endDate, Boolean isFinished){
