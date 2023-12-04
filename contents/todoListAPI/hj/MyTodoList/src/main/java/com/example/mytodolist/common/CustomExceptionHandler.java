@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -28,17 +30,32 @@ public class CustomExceptionHandler {
         log.error("Exception: {},{}", request.getRequestURI(), e.getMessage());
 
         Map<String, String> errorMap = new HashMap<>();
-        errorMap.put("error type", httpStatus.getReasonPhrase());
-        errorMap.put("code", String.valueOf(httpStatus.value()));
+        String [] uriParts = request.getRequestURI().split("/");
+        String Id = uriParts[uriParts.length-1];
+
 
         if(e instanceof NoSuchElementException){
-            errorMap.put("message", "NoSuchElementException 이 발생하였습니다. 자세한 내용은 로그를 확인해주세요.");
+            errorMap.put("message", "NoSuchElementException 이 발생하였습니다.");
+            errorMap.put("details", "아이디 "+ "'" +Id + "' " + e.getMessage());
         }else if (e instanceof  MethodArgumentNotValidException){
-            errorMap.put("message", "MethodArgumentNotValidException 이 발생하였습니다. 자세한 내용은 로그를 확인해주세요. ");
+            errorMap.put("message", "MethodArgumentNotValidException 이 발생하였습니다.");
+            errorMap.put("details", getBindingResultMessage(((MethodArgumentNotValidException) e).getBindingResult()));
         }else {
-            errorMap.put("message", "RuntimeException 이 발생하였습니다. 자세한 내용은 로그를 확인해주세요.");
+            errorMap.put("message", "RuntimeException 이 발생하였습니다.");
+            errorMap.put("details", e.getMessage());
         }
         return new ResponseEntity<>(errorMap, responseHeaders, httpStatus);
+    }
+
+
+    private String getBindingResultMessage(BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            FieldError fieldError = bindingResult.getFieldError();
+            if(fieldError !=null){
+                return fieldError.getDefaultMessage();
+            }
+        }
+        return "Validation error";
     }
 
 }

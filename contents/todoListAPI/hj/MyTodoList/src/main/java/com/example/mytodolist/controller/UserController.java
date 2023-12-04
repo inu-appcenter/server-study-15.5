@@ -1,7 +1,6 @@
 package com.example.mytodolist.controller;
 
-import com.example.mytodolist.Repository.UserRepository;
-import com.example.mytodolist.domain.User;
+
 import com.example.mytodolist.dto.TodoResponseDto;
 import com.example.mytodolist.dto.UserRequestDto;
 import com.example.mytodolist.dto.UserResponseDto;
@@ -28,16 +27,14 @@ import java.util.NoSuchElementException;
 public class UserController {
 
     private final UserService userService;
-    private final UserRepository userRepository;
 
     @ApiOperation(value="사용자 계정 조회", notes="userId에 해당하는 사용자 계정을 조회합니다.")
     @GetMapping("/{id}")  //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<UserResponseDto> getUser(
-            @ApiParam(value="유저 아이디",required = true, example = "1") @PathVariable("id") Long id) throws NoSuchElementException{
+            @ApiParam(value="유저 아이디",required = true, example = "1") @PathVariable("id") Long id) {
 
         log.info("[UserGet] 유저 id로 유저를 조회합니다. 유저 ID : {}",id);
-        User user = userRepository.getById(id);
-        UserResponseDto userResponseDto = userService.getUser(user.getId());
+        UserResponseDto userResponseDto = userService.getUser(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
     }
@@ -45,7 +42,7 @@ public class UserController {
     @ApiOperation(value = "사용자 계정 생성", notes = "사용자 계정을 생성합니다.")
     @PostMapping()
     public ResponseEntity<UserResponseDto> createUser(
-            @Valid @RequestBody UserRequestDto userRequestDto)throws NoSuchElementException{
+            @Valid @RequestBody UserRequestDto userRequestDto){
         log.info("[UserPost] 유저를 생성합니다.");
         UserResponseDto userResponseDto = userService.saveUser(userRequestDto);
 

@@ -30,8 +30,8 @@ public class UserService {
     }
 
     public UserResponseDto saveUser(UserRequestDto userRequestDto){
-        User user;
-        user = UserRequestDto.convertDtoToEntity(userRequestDto);
+
+        User user = UserRequestDto.convertDtoToEntity(userRequestDto);
         userRepository.save(user);
 
         UserResponseDto userResponseDto = UserResponseDto.convertEntityToDto(user);
@@ -40,6 +40,7 @@ public class UserService {
     }
 
     public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto){
+
         User user = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당 아이디가 존재하지 않습니다."));
         user.updateUserInfo(userRequestDto.getName(), userRequestDto.getEmail());
         userRepository.save(user);

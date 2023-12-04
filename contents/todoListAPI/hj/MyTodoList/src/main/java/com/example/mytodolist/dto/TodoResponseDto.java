@@ -11,17 +11,17 @@ public class TodoResponseDto {
     private Long id;
     private String title;
     private String content;
-    private Boolean isCompleted;
+    private Boolean completed;
     private LocalDateTime deadLine;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 
     @Builder
-    public TodoResponseDto(Long id, String title, String content,Boolean isCompleted, LocalDateTime deadLine, LocalDateTime createdDate,LocalDateTime modifiedDate){
+    public TodoResponseDto(Long id, String title, String content,Boolean completed, LocalDateTime deadLine, LocalDateTime createdDate,LocalDateTime modifiedDate){
         this.id = id;
         this.title = title;
         this.content = content;
-        this.isCompleted = isCompleted;
+        this.completed = completed;
         this.deadLine= deadLine;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
@@ -35,7 +35,7 @@ public class TodoResponseDto {
                 .id(todo.getId())
                 .title(todo.getTitle())
                 .content(todo.getContents())
-                .isCompleted(todo.getCompleted())
+                .completed(todo.getCompleted())
                 .deadLine(todo.getDeadLine())
                 .createdDate(todo.getCreatedDate())
                 .modifiedDate(todo.getModifiedDate())
