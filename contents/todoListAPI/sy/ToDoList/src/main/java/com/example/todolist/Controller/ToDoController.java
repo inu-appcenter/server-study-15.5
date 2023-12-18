@@ -5,6 +5,7 @@ import com.example.todolist.DTO.ToDo.AddToDoReqDTO;
 import com.example.todolist.DTO.ToDo.ReadToDoPreviewResDTO;
 import com.example.todolist.DTO.ToDo.ReadToDoResDTO;
 import com.example.todolist.DTO.ToDo.UpdateToDoReqDTO;
+import com.example.todolist.Security.JwtProvider;
 import com.example.todolist.Service.ToDoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -23,10 +25,11 @@ import java.util.List;
 public class ToDoController {
 
     private final ToDoService toDoService;
-    private final Long userId = 4l;
+    private final JwtProvider jwtProvider;
     @Autowired
-    public ToDoController(ToDoService toDoService){
+    public ToDoController(ToDoService toDoService,JwtProvider jwtProvider){
         this.toDoService=toDoService;
+        this.jwtProvider=jwtProvider;
     }
 
     @GetMapping("/to-dos")
@@ -44,11 +47,9 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "개별ToDo 조회성공",response = ReadToDoResDTO.class),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> readToDo(@PathVariable Long toDoId){
-        /*
-            토큰에서 userId값 추출하는 로직
-        */
-        ReadToDoResDTO readToDoResDTO = toDoService.readToDo(toDoId,userId);
+    public ResponseEntity<CommonResponseDTO> readToDo(@PathVariable Long toDoId, HttpServletRequest request){
+
+        ReadToDoResDTO readToDoResDTO = toDoService.readToDo(toDoId,jwtProvider.readUserIdByToken(request));
         return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","todo 조회 성공",readToDoResDTO));
     }
 
@@ -57,11 +58,9 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "ToDo 추가성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> addToDo(@RequestBody @Valid AddToDoReqDTO addToDoReqDTO){
-        /*
-            토큰에서 userId값 추출하는 로직
-        */
-        addToDoReqDTO.setUserId(userId);
+    public ResponseEntity<CommonResponseDTO> addToDo(@RequestBody @Valid AddToDoReqDTO addToDoReqDTO, HttpServletRequest request){
+
+        addToDoReqDTO.setUserId(jwtProvider.readUserIdByToken(request));
         toDoService.addToDo(addToDoReqDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(CommonResponseDTO.of("CREATED","todo 추가 성공",null));
     }
@@ -71,11 +70,9 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "ToDo 수정성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> updateToDo(@PathVariable Long toDoId, @RequestBody @Valid UpdateToDoReqDTO updateToDoReqDTO){
-        /*
-            토큰에서 userId값 추출하는 로직
-        */
-        updateToDoReqDTO.setUserId(userId);
+    public ResponseEntity<CommonResponseDTO> updateToDo(@PathVariable Long toDoId, @RequestBody @Valid UpdateToDoReqDTO updateToDoReqDTO, HttpServletRequest request){
+
+        updateToDoReqDTO.setUserId(jwtProvider.readUserIdByToken(request));
         updateToDoReqDTO.setToDoId(toDoId);
 
         toDoService.updateToDo(updateToDoReqDTO);
@@ -87,12 +84,11 @@ public class ToDoController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "ToDo 삭제성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> deleteToDo(@PathVariable Long toDoId){
-        /*
-            토큰에서 userId값 추출하는 로직
-        */
+    public ResponseEntity<CommonResponseDTO> deleteToDo(@PathVariable Long toDoId, HttpServletRequest request){
 
-        toDoService.deleteToDo(toDoId,userId);
+        toDoService.deleteToDo(toDoId,jwtProvider.readUserIdByToken(request));
         return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","todo 삭제성공",null));
     }
+
+
 }
