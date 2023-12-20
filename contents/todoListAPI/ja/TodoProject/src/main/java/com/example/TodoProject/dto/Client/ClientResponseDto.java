@@ -34,14 +34,14 @@ public class ClientResponseDto {
 
 
         @Schema(example = "ROLE_USER")
-        private String clientRole;
+        private List<String> clientRole;
 
 
         @Schema(example = "010-1234-5678")
         private String clientPhoneNum;
 
         @Builder
-        public ResponseClientDto(Long clientNum, String clientId, String clientPassword, String clientName, String clientEmail, String clientRole,String clientPhoneNum){
+        public ResponseClientDto(Long clientNum, String clientId, String clientPassword, String clientName, String clientEmail, List<String> clientRole,String clientPhoneNum){
             this.clientNum = clientNum;
             this.clientId = clientId;
             this.clientPassword = clientPassword;

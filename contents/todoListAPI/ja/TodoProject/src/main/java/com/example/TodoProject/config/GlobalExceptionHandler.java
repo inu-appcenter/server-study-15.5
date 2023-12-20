@@ -1,8 +1,7 @@
 package com.example.TodoProject.config;
 
 import com.example.TodoProject.common.CommonResponse;
-import com.example.TodoProject.config.ex.DuplicatedException;
-import com.example.TodoProject.config.ex.NotFoundElementException;
+import com.example.TodoProject.config.ex.*;
 import com.example.TodoProject.dto.CommonResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -43,4 +42,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CommonResponseDto(CommonResponse.FAIL, "유효성 검사 실패", errors));
     }
+
+    @ExceptionHandler(value = LoginErrorException.class)
+    public ResponseEntity<CommonResponseDto> handleLoginError(LoginErrorException loginErrorException, WebRequest request) {
+        log.error(loginErrorException.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new CommonResponseDto(CommonResponse.FAIL, loginErrorException.getMessage(), request.getDescription(false)));
+    }
+
 }

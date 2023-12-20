@@ -5,6 +5,8 @@ server:
       charset: utf-8
       force: true
 spring:
+  jwt:
+    secret: h7J2jZ4Bp8WvE9RfTcYvD1QaL6OzXsCmIuN5rFwTgPqM1eCvK9jX4eTcYvU3xS6z
   datasource:
     url: jdbc:mysql://localhost:3333/test_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: testuser
@@ -23,6 +25,6 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
 
 
