@@ -25,3 +25,7 @@ spring:
         level:
             com.example.mytodolist : error
             com.example.mytodolist.controller : debug
+
+springboot:
+    jwt:
+        secret: flature!@#

@@ -22,7 +22,7 @@ public class CustomExceptionHandler {
 
     //두개의 예외 처리를 하기 위해 두개의 클래스, 두개의 핸들러가 꼭 필요한 건 아니다. 하나의 Exception 핸들러에서 예외를 낚아채고,
     //낚아챈 에외를 구벼하여 해당 예외에 대한 내용만 구별하면 된다.
-    @ExceptionHandler(value = {NoSuchElementException.class, MethodArgumentNotValidException.class, RuntimeException.class})
+    @ExceptionHandler(value = {NoSuchElementException.class, MethodArgumentNotValidException.class, RuntimeException.class, NullPointerException.class})
     public ResponseEntity<Map<String, String>> handleException(Exception e, HttpServletRequest request) {
         HttpHeaders responseHeaders = new HttpHeaders();
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
@@ -40,7 +40,12 @@ public class CustomExceptionHandler {
         }else if (e instanceof  MethodArgumentNotValidException){
             errorMap.put("message", "MethodArgumentNotValidException 이 발생하였습니다.");
             errorMap.put("details", getBindingResultMessage(((MethodArgumentNotValidException) e).getBindingResult()));
-        }else {
+        }else if (e instanceof NullPointerException) {
+            errorMap.put("message", "NullPointerException 이 발생하였습니다.");
+            errorMap.put("details", "잘못된 아이디와 비밀번호입니다.");
+        }
+        else
+        {
             errorMap.put("message", "RuntimeException 이 발생하였습니다.");
             errorMap.put("details", e.getMessage());
         }

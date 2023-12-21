@@ -29,8 +29,8 @@ public class TodoService {
         return todoResponseDto;
     }
 
-    public TodoResponseDto saveTodo(Long id, TodoRequestDto todoRequestDto){
-        User user = userRepository.findById(id).orElseThrow(()-> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
+    public TodoResponseDto saveTodo(String uid, TodoRequestDto todoRequestDto){
+        User user = userRepository.getByUid(uid).orElseThrow(()-> new NoSuchElementException("해당 유저가 존재하지 않습니다."));
 
         Todo todo = TodoRequestDto.convertDtoToEntity(todoRequestDto,user);
         LocalDateTime now = LocalDateTime.now();
