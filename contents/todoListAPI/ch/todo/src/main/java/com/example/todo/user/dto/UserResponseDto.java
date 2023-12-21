@@ -1,9 +1,13 @@
 package com.example.todo.user.dto;
 
+import com.example.todo.user.Authority;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ApiModel("User 응답 DTO")
 @Builder
@@ -22,4 +26,7 @@ public class UserResponseDto {
     @ApiModelProperty(value = "User 닉네임", notes = "String 문자열")
     private String name;
 
+    private List<Authority> roles = new ArrayList<>();
+
+    private String token;
 }

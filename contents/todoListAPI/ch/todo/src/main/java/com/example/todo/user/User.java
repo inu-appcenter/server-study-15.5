@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Table(name = "user_tb")
 @Entity
@@ -31,16 +32,23 @@ public class User {
     private String name;
 
     @OneToMany(mappedBy="user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Task> Tasks = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Authority> authorities = new ArrayList<>();
+    private List<Authority> roles = new ArrayList<>();
 
     @Builder
     public User(String loginId, String password, String name) {
         this.loginId = loginId;
         this.password = password;
         this.name = name;
+    }
+
+    public void assignRoles(List<Authority> roles) {
+        this.roles = roles.stream().map(authority -> {
+            authority.assignUser(this);
+            return authority;
+        }).collect(Collectors.toList());
     }
 
     public UserResponseDto toResponseDto() {

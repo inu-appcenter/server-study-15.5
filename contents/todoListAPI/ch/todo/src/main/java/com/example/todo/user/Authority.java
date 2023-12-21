@@ -25,5 +25,9 @@ public class Authority {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    public Authority(String name) {
+        this.name = name;
+    }
+
     public void assignUser(User user) { this.user = user; }
 }
