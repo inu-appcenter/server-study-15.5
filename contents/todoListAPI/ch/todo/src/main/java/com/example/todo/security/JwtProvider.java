@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,10 +22,11 @@ import java.util.Date;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class JwtProvider {
     private final CustomUserDetailService customUserDetailService;
 
-    @Value("${springboot.jwt.secret.key")
+    @Value("${springboot.jwt.secret.key}")
     private String secret;
 
     private Key secretKey;
@@ -33,12 +35,9 @@ public class JwtProvider {
 
     @PostConstruct
     protected void init() {
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public JwtProvider(CustomUserDetailService customUserDetailService) {
-        this.customUserDetailService = customUserDetailService;
-    }
 
     public String createToken(String account, List<Authority> roles) {
         Claims claims = Jwts.claims().setSubject(account);

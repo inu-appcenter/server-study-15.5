@@ -30,6 +30,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
     }
 
+    /*
     @PostMapping()
     @ApiOperation(value = "새 User 등록 api", notes = "새로운 유저 정보 등록")
     public ResponseEntity<UserResponseDto> postUser(
@@ -44,6 +45,7 @@ public class UserController {
     public void deleteUser(@ApiParam(value = "User 식별자", required = true) @PathVariable Long userId) {
         userService.deleteUser(userId);
     }
+     */
 
 
     @PutMapping()

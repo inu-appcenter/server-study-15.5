@@ -2,7 +2,7 @@ package com.example.todo.config;
 
 import com.example.todo.security.JwtAuthenticationFilter;
 import com.example.todo.security.JwtProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
@@ -27,14 +27,10 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
-
-    @Autowired
-    public SecurityConfig(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
 
     /*
         csrfFilter : HTTP 요청에 대해 CSRF 토큰을 생성, 키에 저장한다.
@@ -75,10 +71,10 @@ public class SecurityConfig {
                 // 조건별로 요청 허용/제한 설정
                 .authorizeRequests()
                 // 회원가입과 로그인은 모두 승인
-                .antMatchers("/signs/**").permitAll()
+                .antMatchers("/accounts/**").permitAll()
                 .antMatchers("/tasks/**").hasRole("USER")
                 // users으로 시작하는 요청은 ADMIN 권한이 있는 유저에게만 허용
-                .antMatchers("/users/**").hasRole("ADMIN")
+                .antMatchers("/users/**").hasRole("USER")
                 // swagger-ui와 관련된 주소 허용
                 .antMatchers(  "/v2/api-docs",
                         "/swagger-resources",
