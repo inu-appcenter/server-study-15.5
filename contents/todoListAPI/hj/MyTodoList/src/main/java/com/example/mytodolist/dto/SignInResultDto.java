@@ -11,8 +11,8 @@ public class SignInResultDto extends SignUpResultDto{
     private String token;
 
     @Builder(builderMethodName = "signInResultDtoBuilder")
-    public SignInResultDto(boolean success, int code, String msg, String token){
-        super(success, code, msg);
+    public SignInResultDto(Long id, String uid,String name, String email, int level, String token){
+        super(id,uid,name,email,level);
         this.token = token;
     }
 

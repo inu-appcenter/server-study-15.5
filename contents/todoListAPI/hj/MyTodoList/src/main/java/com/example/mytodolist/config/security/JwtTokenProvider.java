@@ -5,19 +5,19 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import java.security.Key;
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +28,14 @@ public class JwtTokenProvider {
 
     private final UserDetailsService userDetailsService;
 
-    @Value("${springboot.jwt.secret}")
-    private String secretKey = "secretKey";
+    //시크릿키를 랜덤으로 생성.
+      /*
+        @PostConstruct는 해당 객체가 빈 객체로 주입된 이후 수행되는 메소드를 가리킨다.
+        JwtTokenProvider 클래스에는 @Component 어노테이션이 지정되어 있어 애플리케이션이 가동되면서 빈으로 자동주입된다.
+        그때 @PostConstruct가 지정되어 있는 init() 메소드가 자동으로 실행된다.
+       */
+
+    private Key secretKey;
 
     private final long tokenValidMillisecond = 1000L * 60 * 60;
 
@@ -41,7 +47,7 @@ public class JwtTokenProvider {
     protected void init(){
         log.info("[init] JwtTokenProvider 내 secretKey 초기화 시작");
         //secretKey를 Base64 형식으로 인코딩 합니다.
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
+        secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
         log.info("[init] JwtTokenProvider 내 secretKey 초기화 완료");
     }
 
@@ -57,7 +63,7 @@ public class JwtTokenProvider {
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidMillisecond))
-                .signWith(SignatureAlgorithm.HS256,secretKey)
+                .signWith(secretKey)
                 .compact();
 
         log.info("[createToken] 토큰 생성 완료");

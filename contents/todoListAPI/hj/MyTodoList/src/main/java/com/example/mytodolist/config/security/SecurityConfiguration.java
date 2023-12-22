@@ -1,15 +1,18 @@
 package com.example.mytodolist.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+@EnableWebSecurity
+public class SecurityConfiguration{
     private final  JwtTokenProvider jwtTokenProvider;
 
     //@Autowired 어노테이션이 없으면 Spring은 어떻게 의존성을 제공해야 하는지 모르게 되어 런타임 오류나 예상치 못한 동작이 발생할 수 있습니다.
@@ -18,8 +21,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception{
+    //WebSecurityConfigurerAdapter가 decrated 되었기 때문에, 수정해야한다
+    @Bean
+    protected SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         //UI를 사용하는 것을 기본값으로 가진 시큐리티 설정을 비활성화합니다.
         httpSecurity.httpBasic().disable()
                 //Rest Api에서는 CSRF 보안이 필요 없기 때문에 비활성화 하는 로직입니다. CSRF는 Cross-Site Request Forgery의 줄임말로 '사이트 간 요청 위조' 를 의미합니다.
@@ -36,9 +40,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("**exception**").permitAll()
                 //Swagger 접근 모두 허용.
                 .antMatchers("/swagger-resources/**","/swagger-ui/index.html",
-                        "/webjars/**","/swagger/**","/users/exception","/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                //기타 요청은 'ADMIN' 에게 모두 허용
-                .anyRequest().hasRole("ADMIN")
+                      "/webjars/**","/swagger/**","/users/exception","/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                //기타 요청은 'ADMIN' 에게 모두 허용, 유저도 허용.
+                .anyRequest().hasRole("USER")
                 .and()
                 //권한을 확인하는 과정에서 통과하지 못하는 예외가 발생할 경우 예외 전달
                 .exceptionHandling().accessDeniedHandler(new CustomAccessDeniedHandler())
@@ -49,13 +53,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //addFilterBefore() 메서드를 통해 어느 필터 앞에 추가할 것인지 설정할 수 있는데, 현재 구현돼 있는 설정은,
                 //스프링 시큐리티에서 인증을 처리하는 필터인 UsernamePasswordAuthenticationFilter 앞에 앞에서 생성한 JwtAuthenticaionFilter를 추가하겠다는 의미이다.
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-    }
 
-    //WebSecurity는 HttpSecurity 앞단에 적용되며, 전체적으로 스프링 시큐리티의 영향권 밖에 있습니다. 즉, 인증과 인가가 모두 적용되기 전에 동작하는 설정입니다.
-    //그렇기에 인증과 인가가 적용되지 않는 리소스 접근에 대해서만 사용합니다.
-    @Override
-    public void configure(WebSecurity webSecurity){
-        webSecurity.ignoring().antMatchers("/v3/api-docs","/swagger-resources/**","/swagger-ui/index.html","/webjars/**","/swagger/**","/sign-api/exception");
-
+                return httpSecurity.build();
     }
 }

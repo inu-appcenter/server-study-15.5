@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Api(tags = {"유저 정보"},description = "회원가입, 로그인 ,조회,수정,삭제")
 @Slf4j //private static final Logger log = LoggerFactory.getLogger(UserController.class) 자동 생성
@@ -50,7 +49,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "사용자 계정 수정", notes = "userId에 해당하는 사용자 계정을 수정합니다.")
-    @PutMapping() //uri 경로를 제대로 고쳐야한다.
+    @PutMapping("/update") //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<UserResponseDto> changeUser(@Valid @RequestBody UserRequestDto userRequestDto){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -65,7 +64,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "사용자 계정 삭제", notes = "userId에 해당하는 사용자 계정을 삭제합니다.")
-    @DeleteMapping() //uri 경로를 제대로 고쳐야한다.
+    @DeleteMapping("/delete") //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<Void> deleteUser(){
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -101,7 +100,7 @@ public class UserController {
         log.info("[signIn] 로그인을 시도하고 있습니다. id : {}, pw : ****",id);
         SignInResultDto signInResultDto = signService.signIn(id,password);
 
-        if(signInResultDto.getCode() == 0){
+        if(signInResultDto.getToken() !=null){
             log.info("[signIn] 정상적으로 로그인 되었습니다 : id : {}, token: {}",id,signInResultDto.getToken());
         }
         return signInResultDto;
@@ -109,16 +108,15 @@ public class UserController {
 
     @ApiOperation(value = "회원가입", notes = "아이디,비밀번호,이름,이메일,권한을 입력하여 회원가입")
     @PostMapping( "/sign-up")
-    public SignUpResultDto signUp(
-            @ApiParam(value = "ID", required = true) @RequestParam String id,
-            @ApiParam(value = "비밀번호", required = true) @RequestParam String password,
-            @ApiParam(value = "이름", required = true) @RequestParam String name,
-            @ApiParam(value = "이메일", required = true) @RequestParam String email,
-            @ApiParam(value = "권한", required = true) @RequestParam String role){
-        log.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, email : {}, role : {}",id,name,email,role);
-        SignUpResultDto signUpResultDto = signService.signUp(id,password,name,email,role);
+    public SignUpResultDto signUp(@Valid @RequestBody SignUpRequestDto signUpRequestDto){
+        String role = "USER";
+        log.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, email : {}, role : {}",signUpRequestDto.getUid(),signUpRequestDto.getName(),signUpRequestDto.getEmail(),role);
+        signService.checkDuplicate(signUpRequestDto.getUid());
 
-        log.info("[signUp] 회원가입을 완료했습니다. id : {}",id);
+        SignUpResultDto signUpResultDto = signService.signUp(signUpRequestDto,role);
+
+        log.info("[signUp] 회원가입을 완료했습니다. id : {}",signUpRequestDto.getUid());
+
         return signUpResultDto;
     }
 

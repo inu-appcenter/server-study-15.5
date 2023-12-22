@@ -1,6 +1,7 @@
 package com.example.mytodolist.common;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,23 @@ public class CustomExceptionHandler {
         return new ResponseEntity<>(errorMap, responseHeaders, httpStatus);
     }
 
+    @ExceptionHandler(value = {DuplicateKeyException.class})
+    public ResponseEntity<Map<String, String>> handleDuplicateException(Exception e, HttpServletRequest request) {
+        HttpHeaders responseDuplicateHeaders = new HttpHeaders();
+        HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+
+        log.error("Exception: {},{}", request.getRequestURI(), e.getMessage());
+
+        Map<String, String> errorMap = new HashMap<>();
+        String [] uriParts = request.getRequestURI().split("/");
+        String Id = uriParts[uriParts.length-1];
+
+        errorMap.put("message","DuplicateKeyException 발생!!");
+        errorMap.put("details", "중복되는 UserId입니다.");
+
+
+        return new ResponseEntity<>(errorMap, responseDuplicateHeaders, httpStatus);
+    }
 
     private String getBindingResultMessage(BindingResult bindingResult){
         if(bindingResult.hasErrors()){

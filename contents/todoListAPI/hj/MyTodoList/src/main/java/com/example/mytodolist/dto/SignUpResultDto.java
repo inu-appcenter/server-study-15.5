@@ -4,21 +4,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor
 public class SignUpResultDto {
 
-    private boolean success;
-    private int code;
-    private String msg;
+    private Long id;
+    private String uid;
+    private String name;
+    private String email;
+    private int level;
 
-    @Builder(builderMethodName = "signUpResultDtoBuilder")
-    public SignUpResultDto(boolean success,int code, String msg)
+
+    @Builder
+    public SignUpResultDto (Long id, String uid, String name, String email, int level)
     {
-        this.success=success;
-        this.code = code;
-        this.msg= msg;
+        this.id=id;
+        this.uid = uid;
+        this.name = name;
+        this.email=email;
+        this.level = level;
     }
-
 }

@@ -50,6 +50,7 @@ public class TodoController {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         //userDetails객체에 담겨있는 uid(로그인아이디)를 식별자로 가져옴
         String uid = userDetails.getUsername(); // 로그인한 사용자의 아이디
+
         log.info("[TodoPost] 유저 아이디에 해당하는 투두를 생성합니다. 유저 id : {}",uid);
 
         TodoResponseDto todoResponseDto = todoService.saveTodo(uid,todoRequestDto); //유저를 찾고, 예외처리를 서비스로 넘김
