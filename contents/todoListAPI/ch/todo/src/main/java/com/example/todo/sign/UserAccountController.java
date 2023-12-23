@@ -3,7 +3,6 @@ package com.example.todo.sign;
 import com.example.todo.user.dto.UserRequestDto;
 import com.example.todo.user.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,6 @@ public class UserAccountController {
         return ResponseEntity.ok().body(userAccountService.register(userRequestDto));
     }
 
-    // url이 애매하다.
     @PostMapping(value = "/login")
     public ResponseEntity<UserResponseDto> signin(@RequestBody UserRequestDto userRequestDto) throws Exception {
         return ResponseEntity.ok().body(userAccountService.login(userRequestDto));

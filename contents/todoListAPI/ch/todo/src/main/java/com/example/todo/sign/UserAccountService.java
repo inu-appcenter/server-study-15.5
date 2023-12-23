@@ -50,6 +50,8 @@ public class UserAccountService {
                 .password(passwordEncoder.encode(userRequestDto.getPassword()))
                 .name(userRequestDto.getName())
                 .build();
+
+        at.assignUser(user);
         user.assignRoles(Collections.singletonList(at));
 
         userRepository.save(user);
