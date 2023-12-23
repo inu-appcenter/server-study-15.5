@@ -72,8 +72,8 @@ public class SecurityConfig {
                 .authorizeRequests()
                 // 회원가입과 로그인은 모두 승인
                 .antMatchers("/accounts/**").permitAll()
+                // USER Role이 있는 사용자만 허용
                 .antMatchers("/tasks/**").hasRole("USER")
-                // users으로 시작하는 요청은 ADMIN 권한이 있는 유저에게만 허용
                 .antMatchers("/users/**").hasRole("USER")
                 // swagger-ui와 관련된 주소 허용
                 .antMatchers(  "/v2/api-docs",
