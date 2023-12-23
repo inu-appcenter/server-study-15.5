@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +56,13 @@ public class JwtProvider {
         return token;
     }
 
+    /*
+    UserDetails의 getAuthorities() 메소드 내부적으로 User 엔티티의 roles 필드를 조회하려고 할 때,
+    Lazily Fetch를 시도하게 된다. 이 때 최초 User 엔티티를 조회한 세션이 닫히면 영속성 컨텍스트가 클린-업되고
+    더 이상 Proxy 객체의 State를 초기화할 수 없어 LazyInitializationException을 발생시킨다.
+    이를 해결학 위해 getAuthentication() 메소드 범위로 Transaction을 확장시켜 영속성 컨텍스트가 유지되도록 만들었다.
+     */
+    @Transactional
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getAccount(token));
 
