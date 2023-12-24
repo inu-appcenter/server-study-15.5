@@ -57,10 +57,15 @@ public class JwtProvider {
     }
 
     /*
+    23.12.23
     UserDetails의 getAuthorities() 메소드 내부적으로 User 엔티티의 roles 필드를 조회하려고 할 때,
     Lazily Fetch를 시도하게 된다. 이 때 최초 User 엔티티를 조회한 세션이 닫히면 영속성 컨텍스트가 클린-업되고
     더 이상 Proxy 객체의 State를 초기화할 수 없어 LazyInitializationException을 발생시킨다.
     이를 해결학 위해 getAuthentication() 메소드 범위로 Transaction을 확장시켜 영속성 컨텍스트가 유지되도록 만들었다.
+
+    23.12.24
+    UserRepository 인터페이스에 findByLoginId()를 대신하는 메소드 시그니처를 선언하고
+    @Query를 통해 JPQL로 한 번에 가져오면 @Transactional을 통해 Lazily Fetch하는 것 보다 성능 상 이점이 있지않을까?
      */
     @Transactional
     public Authentication getAuthentication(String token) {
