@@ -1,9 +1,11 @@
 package com.example.TodoProject.config.security;
 
+import com.example.TodoProject.entity.Client;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -17,7 +19,9 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.awt.*;
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -29,19 +33,20 @@ public class JwtProvider {
 
     private final UserDetailsService userDetailsService; // Spring Security 에서 제공하는 서비스 레이어
 
-    @Value("${spring.jwt.secret}")
-    private String secretKey = "secretKey";
+    private Key secretKey;
     private final long tokenValidMillisecond = 1000L * 60 * 60; // 1시간 토큰 유효
 
 
     @PostConstruct
     protected void init() {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes(StandardCharsets.UTF_8));
+        log.info("[init] 시크릿키 초기화 시작");
+        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+        log.info("[init] 시크릿키 초기화 성공");
     }
 
-    public String createToken(String username, List<String> roles) {
+    public String createToken(Long ClientNum, List<String> roles) {
         log.info("[createToken] 토큰 생성 시작");
-        Claims claims = Jwts.claims().setSubject(username);
+        Claims claims = Jwts.claims().setSubject(String.valueOf(ClientNum));
         claims.put("roles", roles);
 
         Date now = new Date();

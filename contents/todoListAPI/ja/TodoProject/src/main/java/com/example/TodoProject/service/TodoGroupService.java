@@ -38,15 +38,25 @@ public class TodoGroupService {
         this.todoGroupRepository = todoGroupRepository;
         this.todoService = todoService;
     }
-    public void saveTodoGroup(Long clientNum, RequestTodoGroupDto requestTodoGroupDto){
+    public Long saveTodoGroup(Long clientNum, RequestTodoGroupDto requestTodoGroupDto){
         log.info("[saveTodoGroup] 투두 그룹 생성중");
         Client client = clientRepository.findByClientNum(clientNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 사용자입니다."));
-        todoGroupRepository.save(requestTodoGroupDto.toEntity(client, requestTodoGroupDto));
+        TodoGroup todoGroup = todoGroupRepository.save(requestTodoGroupDto.toEntity(client, requestTodoGroupDto));
         log.info("[saveTodoGroup] 투두 그룹 생성완료");
+        return todoGroup.getGroupNum();
     }
 
-    public void editTodoGroup(Long todoGroupNum, RequestTodoGroupDto requestTodoGroupDto){
+    public void editTodoGroup(Long clientNum, Long todoGroupNum, RequestTodoGroupDto requestTodoGroupDto){
+        log.info("투두 그룹의 소유주가 맞는지 확인 작업 시작");
+
+        Client client = clientRepository.findByClientNum(clientNum)
+                .orElseThrow(() -> new NotFoundElementException("존재하지 않는 사용자입니다."));
+
+        if(client.getClientNum() != clientNum){
+            throw new NotRightThisObject("투두 그룹 소유주가 아닙니다.");
+        }
+
         log.info("[editTodoGroup] 투두 그룹 수정중");
         TodoGroup todoGroup = todoGroupRepository.findByGroupNum(todoGroupNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 투두 그룹입니다."));
@@ -115,6 +125,7 @@ public class TodoGroupService {
 
         List<TodoListDto> todoListDtos = todoGroups.stream()
                 .map( todoGroup -> new TodoListDto(
+                        todoGroup.getGroupNum(),
                        todoGroup.getGroupName(),
                         todoGroup.getIsImportant(),
                         todoGroup.getTodo().stream().map(

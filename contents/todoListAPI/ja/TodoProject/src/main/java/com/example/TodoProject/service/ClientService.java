@@ -76,7 +76,7 @@ public class ClientService {
             throw new LoginErrorException("아이디 혹은 비밀번호가 틀렸습니다.");
         }
         else{
-            String token = jwtProvider.createToken(client.getUsername(), client.getClientRole());
+            String token = jwtProvider.createToken(client.getClientNum(), client.getClientRole());
             log.info("토큰 생성 완료. 토큰: {}", token);
             return token;
         }

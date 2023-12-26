@@ -59,7 +59,7 @@ public class ClientController {
 
     //유저 생성하기
     @Operation(summary = "유저 생성(회원가입)", description = "유저의 회원가입을 담당함.<br><br> 입력: RequestClientDto <br> 출력: data에 null을 반환.")
-    @PostMapping("/sign/sign-up")
+    @PostMapping("/sign-up")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "회원가입 성공"),
             @ApiResponse(responseCode = "409", description = "아이디가 중복되었습니다."),
@@ -106,7 +106,7 @@ public class ClientController {
                 .body(new CommonResponseDto(CommonResponse.SUCCESS, "회원탈퇴 성공", null));
     }
 
-    @PostMapping("/sign/sign-in")
+    @PostMapping("/sign-in")
     public ResponseEntity<CommonResponseDto> signIn(@RequestBody RequestLoginDto requestLoginDto){
         log.info("[signIn] 로그인 시도");
         return ResponseEntity.status(HttpStatus.OK)

@@ -13,6 +13,9 @@ public class TodoGroupResponseDto {
 
     @Getter
     public static class TodoListDto {
+
+        private Long groupNum;
+
         @Schema(example = "중요한 일 모음")
         private String groupName;
 
@@ -22,7 +25,8 @@ public class TodoGroupResponseDto {
         private List<ResponseTodoDto> todoList;
 
         @Builder
-        public TodoListDto(String groupName, Boolean isImportant, List<ResponseTodoDto> todoList){
+        public TodoListDto(Long groupNum, String groupName, Boolean isImportant, List<ResponseTodoDto> todoList){
+            this.groupNum = groupNum;
             this.groupName = groupName;
             this.isImportant = isImportant;
             this.todoList = todoList;

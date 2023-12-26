@@ -21,8 +21,8 @@ public class ClientAccessDeniedException implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException exception) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        log.info("[ClientAccessDeniedException] 권한이 모자라서 접근 불가합니다.");
-        CommonResponseDto commonResponseDto = new CommonResponseDto(CommonResponse.FAIL, "권한이 모자라요", null);
+        log.info("[ClientAccessDeniedException] 접근 권한이 없습니다.");
+        CommonResponseDto commonResponseDto = new CommonResponseDto(CommonResponse.FAIL, "접근 권한이 없습니다.", null);
 
         response.setStatus(403);
         response.setContentType("application/json");

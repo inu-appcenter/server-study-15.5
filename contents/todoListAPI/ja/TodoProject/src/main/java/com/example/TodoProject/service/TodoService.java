@@ -1,6 +1,7 @@
 package com.example.TodoProject.service;
 
 import com.example.TodoProject.config.ex.NotFoundElementException;
+import com.example.TodoProject.config.ex.NotRightThisObject;
 import com.example.TodoProject.entity.Client;
 import com.example.TodoProject.entity.Todo;
 import com.example.TodoProject.entity.TodoGroup;
@@ -59,8 +60,17 @@ public class TodoService {
     }
 
 
-    public void editTodo(Long todoNum, RequestTodoDto requestTodoDto){
-        log.info("[editTodoForTodoGroup] 투두 수정. todo id: {}", todoNum);
+    public void editTodo(Long clientNum ,Long todoNum, RequestTodoDto requestTodoDto){
+
+        log.info("[editTodo] 투두 소유주 확인");
+        Client client = clientRepository.findByClientNum(clientNum)
+                        .orElseThrow(()-> new NotFoundElementException("존재하지 않는 유저입니다."));
+
+        if(client.getClientNum() != clientNum){
+            throw new NotRightThisObject("투두의 소유주가 아닙니다.");
+        }
+
+        log.info("[editTodoForTodoGroup] 투두 수정 시작. todo id: {}", todoNum);
         Todo todo = todoRepository.findByTodoNum(todoNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 투두입니다."));
 
@@ -84,7 +94,14 @@ public class TodoService {
         todoRepository.save(todo);
     }
 
-    public void deleteTodo(Long todoNum){
+    public void deleteTodo(Long clientNum, Long todoNum){
+        log.info("[deleteTodo] 투두 소유주 확인");
+        Client client = clientRepository.findByClientNum(clientNum)
+                .orElseThrow(()-> new NotFoundElementException("존재하지 않는 유저입니다."));
+
+        if(client.getClientNum() != clientNum){
+            throw new NotRightThisObject("투두의 소유주가 아닙니다.");
+        }
         log.info("[deleteTodo] 투두 삭제하기. todo id: {}", todoNum);
         Todo todo = todoRepository.findByTodoNum(todoNum)
                 .orElseThrow(() -> new NotFoundElementException("존재하지 않는 투두입니다."));

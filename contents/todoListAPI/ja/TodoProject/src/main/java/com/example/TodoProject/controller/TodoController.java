@@ -65,9 +65,9 @@ public class TodoController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 투두입니다."),
             @ApiResponse(responseCode = "400", description = "유효성검사 실패")
     })
-    public ResponseEntity<CommonResponseDto> editTodo(@PathVariable Long todonum,@Valid @RequestBody RequestTodoDto requestTodoDto){
+    public ResponseEntity<CommonResponseDto> editTodo(Long clientNum, @PathVariable Long todonum,@Valid @RequestBody RequestTodoDto requestTodoDto){
 
-        todoService.editTodo(todonum, requestTodoDto);
+        todoService.editTodo(clientNum, todonum, requestTodoDto);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 수정 성공", null));
@@ -83,8 +83,8 @@ public class TodoController {
     @io.swagger.annotations.ApiResponses(
             @io.swagger.annotations.ApiResponse(code = 200, message = "투두 삭제 성공", response = ResponseTodoDeleteDto.class)
     )
-    public ResponseEntity<CommonResponseDto> deleteTodo(@PathVariable Long todonum){
-        todoService.deleteTodo(todonum);
+    public ResponseEntity<CommonResponseDto> deleteTodo(Long clientNum,@PathVariable Long todonum){
+        todoService.deleteTodo(clientNum, todonum);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두 삭제 성공" ,todonum));
     }

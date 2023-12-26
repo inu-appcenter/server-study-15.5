@@ -38,9 +38,10 @@ public class SecurityConfig{
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/clients/sign/**").permitAll()
+                .antMatchers("/clients/sign-in", "/clients/sign-up").permitAll()
                 .antMatchers("**exception**").permitAll()
-                .antMatchers("/clients/**", "/todos/**", "/todogroup/**").hasRole("USER")
+                .antMatchers("/clients/{clientnum}", "/todos/**", "/todogroup/**").hasRole("USER")
+                .antMatchers("/clients/").hasRole("ADMIN")
                 .anyRequest().hasRole("ADMIN")
                 .and()
                 .exceptionHandling().accessDeniedHandler(new ClientAccessDeniedException())
