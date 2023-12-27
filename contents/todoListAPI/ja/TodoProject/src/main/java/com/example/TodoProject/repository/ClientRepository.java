@@ -17,6 +17,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Optional<Client> findByTodoGroupGroupNum(Long TodoGroupNum);
 
-    UserDetails getByClientNum(Long clientNum);
+    UserDetails getByClientId(String clientId);
 
 }

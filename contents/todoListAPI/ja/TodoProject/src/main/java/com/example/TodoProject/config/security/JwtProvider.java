@@ -44,10 +44,11 @@ public class JwtProvider {
         log.info("[init] 시크릿키 초기화 성공");
     }
 
-    public String createToken(Long ClientNum, List<String> roles) {
+    public String createToken(String clientId,Long clientNum, List<String> roles) {
         log.info("[createToken] 토큰 생성 시작");
-        Claims claims = Jwts.claims().setSubject(String.valueOf(ClientNum));
+        Claims claims = Jwts.claims().setSubject(clientId);
         claims.put("roles", roles);
+        claims.put("clientNum", clientNum);
 
         Date now = new Date();
         String token = Jwts.builder()
@@ -72,11 +73,18 @@ public class JwtProvider {
 
     public String getUsername(String token) {
         log.info("[getUsername] 토큰 기반 회원 구별 정보 추출");
-        String info = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody()
-                .getSubject();
+        String info = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
         log.info("[getUsername] 토큰 기반 회원 구별 정보 추출 완료, info : {}", info);
         return info;
     }
+
+    public Long getClientNum(String token){
+        log.info("[getClientNum] 토큰 기반 회원 구별 정보 추출");
+        Long info = Long.valueOf(Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().get("clientNum").toString());
+        log.info("[getClientNum] 토큰 기반 회원 구별 정보 추출 완료, clientNum : {}", info);
+        return info;
+    }
+
 
     public String resolveToken(HttpServletRequest request) {
         log.info("[resolveToken] HTTP 헤더에서 Token 값 추출");

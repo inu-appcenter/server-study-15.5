@@ -80,28 +80,27 @@ public class ClientController {
 
     //유저 수정하기
     @Operation(summary = "유저 회원정보 수정", description = "유저의 회원정보를 수정한다.<br><br> 특이사항: 아이디 수정 불가능합니다. 헷갈리지 마십쇼! <br><br> 입력: EditClientDto <br> 출력: data에 null 반환")
-    @PutMapping("/{clientnum}")
+    @PutMapping("")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "유저 회원정보 수정 성공"),
             @ApiResponse(responseCode   = "404", description = "유저를 찾을 수 없습니다")
     })
-    public ResponseEntity<CommonResponseDto> editClient(@PathVariable Long clientnum,@Valid @RequestBody EditClientDto editClientDto){
-
+    public ResponseEntity<CommonResponseDto> editClient(@RequestHeader("X-AUTH-TOKEN") String token ,@Valid @RequestBody EditClientDto editClientDto){
         log.info("[editUser] 회원정보수정");
-        clientService.editClient(clientnum, editClientDto);
+        clientService.editClient(token, editClientDto);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS, "회원정보 수정 성공", null));
     }
 
     @Operation(summary="유저 회원탈퇴", description = "유저의 번호를 파라미터로 입력하면 유저를 영구 삭제함. <br><br> 특이사항: 유저가 가지고 있는 투두까지 삭제됨 <br><br> 입력: 삭제하고싶은 클라이언트의 데이터베이스 상 PK <br> 출력: data에 null로 반환함.")
-    @DeleteMapping("/{clientnum}")
+    @DeleteMapping("")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원 탈퇴 성공"),
             @ApiResponse(responseCode = "404", description = "유저를 찾을 수가 없네요;;")
     })
-    public ResponseEntity<CommonResponseDto> deleteClient(@PathVariable Long clientnum){
+    public ResponseEntity<CommonResponseDto> deleteClient(@RequestHeader("X-AUTH-TOKEN") String token){
         log.info("[deleteClient] 회원탈퇴");
-        clientService.deleteClient(clientnum);
+        clientService.deleteClient(token);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS, "회원탈퇴 성공", null));
     }

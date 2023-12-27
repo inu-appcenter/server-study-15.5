@@ -43,15 +43,16 @@ public class TodoController {
 
     //투두 작성하기
     @Operation(summary = "투두 만들기", description = "유저가 작성한 투두를 생성한다.<br><br> 특이사항: 투두 작성 시 유저가 투두가 속할 그룹을 선택하지 않았다면(혹은 없음 으로 설정했다면.) todogroupnum 자리에 null을 넣어주셔야 합니다. 만약 선택했다면 저 자리에 투두그룹의 데이터베이스 상 pk를 넣으시면 됩니다. <br><br> 입력: ResponseTodoDto <br> 출력: data에 null로 반환")
-    @PostMapping("/{clientnum}")
+    @PostMapping("")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "투두 생성 성공"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 유저입니다."),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 투두 그룹입니다."),
             @ApiResponse(responseCode = "400", description = "유효성검사 실패")
     })
-    public ResponseEntity<CommonResponseDto> createTodo(@PathVariable Long clientnum, @Valid @RequestBody RequestTodoDto requestTodoDto){
-        todoService.CreateTodo(clientnum, requestTodoDto);
+    public ResponseEntity<CommonResponseDto> createTodo(@RequestHeader("X-AUTH-TOKEN") String token, @Valid @RequestBody RequestTodoDto requestTodoDto){
+
+        todoService.createTodo(token, requestTodoDto);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두리스트 생성 성공", null));
@@ -65,9 +66,9 @@ public class TodoController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 투두입니다."),
             @ApiResponse(responseCode = "400", description = "유효성검사 실패")
     })
-    public ResponseEntity<CommonResponseDto> editTodo(Long clientNum, @PathVariable Long todonum,@Valid @RequestBody RequestTodoDto requestTodoDto){
+    public ResponseEntity<CommonResponseDto> editTodo(@RequestHeader("X-AUTH-TOKEN") String token, @PathVariable Long todonum,@Valid @RequestBody RequestTodoDto requestTodoDto){
 
-        todoService.editTodo(clientNum, todonum, requestTodoDto);
+        todoService.editTodo(token, todonum, requestTodoDto);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS, "투두 수정 성공", null));
@@ -83,8 +84,8 @@ public class TodoController {
     @io.swagger.annotations.ApiResponses(
             @io.swagger.annotations.ApiResponse(code = 200, message = "투두 삭제 성공", response = ResponseTodoDeleteDto.class)
     )
-    public ResponseEntity<CommonResponseDto> deleteTodo(Long clientNum,@PathVariable Long todonum){
-        todoService.deleteTodo(clientNum, todonum);
+    public ResponseEntity<CommonResponseDto> deleteTodo(@RequestHeader("X-AUTH-TOKEN") String token,@PathVariable Long todonum){
+        todoService.deleteTodo(token, todonum);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new CommonResponseDto(CommonResponse.SUCCESS,"투두 삭제 성공" ,todonum));
     }
@@ -98,13 +99,13 @@ public class TodoController {
     @io.swagger.annotations.ApiResponses(
             @io.swagger.annotations.ApiResponse(code = 200, message = "투두 검색 성공", response = ResponseListDto.class)
     )
-    public ResponseEntity<CommonResponseDto> getTodoSearch(Long clientnum, @PathVariable String keyword) {
+    public ResponseEntity<CommonResponseDto> getTodoSearch(@RequestHeader("X-AUTH-TOKEN") String token, @PathVariable String keyword) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponseDto(CommonResponse.SUCCESS,"검색 성공", todoService.getUsersSearchTodos(clientnum,keyword)));
+                .body(new CommonResponseDto(CommonResponse.SUCCESS,"검색 성공", todoService.getUsersSearchTodos(token,keyword)));
     }
 
     @Operation(summary = "투두 그룹을 가지고 있지 않은 투두 전체 조회", description = "투두 그룹을 가지고 있지 않은 투두를 조회를 하는 컨트롤러.<br><br> 입력: 사용자의 데이터베이스 상 pk(clientnum)<br>출력: data에 투두 그룹이 null인 투두들을 ResponseTodoDto 형식으로 바꾼 후, list로 반환")
-    @GetMapping("/todolist/{clientnum}")
+    @GetMapping("/todolist")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 그룹을 가지고 있지 않은 투두 전체 조회", content = @Content(schema = @Schema(implementation = ResponseListDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자입니다")
@@ -112,8 +113,8 @@ public class TodoController {
     @io.swagger.annotations.ApiResponses(
             @io.swagger.annotations.ApiResponse(code = 200, message = "투두 검색 성공", response = ResponseListDto.class)
     )
-    public ResponseEntity<CommonResponseDto> getAllTodosNotTodoGroup(@PathVariable Long clientnum){
+    public ResponseEntity<CommonResponseDto> getAllTodosNotTodoGroup(@RequestHeader("X-AUTH-TOKEN") String token){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new CommonResponseDto(CommonResponse.SUCCESS, "getAllTodosNotTodoGroup 전체 조회 성공", todoService.getAllTodosForNotTodoGroup(clientnum)));
+                .body(new CommonResponseDto(CommonResponse.SUCCESS, "getAllTodosNotTodoGroup 전체 조회 성공", todoService.getAllTodosForNotTodoGroup(token)));
     }
 }

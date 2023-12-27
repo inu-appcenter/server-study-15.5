@@ -42,7 +42,6 @@ public class SecurityConfig{
                 .antMatchers("**exception**").permitAll()
                 .antMatchers("/clients/{clientnum}", "/todos/**", "/todogroup/**").hasRole("USER")
                 .antMatchers("/clients/").hasRole("ADMIN")
-                .anyRequest().hasRole("ADMIN")
                 .and()
                 .exceptionHandling().accessDeniedHandler(new ClientAccessDeniedException())
                 .and()
