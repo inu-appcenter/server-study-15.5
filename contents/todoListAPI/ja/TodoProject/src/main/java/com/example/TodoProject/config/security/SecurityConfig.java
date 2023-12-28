@@ -38,7 +38,7 @@ public class SecurityConfig{
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/clients/sign-in", "/clients/sign-up").permitAll()
+                .antMatchers("/clients/sign-in", "/clients/sign-up", "/clients/duplicationcheck").permitAll()
                 .antMatchers("**exception**").permitAll()
                 .antMatchers("/clients/{clientnum}", "/todos/**", "/todogroup/**").hasRole("USER")
                 .antMatchers("/clients/").hasRole("ADMIN")

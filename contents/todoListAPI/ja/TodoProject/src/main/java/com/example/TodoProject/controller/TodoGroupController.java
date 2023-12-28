@@ -63,7 +63,7 @@ public class TodoGroupController {
     }
 
     @Operation(summary = "투두 그룹 조회", description = "투두 그룹 조회를 하는 컨트롤러<br><br> 입력: 투두 그룹을 조회하려는 사용자의 데이터베이스 상 pk(clientnum)<br>출력: data에 ResponseTodoGroup 형식을 List에 담아서 반환한다.")
-    @GetMapping("/todogrorups")
+    @GetMapping("/todogroups")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "투두 그룹 조회 성공", content = @Content(schema = @Schema(implementation = ResponseTodoGroupListDto.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자입니다.")

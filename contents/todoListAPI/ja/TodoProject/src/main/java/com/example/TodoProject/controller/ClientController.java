@@ -112,4 +112,12 @@ public class ClientController {
                 .body(new CommonResponseDto(CommonResponse.SUCCESS, "로그인 성공", clientService.signIn(requestLoginDto)));
     }
 
+    @PostMapping("/duplicationcheck")
+    public ResponseEntity<CommonResponseDto> duplicationCheck(String clientId){
+        log.info("[duplicationCheck] 아이디 중복 확인");
+        clientService.duplicationCheck(clientId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new CommonResponseDto(CommonResponse.SUCCESS, "중복되는 아이디가 없습니다", null));
+    }
+
 }
