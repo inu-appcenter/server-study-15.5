@@ -7,11 +7,13 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Api(tags = {"User"})
 @RestController
 @RequestMapping("/users")
@@ -28,10 +30,12 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
     }
 
+    /*
     @PostMapping()
     @ApiOperation(value = "새 User 등록 api", notes = "새로운 유저 정보 등록")
     public ResponseEntity<UserResponseDto> postUser(
             @Validated @RequestBody UserRequestDto userRequestDto) {
+        log.info("사용자 신규 가입, 로그인ID: {}", userRequestDto.getLoginId());
         UserResponseDto userResponseDto = userService.saveUser(userRequestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDto);
     }
@@ -41,6 +45,7 @@ public class UserController {
     public void deleteUser(@ApiParam(value = "User 식별자", required = true) @PathVariable Long userId) {
         userService.deleteUser(userId);
     }
+     */
 
 
     @PutMapping()
