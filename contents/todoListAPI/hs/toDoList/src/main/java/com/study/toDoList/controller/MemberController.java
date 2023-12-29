@@ -9,6 +9,8 @@ import com.study.toDoList.dto.ResponseDto;
 import com.study.toDoList.service.MemberService;
 import com.study.toDoList.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +44,7 @@ public class MemberController {
     }
 
     @Operation(summary = "회원 정보 수정",description = "url 경로변수에 회원아이디,바디에 {password,nickname}을 json 형식으로 보내주세요.")
+    @Parameter(name = "X-AUTH-TOKEN",description = "로그인 후 발급 받은 토큰",required = true,in = ParameterIn.HEADER)
     @ApiResponses({
             @ApiResponse(responseCode = "200",description = "회원정보수정성공")
     })
@@ -52,6 +55,7 @@ public class MemberController {
         return new ResponseEntity<>(new ResponseDto(id,"회원정보수정성공"), HttpStatus.OK);
     }
     @Operation(summary = "회원 삭제",description = "url 경로변수에 회원아이디를 담아 보내주세요")
+    @Parameter(name = "X-AUTH-TOKEN",description = "로그인 후 발급 받은 토큰",required = true,in = ParameterIn.HEADER)
     @ApiResponses({
             @ApiResponse(responseCode = "204",description = "회원삭제성공")
     })
@@ -63,6 +67,7 @@ public class MemberController {
     }
 
     @Operation(summary = "회원 가져오기",description = "url 경로변수에 회원아이디를 담아 보내주세요")
+    @Parameter(name = "X-AUTH-TOKEN",description = "로그인 후 발급 받은 토큰",required = true,in = ParameterIn.HEADER)
     @ApiResponses({
             @ApiResponse(responseCode = "200",description = "회원가져오기성공")
     })
@@ -73,6 +78,7 @@ public class MemberController {
     }
 
     @Operation(summary = "회원의 모든 할일 가져오기",description = "url 경로변수에 회원아이디를 담아 보내주세요")
+    @Parameter(name = "X-AUTH-TOKEN",description = "로그인 후 발급 받은 토큰",required = true,in = ParameterIn.HEADER)
     @ApiResponses({
             @ApiResponse(responseCode = "200",description = "회원의모든할일가져오기성공")
     })
@@ -82,6 +88,7 @@ public class MemberController {
         return new ResponseEntity<>(taskService.getAllTask(id),HttpStatus.OK);
     }
 
+    @Parameter(name = "X-AUTH-TOKEN",description = "로그인 후 발급 받은 토큰",required = true,in = ParameterIn.HEADER)
     @Operation(summary = "모든 회원 정보 가져오기")
     @ApiResponses({
             @ApiResponse(responseCode = "200",description = "모든회원정보가져오기성공")
@@ -90,5 +97,12 @@ public class MemberController {
     public ResponseEntity<?> getAllMember(){
         log.info("모든 회원 정보 호출");
         return new ResponseEntity<>(memberService.getAllMember(),HttpStatus.OK);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> Login(@RequestParam String id, @RequestParam String password){
+        log.info("로그인 호출");
+        String token = memberService.login(id,password);
+        return new ResponseEntity<>(token,HttpStatus.OK);
     }
 }
