@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,14 +41,19 @@ public class TodoController {
         return new ResponseEntity<>(todoResponseDto, HttpStatus.OK);
     }
 
-    @ApiOperation(value = "사용자 id 에 해당하는 Todo 생성", notes = "userId 에 해당하는 사용자로 게시물을 작성합니다.")
-    @PostMapping("/{id}")
-    public ResponseEntity<TodoResponseDto> createTodo(
-            @ApiParam(value="사용자 아이디",required = true, example = "1")
-            @PathVariable("id") Long id, @Valid @RequestBody TodoRequestDto todoRequestDto)throws NoSuchElementException{
+    @ApiOperation(value = "로그인한 사용자 id 에 해당하는 Todo 생성", notes = "userId 에 해당하는 사용자로 게시물을 작성합니다.")
+    @PostMapping()
+    public ResponseEntity<TodoResponseDto> createTodo(@Valid @RequestBody TodoRequestDto todoRequestDto){
 
-        log.info("[TodoPost] 유저 아이디에 해당하는 투두를 생성합니다. 유저 id : {}",id);
-        TodoResponseDto todoResponseDto = todoService.saveTodo(id,todoRequestDto); //유저를 찾고, 예외처리를 서비스로 넘김
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //실제 사용자 정보를 추출, 인증주체(principal)을 가져오고 주체는 UserDetails객체로 캐스팅됨
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        //userDetails객체에 담겨있는 uid(로그인아이디)를 식별자로 가져옴
+        String uid = userDetails.getUsername(); // 로그인한 사용자의 아이디
+
+        log.info("[TodoPost] 유저 아이디에 해당하는 투두를 생성합니다. 유저 id : {}",uid);
+
+        TodoResponseDto todoResponseDto = todoService.saveTodo(uid,todoRequestDto); //유저를 찾고, 예외처리를 서비스로 넘김
 
         return new ResponseEntity<>(todoResponseDto,HttpStatus.CREATED);
     }
@@ -54,7 +62,7 @@ public class TodoController {
     @PutMapping("/{id}") //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<TodoResponseDto> updateTodo(
             @ApiParam(value="투두 번호",required = true, example = "1")
-            @PathVariable("id") Long id,@Valid @RequestBody TodoRequestDto todoRequestDto )throws NoSuchElementException{
+            @PathVariable("id") Long id,@Valid @RequestBody TodoRequestDto todoRequestDto ){
 
         log.info("[TodoUpdate] 투두 번호에 해당하는 투두를 수정합니다. 투두 id : {}",id);
         TodoResponseDto todoResponseDto = todoService.updateTodo(id,todoRequestDto);
@@ -66,7 +74,7 @@ public class TodoController {
     @DeleteMapping("/{id}") //uri 경로를 제대로 고쳐야한다.
     public ResponseEntity<Void> deleteTodo(
             @ApiParam(value="투두 번호",required = true, example = "1")
-            @PathVariable("id") Long id) throws NoSuchElementException{
+            @PathVariable("id") Long id){
 
         log.info("[TodoDelete] 투두 번호에 해당하는 투두를 삭제합니다. 투두 id : {}",id);
         todoService.deleteTodo(id);
@@ -80,7 +88,7 @@ public class TodoController {
             @ApiParam(value="투두 번호",required = true, example = "1")
             @RequestParam("id") Long id,
             @ApiParam(value="투두 성공여부 체크")
-            @RequestParam("completed") Boolean completed) throws NoSuchElementException{
+            @RequestParam("completed") Boolean completed) {
 
         log.info("[TodoCheck] 투두 번호에 해당하는 투두의 성공여부를 체크합니다. 투두 id : {}, 성공여부 : {}",id,completed);
         TodoResponseDto todoResponseDto = todoService.checkCompleted(id,completed);

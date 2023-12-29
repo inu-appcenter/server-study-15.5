@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -39,11 +40,12 @@ public class UserControllerTest {
     UserService userService;
 
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("MockMvc를 통한 User 데이터 가져오기")
     void getUserTest() throws Exception{
 
         //given
-        given(userService.getUser(1L)).willReturn(UserResponseDto.builder()
+        given(userService.getUser("USER")).willReturn(UserResponseDto.builder()
                 .id(1L)
                 .name("홍길순")
                 .email("popora99@naver.com")
@@ -60,10 +62,11 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.level").exists())
                 .andDo(print());
 
-        verify(userService).getUser(1L);
+        verify(userService).getUser("USER");
     }
 
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("User 데이터 생성 테스트")
     void createUserTest() throws Exception{
 
@@ -100,6 +103,7 @@ public class UserControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("User 데이터 수정 테스트")
     void changeUserTest() throws Exception{
 
@@ -109,7 +113,7 @@ public class UserControllerTest {
                 .email("popora99@gmail.net")
                 .build();
 
-        given(userService.updateUser(eq(1L),any(UserRequestDto.class))) //Mockito에서 메서드 호출시 특정한 인자가 전달되는지 여부만을 검증
+        given(userService.updateUser(eq("USER"),any(UserRequestDto.class))) //Mockito에서 메서드 호출시 특정한 인자가 전달되는지 여부만을 검증
                 .willReturn(UserResponseDto.builder()
                         .id(1L)
                         .name("업데이트홍길순")
@@ -132,10 +136,11 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.level").exists())
                 .andDo(print());
 
-        verify(userService).updateUser(eq(1L),any(UserRequestDto.class)); //Mockito에서 메서드 호출시 특정한 인자가 전달되는지 여부만을 검증
+        verify(userService).updateUser(eq("USER"),any(UserRequestDto.class)); //Mockito에서 메서드 호출시 특정한 인자가 전달되는지 여부만을 검증
     }
 
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("User 데이터 삭제 테스트")
     void deleteUserTest() throws Exception{
 
@@ -145,10 +150,11 @@ public class UserControllerTest {
                         .andExpect(status().isOk())
                                 .andDo(print());
 
-        verify(userService).deleteUser(1L); 
+        verify(userService).deleteUser("USER");
     }
-    
+
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("User의 게시물들을 조회 테스트")
     void getTodoListTest()throws Exception{
 
@@ -164,7 +170,7 @@ public class UserControllerTest {
                         .build());
 
 
-        given(userService.getTodosByUserId(1L)).willReturn(todoList);
+        given(userService.getTodosByUserId("USER")).willReturn(todoList);
 
         //when
         mockMvc.perform(get("/users/search/{id}",1L))
@@ -177,6 +183,6 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.[0].deadLine").exists())
                 .andDo(print());
 
-        verify(userService).getTodosByUserId(1L);
+        verify(userService).getTodosByUserId("USER");
     }
 }

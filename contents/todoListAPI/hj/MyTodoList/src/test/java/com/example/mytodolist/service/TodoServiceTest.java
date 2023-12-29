@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -66,6 +67,7 @@ public class TodoServiceTest {
 
 
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("given_when_then 방식으로 saveTodo 테스트")
     void saveTodoTest(){
 
@@ -94,7 +96,7 @@ public class TodoServiceTest {
         Mockito.when(todoRepository.save(any(Todo.class))).then(returnsFirstArg());
 
         //when
-        TodoResponseDto todoResponseDto = todoService.saveTodo(1L,todoRequestDto);
+        TodoResponseDto todoResponseDto = todoService.saveTodo("USER",todoRequestDto);
 
         //then
         Assertions.assertEquals(todoResponseDto.getTitle(),"내일할일");

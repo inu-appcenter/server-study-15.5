@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -68,6 +69,7 @@ public class TodoControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("Todo 데이터 생성 테스트")
     void createTodoTest() throws Exception{
 
@@ -81,7 +83,7 @@ public class TodoControllerTest {
                 .deadLine("2023-12-31T23:59:59")
                 .build();
 
-        given(todoService.saveTodo(eq(1L), any(TodoRequestDto.class))) //Mockito에서 메서드 호출시 특정한 인자가 전달되는지 여부만을 검증
+        given(todoService.saveTodo(eq("USER"), any(TodoRequestDto.class))) //Mockito에서 메서드 호출시 특정한 인자가 전달되는지 여부만을 검증
                 .willReturn(TodoResponseDto.builder()
                         .id(1L)
                         .title("내일 할일")
@@ -110,7 +112,7 @@ public class TodoControllerTest {
                 .andExpect(jsonPath("$.modifiedDate").exists())
                 .andDo(print());
 
-        verify(todoService).saveTodo(eq(1L),any(TodoRequestDto.class)); //Mockito에서 메서드 호출시 특정한 인자가 전달되는지 여부만을 검증
+        verify(todoService).saveTodo(eq("USER"),any(TodoRequestDto.class)); //Mockito에서 메서드 호출시 특정한 인자가 전달되는지 여부만을 검증
     }
 
     @Test

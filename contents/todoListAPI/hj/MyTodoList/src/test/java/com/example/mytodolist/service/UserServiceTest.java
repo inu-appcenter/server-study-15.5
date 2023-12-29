@@ -15,16 +15,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.security.test.context.support.WithMockUser;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,6 +36,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("given_when_then 방식으로 getUser 테스트")
     void getUserTest(){
 
@@ -51,7 +50,7 @@ public class UserServiceTest {
                 .thenReturn(Optional.of(givenUser));
 
         //when
-        UserResponseDto userResponseDto = userService.getUser(1L);
+        UserResponseDto userResponseDto = userService.getUser("USER");
 
         //then
         Assertions.assertEquals(userResponseDto.getId(),givenUser.getId());
@@ -63,6 +62,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("given_when_then 방식으로 saveUser 테스트")
     void saveUserTest(){
 
@@ -86,6 +86,7 @@ public class UserServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("given_when_then 방식으로 updateUser 테스트")
     void updateUserTest(){
 
@@ -105,7 +106,7 @@ public class UserServiceTest {
                 .thenReturn(Optional.of(givenUser));
 
         //when
-        UserResponseDto userResponseDto = userService.updateUser(1L, userRequestDto);
+        UserResponseDto userResponseDto = userService.updateUser("USER", userRequestDto);
 
         //then
         Assertions.assertEquals(userResponseDto.getName(),"업데이트홍길순");
@@ -116,15 +117,17 @@ public class UserServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("deleteUser 테스트")
     void deleteUserTest(){
         //when
-        userService.deleteUser(1L);
+        userService.deleteUser("USER");
         //then
         verify(userRepository).deleteById(1L);
     }
 
     @Test
+    @WithMockUser(username = "USER",password = "USER")
     @DisplayName("getTodosByUserId 테스트")
     void getTodosByUserIdTest(){
 
@@ -150,7 +153,7 @@ public class UserServiceTest {
                 .thenReturn(Optional.of(user));
 
         //when
-        List<TodoResponseDto> result = userService.getTodosByUserId(1L);
+        List<TodoResponseDto> result = userService.getTodosByUserId("USER");
 
         //then
         Assertions.assertEquals(1, result.size());
