@@ -3,6 +3,7 @@ package com.example.todolist.Controller;
 import com.example.todolist.DTO.CommonResponseDTO;
 import com.example.todolist.DTO.Reply.AddReplyReqDTO;
 import com.example.todolist.DTO.Reply.ChangeReplyReqDTO;
+import com.example.todolist.Security.JwtProvider;
 import com.example.todolist.Service.ReplyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -20,10 +22,11 @@ import javax.validation.Valid;
 public class ReplyController {
 
     private final ReplyService replyService;
-    private final Long userId = 4l;
+    private final JwtProvider jwtProvider;
     @Autowired
-    public ReplyController(ReplyService replyService){
+    public ReplyController(ReplyService replyService,JwtProvider jwtProvider){
         this.replyService=replyService;
+        this.jwtProvider=jwtProvider;
     }
 
     @PostMapping("/{toDoId}/replys")
@@ -31,11 +34,10 @@ public class ReplyController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "댓글 추가성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> addReply(@PathVariable Long toDoId, @RequestBody @Valid AddReplyReqDTO addReplyReqDTO){
-        /*
-            토큰에서 userId값 추출 로직
-        */
-        addReplyReqDTO.setUserId(userId);
+    public ResponseEntity<CommonResponseDTO> addReply(@PathVariable Long toDoId, @RequestBody @Valid AddReplyReqDTO addReplyReqDTO,
+                                                      HttpServletRequest request){
+
+        addReplyReqDTO.setUserId(jwtProvider.readUserIdByToken(request));
         addReplyReqDTO.setToDoId(toDoId);
 
         replyService.addReply(addReplyReqDTO);
@@ -47,12 +49,11 @@ public class ReplyController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "댓글 수정성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> changeReply(@PathVariable Long replyId,@RequestBody @Valid ChangeReplyReqDTO changeReplyReqDTO){
-        /*
-            토큰에서 userId값 추출 로직
-        */
+    public ResponseEntity<CommonResponseDTO> changeReply(@PathVariable Long replyId,@RequestBody @Valid ChangeReplyReqDTO changeReplyReqDTO,
+                                                         HttpServletRequest request){
+
         changeReplyReqDTO.setReplyId(replyId);
-        changeReplyReqDTO.setUserId(userId);
+        changeReplyReqDTO.setUserId(jwtProvider.readUserIdByToken(request));
 
         replyService.changeReply(changeReplyReqDTO);
         return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","댓글 변경성공",null));
@@ -63,12 +64,9 @@ public class ReplyController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "댓글 삭제성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> deleteReply(@PathVariable Long replyId){
-        /*
-            토큰에서 userId값 추출 로직
-        */
+    public ResponseEntity<CommonResponseDTO> deleteReply(@PathVariable Long replyId, HttpServletRequest request){
 
-        replyService.deleteReply(userId,replyId);
+        replyService.deleteReply(jwtProvider.readUserIdByToken(request),replyId);
         return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","댓글 삭제성공",null));
     }
 }

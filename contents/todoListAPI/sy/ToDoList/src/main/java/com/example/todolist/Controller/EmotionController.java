@@ -1,6 +1,7 @@
 package com.example.todolist.Controller;
 
 import com.example.todolist.DTO.CommonResponseDTO;
+import com.example.todolist.Security.JwtProvider;
 import com.example.todolist.Service.EmotionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -14,15 +15,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @Api(tags = "Emotion")
 public class EmotionController {
 
     private final EmotionService emotionService;
-    private final Long userId = 3l;
+    private final JwtProvider jwtProvider;
     @Autowired
-    public EmotionController(EmotionService emotionService){
+    public EmotionController(EmotionService emotionService,JwtProvider jwtProvider){
         this.emotionService=emotionService;
+        this.jwtProvider=jwtProvider;
     }
 
     @PostMapping("/emotions/{toDoId}")
@@ -30,11 +34,9 @@ public class EmotionController {
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Emotion 추가성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> addEmotion(@PathVariable Long toDoId){
-        /*
-            토큰에서 userId값 추출 로직
-        */
-        emotionService.addEmotion(userId,toDoId);
+    public ResponseEntity<CommonResponseDTO> addEmotion(@PathVariable Long toDoId, HttpServletRequest request){
+
+        emotionService.addEmotion(jwtProvider.readUserIdByToken(request),toDoId);
         return ResponseEntity.status(HttpStatus.CREATED).body(CommonResponseDTO.of("CREATED","이모션 추가성공",null));
     }
     @DeleteMapping("/emotions/{toDoId}")
@@ -42,11 +44,9 @@ public class EmotionController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Emotion 삭제성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> deleteEmotion(@PathVariable Long toDoId){
-        /*
-            토큰에서 userId값 추출 로직
-        */
-        emotionService.deleteEmotion(userId,toDoId);
+    public ResponseEntity<CommonResponseDTO> deleteEmotion(@PathVariable Long toDoId, HttpServletRequest request){
+
+        emotionService.deleteEmotion(jwtProvider.readUserIdByToken(request),toDoId);
         return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","이모션 삭제성공",null));
     }
 }

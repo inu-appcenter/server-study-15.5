@@ -1,10 +1,8 @@
 package com.example.todolist.Controller;
 
 import com.example.todolist.DTO.CommonResponseDTO;
-import com.example.todolist.DTO.User.AddUserReqDTO;
-import com.example.todolist.DTO.User.ChangeUserReqDTO;
-import com.example.todolist.DTO.User.DeleteUserReqDTO;
-import com.example.todolist.DTO.User.ReadUserResDTO;
+import com.example.todolist.DTO.User.*;
+import com.example.todolist.Security.JwtProvider;
 import com.example.todolist.Service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
@@ -15,7 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -23,12 +21,18 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
-    private final Long userId = 4l;
+    private final JwtProvider jwtProvider;
     @Autowired
-    public UserController(UserService userService){
+    public UserController(UserService userService, JwtProvider jwtProvider){
         this.userService=userService;
+        this.jwtProvider=jwtProvider;
     }
 
+    @GetMapping("/login")
+    public ResponseEntity<CommonResponseDTO> login(@RequestBody @Valid LoginReqDTO loginReqDTO){
+
+        return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","로그인 완료",userService.login(loginReqDTO)));
+    }
 
     @PostMapping("/users")
     @Operation(summary = "유저 회원가입", description = "1. 모든 값은 비어있거나 null이면 유효성 검사에 실패합니다.<br> 2. email값은 중복이 허용되지 않습니다.")
@@ -45,11 +49,9 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "유저 조회성공",response = ReadUserResDTO.class),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> readUser(ServletRequest request){
-        /*
-            토큰에서 userId값 추출 로직
-        */
-        ReadUserResDTO readUserResDTO = userService.readUserInfo(userId);
+    public ResponseEntity<CommonResponseDTO> readUser(HttpServletRequest request){
+
+        ReadUserResDTO readUserResDTO = userService.readUserInfo(jwtProvider.readUserIdByToken(request));
 
         return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","유저정보 조회성공",readUserResDTO));
     }
@@ -59,11 +61,9 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "유저 정보변경 성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> changeUserInfo(@RequestBody @Valid ChangeUserReqDTO changeUserReqDTO, ServletRequest request){
-        /*
-            토큰에서 userId값 추출 로직
-        */
-        changeUserReqDTO.setUserId(userId);
+    public ResponseEntity<CommonResponseDTO> changeUserInfo(@RequestBody @Valid ChangeUserReqDTO changeUserReqDTO, HttpServletRequest request){
+
+        changeUserReqDTO.setUserId(jwtProvider.readUserIdByToken(request));
         userService.changeUserInfo(changeUserReqDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","유저정보 변경성공",null));
@@ -73,11 +73,9 @@ public class UserController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "유저 삭제성공"),
             @ApiResponse(code = 400, message = "잘못된 요청입니다.")})
-    public ResponseEntity<CommonResponseDTO> deleteUser(@RequestBody @Valid DeleteUserReqDTO deleteUserReqDTO, ServletRequest request){
-        /*
-            토큰에서 userId값 추출 로직
-        */
-        deleteUserReqDTO.setUserId(userId);
+    public ResponseEntity<CommonResponseDTO> deleteUser(@RequestBody @Valid DeleteUserReqDTO deleteUserReqDTO, HttpServletRequest request){
+
+        deleteUserReqDTO.setUserId(jwtProvider.readUserIdByToken(request));
         userService.deleteUser(deleteUserReqDTO);
 
         return ResponseEntity.status(HttpStatus.OK).body(CommonResponseDTO.of("OK","유저삭제 성공",null));
