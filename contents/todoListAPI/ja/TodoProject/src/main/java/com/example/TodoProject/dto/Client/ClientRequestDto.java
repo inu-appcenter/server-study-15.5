@@ -6,10 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
+import java.util.List;
 
 public class ClientRequestDto {
 
@@ -35,19 +33,19 @@ public class ClientRequestDto {
         @Email
         private String clientEmail;
 
-        @Schema(description = "클라이언트의 권한역할. 일반 유저는 ROLE_USER, 관리자는 ROLE_ADMIN", example = "ROLE_USER")
-        @NotBlank(message = "유저 권한은 필수 입력 값입니다.")
-        private String clientRole;
+        @Schema(description = "클라이언트의 권한역할. 일반 유저는 ROLE_USER, 관리자는 ROLE_ADMIN", example = "[\"ROLE_USER\"]")
+        @NotNull(message = "유저 권한은 필수 입력 값입니다.")
+        private List<String> clientRole;
 
         @Schema(description = "클라이언트 전화번호", example = "010-1234-5678")
         @NotBlank(message = "전화번호는 필수 입력 값입니다.")
         @Pattern(regexp = "^[0-9].{3}+[0-9].{3,4}+[0-9].{3,4}$")
         private String clientPhoneNum;
 
-        public Client toEntity(RequestClientDto requestClientDto){
+        public Client toEntity(RequestClientDto requestClientDto, String password){
             return Client.builder()
                     .clientId(requestClientDto.getClientId())
-                    .clientPassword(requestClientDto.getClientPassword())
+                    .clientPassword(password)
                     .clientName(requestClientDto.getClientName())
                     .clientEmail(requestClientDto.getClientEmail())
                     .clientRole(requestClientDto.getClientRole())
@@ -56,7 +54,7 @@ public class ClientRequestDto {
         }
 
         @Builder
-        public RequestClientDto(String clientId, String clientPassword, String clientName, String clientEmail, String clientRole, String clientPhoneNum){
+        public RequestClientDto(String clientId, String clientPassword, String clientName, String clientEmail, List<String> clientRole, String clientPhoneNum){
             this.clientId = clientId;
             this.clientPassword = clientPassword;
             this.clientName = clientName;
@@ -90,6 +88,20 @@ public class ClientRequestDto {
             this.clientEmail = clientEmail;
             this.clientPhoneNum=clientPhoneNum;
         }
+    }
+    @Getter
+    public static class RequestLoginDto {
+
+        @Schema(description = "클라이언트가 로그인 할 때 사용하는 아이디",example = "inu1234")
+        @NotBlank(message = "아이디는 필수 입력 값입니다.")
+        @Size(min = 5, max = 15, message="아이디는 최소 5자 이상, 최대 15자 이하의 길이를 충족해야 합니다.")
+        private String clientId;
+
+        @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
+        @Pattern(regexp="(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{5,20}", message = "비밀번호는 최소 5자 이상, 최대 20자 이하의 대소문자, 숫자, 특수문자로 구성되어야 합니다.")
+        @Schema(description = "클라이언트가 로그인 할 때 사용하는 비밀번호", example = "password1234@")
+        private String clientPassword;
+
     }
 
 }
